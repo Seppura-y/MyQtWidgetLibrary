@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file>res/fonts/fa-light-300.ttf</file>
+        <file>res/fonts/fa-regular-400.ttf</file>
+        <file>res/fonts/fa-solid-900.ttf</file>
+        <file>res/fonts/Font Awesome 6 Duotone-Solid-900.otf</file>
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/fonts/Font Awesome 6 Pro-Solid-900.otf</file>
+        <file>res/fonts/fontawesome-webfont.ttf</file>
+    </qresource>
+    <qresource prefix="/assets/icons">
+        <file>res/icons/transparent_donut.png</file>
+    </qresource>
+    <qresource prefix="/css">
+        <file>res/css/menu_bar.css</file>
+        <file>res/css/my_button.css</file>
+        <file>res/css/title.css</file>
+    </qresource>
+</RCC>

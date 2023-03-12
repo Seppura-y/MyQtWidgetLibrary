@@ -1,0 +1,55 @@
+* {
+    background-color: #2e3137;
+    /*background-color: lawngreen;*/
+    border: none;
+}
+
+QToolTip {
+    background-color: #2e3137;
+    color: silver;
+}
+
+QWidget#wid_title{
+    border-top-left-radius:12px;
+    border-top-right-radius: 12px;
+}
+
+QWidget#wid_toolbar {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+QWidget#place_holder {
+    background-color: #1f2126;
+}
+
+QPushButton {
+    color: silver;
+}
+
+QPushButton:hover {
+    color: orange;
+}
+
+QPushButton:pressed {
+    color: #FF8033;
+    border-style: outset;
+    border-width: 1px;
+    border-color: #FF8033;
+    border-radius: 4px;
+}
+
+QPushButton:checked {
+    color: orange;
+    border-style: outset;
+    border-width: 1px;
+    border-color: orange;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+}
+
+QPushButton:disabled, checked {
+    color: dimgray;
+    border: none;
+    background-color: #2e3137;
+}
