@@ -2,22 +2,29 @@
 #cmake --build build --config Release
 #cmake --install build --config Release
 cmake_minimum_required(VERSION 3.22)
-project(QtCourse51_Build)
+project(MyQtWidgetLibrary_Build)
 
+set(STARTUP_PROJ "" CACHE STRING "set the vs startup project")
 
-set(PROJECT_FRAMELESS_WIDGET FALSE CACHE BOOL "add project frameless widget ?")
-set(PROJECT_FRAMELESS_WIDGET2 FALSE CACHE BOOL "add project frameless widget2 ?")
+set(PROJECT_FRAMELESS_WIDGET    FALSE CACHE BOOL "add project frameless widget ?")
+set(PROJECT_FRAMELESS_WIDGET2   FALSE CACHE BOOL "add project frameless widget2 ?")
+set(PROJECT_ROUND_WIDGET        FALSE CACHE BOOL "add project round widget ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
-    set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT FramelessWidget)
-endif(PROJECT_FRAMELESS_WIDGET)
+endif()
 
 if(PROJECT_FRAMELESS_WIDGET2)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget2)
-    set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT FramelessWidget2)
-endif(PROJECT_FRAMELESS_WIDGET2)
+endif()
+
+if(PROJECT_ROUND_WIDGET)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/RoundWidget)
+endif()
+
+if(STARTUP_PROJ)
+    set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUP_PROJ})
+endif()
+
 
 # add_dependencies(DonutEditorFramework)
-
-# set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT DonutEditorFramework)

@@ -1,0 +1,16 @@
+QListWidget {
+    border: none;
+    color: silver;
+    background-color: #1e1e1e;
+}
+
+QListWidget::item:selected{
+    color: white;
+    background-color: darkorange;
+}
+
+
+QListWidget::item:hover {
+    color: white;
+    background-color: #ffc266;
+}
