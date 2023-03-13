@@ -11,10 +11,20 @@ RoundWidget::RoundWidget()
 
     // method 2
     this->setStyleSheet("QWidget{background-color:gray;border-radius:30px;}");
+
+
+    this->setFixedSize(800, 600);
+
+    menu_button_ = new MenuButton(this);
+    menu_button_->setText("menu button");
+    menu_button_->setGeometry(20, 20, 150, 50);
+    //menu_button_->move(20, 20);
+    menu_button_->show();
 }
 
 RoundWidget::~RoundWidget()
 {
+
 }
 
 

@@ -1,0 +1,17 @@
+* {
+    background-color:white;
+    border: none;
+}
+
+QPushButton {
+    color: silver;
+}
+
+QPushButton:hover {
+    color: silver;
+    background-color:gray;
+}
+
+QPushButton:pressed {
+    color: #FF8033;
+}

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/menu_button">
+        <file>res/icons/down_arrow.svg</file>
+        <file>res/icons/exit.png</file>
+        <file>res/icons/file.png</file>
+        <file>res/icons/play.png</file>
+        <file>res/icons/set.png</file>
+        <file>res/icons/tools.png</file>
+        <file>res/icons/up_arrow.svg</file>
+        <file>res/css/menu_button.css</file>
+    </qresource>
+</RCC>

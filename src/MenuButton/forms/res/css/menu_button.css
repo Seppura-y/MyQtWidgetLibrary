@@ -1,0 +1,52 @@
+MenuButton {
+    font: 18px "Microsoft Black";
+    color: gray;
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 8px;
+}
+
+MenuButton:hover {
+    color: orange;
+    background: dimgray;
+}
+
+MenuButton::menu-indicator:open {
+    image: url(:/menu_button/res/icons/down_arrow.svg);
+    subcontrol-position: right center;
+    subcontrol-origin: padding;
+    border: none;
+    padding: 0px 10px;
+}
+
+MenuButton::menu-indicator:closed {
+    image: url(:/menu_button/res/icons/up_arrow.svg);
+    subcontrol-position: right center;
+    subcontrol-origin: padding;
+    border: none;
+    padding: 0px 10px;
+}
+
+QMenu {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+QMenu::item {
+    font: 16px;
+    color: white;
+    background-color: #1e1e1e;
+    padding: 5px 30px 5px 10px; /*top right bottom left*/
+    margin: 0px 0px;
+    /*border-radius: 8px;*/
+    /*border-bottom: 1px solid #DBDBDB;*/
+}
+
+QMenu::item:selected {
+     background-color:darkorange;
+}
+
+QMenu::separator {
+    background-color:white;
+    height: 1px;
+}
