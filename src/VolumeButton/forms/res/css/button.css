@@ -1,0 +1,14 @@
+QPushButton {
+    background-image:url(:/volume_button/res/icons/audio_open.svg);
+    border:none;
+} 
+
+QPushButton:hover {
+    background-image:url(:/volume_button/res/icons/audio_open_hover.svg);
+    border:none;
+}
+
+QPushButton:pressed {
+    background-image:url(:/volume_button/res/icons/audio_open.svg);
+    border:none;
+}

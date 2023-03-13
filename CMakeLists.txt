@@ -9,7 +9,8 @@ set(STARTUP_PROJ "" CACHE STRING "set the vs startup project")
 set(PROJECT_FRAMELESS_WIDGET    FALSE CACHE BOOL "add project frameless widget ?")
 set(PROJECT_FRAMELESS_WIDGET2   FALSE CACHE BOOL "add project frameless widget2 ?")
 set(PROJECT_ROUND_WIDGET        FALSE CACHE BOOL "add project round widget ?")
-set(PROJECT_MENU_BUTTON         FALSE CACHE BOOL "add project button menu ?")
+set(PROJECT_MENU_BUTTON         FALSE CACHE BOOL "add project menu button ?")
+set(PROJECT_VOLUME_BUTTON         FALSE CACHE BOOL "add project volume button ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -25,6 +26,10 @@ endif()
 
 if(PROJECT_MENU_BUTTON)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/MenuButton)
+endif()
+
+if(PROJECT_VOLUME_BUTTON)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/VolumeButton)
 endif()
 
 if(STARTUP_PROJ)

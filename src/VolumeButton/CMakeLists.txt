@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(RoundWidget LANGUAGES CXX)
+project(VolumeButton LANGUAGES CXX)
 
 set(RUNTIME_DIR ${CMAKE_CURRENT_LIST_DIR}/../../bin)
 set(LIBRARY_DIR ${CMAKE_CURRENT_LIST_DIR}/../../lib)
