@@ -1,0 +1,32 @@
+QWidget {
+    background-color: #2e3137;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+QPushButton {
+    color: silver;
+    font-size: 18px;
+}
+
+QPushButton:hover {
+    color: orange;
+}
+
+QPushButton:pressed {
+    color: #FF8033;
+}
+
+QPushButton#pb_close {
+    border-top-right-radius: 10px;
+}
+
+QPushButton#pb_close:hover {
+    color: orange;
+}
+
+QPushButton#pb_close:pressed {
+    color: tomato;
+}

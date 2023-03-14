@@ -1,0 +1,67 @@
+QDialog 
+{
+    background-color: #2e3137;
+    border: none;
+    border-radius: 10px;
+}
+
+QWidget {
+    background-color: #2e3137;
+}
+
+
+DialogTitle 
+{
+    background-color: #2e3137;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+QTabBar::tab {
+    color: silver;
+    background: #2e3137;
+    border: none;
+    font-family: Ubuntu;
+    font-size: 12px;
+}
+
+QTabBar::groove {
+    color: silver;
+    background: #2e3137;
+}
+
+QTabBar::tab:first {
+    border-top-left-radius: 0px;
+}
+
+QTabBar::tab:last {
+    border-top-right-radius: 0px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    color: orange;
+}
+
+QPushButton {
+    background-color: black;
+    border-color: orange;
+    color: white;
+    font-family: Ubuntu;
+    font-size: 12px;
+    border-radius: 8px;
+
+}
+
+QPushButton:hover {
+    color: orange;
+    border-color: orange;
+    border-style: outset;
+    border-width: 1px;
+    border-color: #FF8033;
+}
+
+QPushButton:pressed {
+    color: tomato;
+    border-color: orange;
+}
