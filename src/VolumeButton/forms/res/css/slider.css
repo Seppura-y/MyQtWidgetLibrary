@@ -15,7 +15,7 @@ QSlider::sub-page:vertical {
 
 QSlider::add-page:vertical {
     /*background-color: #7A7B79;*/
-    background-color:orange;
+    background-color:darkorange;
     width: 6px;
     border-radius: 3px;
 }
@@ -34,5 +34,5 @@ QSlider::handle:vertical {
 }
 
 QSlider::handle:hover{
-    background-color:darkorange;
+    background-color:orange;
 }

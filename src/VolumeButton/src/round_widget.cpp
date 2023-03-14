@@ -18,10 +18,12 @@ RoundWidget::RoundWidget()
 
     resize(800, 600);
 
-    QHBoxLayout* pHlay = new QHBoxLayout(this);
+    //QHBoxLayout* pHlay = new QHBoxLayout(this);
 
     VolumeButton* volume_button = new VolumeButton(this);
-    pHlay->addWidget(volume_button);
+    //volume_button->setFixedSize(28, 28);
+    volume_button->move(this->width() / 2, this->height() / 2);
+    //pHlay->addWidget(volume_button);
 }
 
 RoundWidget::~RoundWidget()

@@ -4,14 +4,64 @@
 #include <QStyleOptionButton>
 #include <iostream>
 #include <QThread>
+#include <QFontDatabase>
+
+
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
+#include <QParallelAnimationGroup>
 
 #include "config_helper.h"
 
 VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
 {
-	this->setFixedSize(32, 32);
+	this->setAttribute(Qt::WA_StyledBackground);
+	this->setFixedSize(28, 28);
+	int id = QFontDatabase::addApplicationFont(":/volume_button/res/fonts/Font Awesome 6 Pro-Light-300.otf");
+	if (id < 0)
+	{
+		std::cout << "VolumeButton -> load font failed" << std::endl;
+	}
+	else
+	{
+		QFont font;
+		QString family = QFontDatabase::applicationFontFamilies(id).first();
+		font.setFamily(family);
+
+		font.setPixelSize(16);
+		font.setPointSize(16);
+		this->setFont(font);
+		this->setText(QChar(0xf028));
+		this->setCursor(QCursor(Qt::PointingHandCursor));
+	}
 
 	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":volume_button/res/css/button.css"));
+
+	graphics_effect_ = new QGraphicsOpacityEffect(this);
+	graphics_effect_->setOpacity(0);
+
+	animation_ = new QPropertyAnimation(graphics_effect_, "opacity");
+	animation_->setDuration(1000);
+	animation_->setStartValue(1);
+	animation_->setEndValue(0);
+	//animation_->setEasingCurve(QEasingCurve::BezierSpline);
+
+	sequential_animation_group_ = new QSequentialAnimationGroup(this);
+	sequential_animation_group_->addAnimation(animation_);
+
+	parallel_animation_group_ = new QParallelAnimationGroup(this);
+	parallel_animation_group_->addAnimation(sequential_animation_group_);
+	parallel_animation_group_->setDirection(QAbstractAnimation::Forward);
+	parallel_animation_group_->setLoopCount(1);
+
+	QObject::connect(parallel_animation_group_, &QParallelAnimationGroup::finished,
+		[=]
+		{
+			volume_slider_dialog_->hide();
+		}
+	);
+
 }
 
 VolumeButton::~VolumeButton()
@@ -51,9 +101,12 @@ void VolumeButton::enterEvent(QEvent* ev)
 	volume_slider_dialog_->show();
 	timer_id_ = startTimer(250);
 
-	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged, [=](int value) {
-		emit sigVolumeValueChanged(value);
-		});
+	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged, 
+		[=](int value) 
+		{
+			emit sigVolumeValueChanged(value);
+		}
+	);
 }
 
 void VolumeButton::mousePressEvent(QMouseEvent* ev)
@@ -63,11 +116,13 @@ void VolumeButton::mousePressEvent(QMouseEvent* ev)
 		is_mute_ = !is_mute_;
 		if (is_mute_)
 		{
+			this->setText(QChar(0xf2e2));
 			if (volume_slider_dialog_)
 				volume_slider_dialog_->setSliderValue(0);
 		}
 		else
 		{
+			this->setText(QChar(0xf028));
 			if (volume_slider_dialog_)
 				volume_slider_dialog_->setSliderValue(50);
 		}
@@ -97,7 +152,17 @@ void VolumeButton::timerEvent(QTimerEvent* event)
 
 			if (!area.contains(cursor_pos))
 			{
-				volume_slider_dialog_->hide();
+				if (parallel_animation_group_->state() == QParallelAnimationGroup::Stopped)
+				{
+					graphics_effect_->setOpacity(0);
+					volume_slider_dialog_->setGraphicsEffect(graphics_effect_);
+					parallel_animation_group_->start();
+				}
+			}
+			else
+			{
+				graphics_effect_->setOpacity(1);
+				volume_slider_dialog_->setGraphicsEffect(graphics_effect_);
 			}
 		}
 	}

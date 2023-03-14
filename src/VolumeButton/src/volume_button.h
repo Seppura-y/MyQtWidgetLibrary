@@ -6,6 +6,11 @@
 
 #include "volume_slider_dialog.h"
 
+class QGraphicsOpacityEffect;
+class QPropertyAnimation;
+class QSequentialAnimationGroup;
+class QParallelAnimationGroup;
+
 class VolumeButton : public QPushButton
 {
     Q_OBJECT
@@ -41,6 +46,11 @@ private:
 
     bool is_mute_ = false;
     VolumeSliderDialog* volume_slider_dialog_ = nullptr;
+
+    QGraphicsOpacityEffect* graphics_effect_ = nullptr;
+    QPropertyAnimation* animation_ = nullptr;
+    QSequentialAnimationGroup* sequential_animation_group_ = nullptr;
+    QParallelAnimationGroup* parallel_animation_group_ = nullptr;
 };
 
 #endif

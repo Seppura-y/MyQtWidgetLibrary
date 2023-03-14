@@ -1,14 +1,23 @@
-QPushButton {
-    background-image:url(:/volume_button/res/icons/audio_open.svg);
-    border:none;
-} 
-
-QPushButton:hover {
-    background-image:url(:/volume_button/res/icons/audio_open_hover.svg);
-    border:none;
+VolumeButton {
+    /*background-image:url(:/volume_button/res/icons/audio_open.svg);*/
+    border: none;
+    padding: 0px 0px 0px 0px;
+    color: silver;
+    background: #2d2d30;
+    border-radius: 8px;
 }
 
-QPushButton:pressed {
-    background-image:url(:/volume_button/res/icons/audio_open.svg);
-    border:none;
+VolumeButton:hover {
+    /*background-image:url(:/volume_button/res/icons/audio_open_hover.svg);*/
+    color: orange;
+    background: dimgray;
+}
+
+VolumeButton:pressed {
+    /*background-image:url(:/volume_button/res/icons/audio_open.svg);*/
+    border: none;
+}
+
+VolumeButton:pressed {
+    color: #FF8033;
 }
