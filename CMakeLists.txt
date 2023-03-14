@@ -13,6 +13,7 @@ set(PROJECT_MENU_BUTTON         FALSE CACHE BOOL "add project menu button ?")
 set(PROJECT_VOLUME_BUTTON         FALSE CACHE BOOL "add project volume button ?")
 set(PROJECT_TITLE         FALSE CACHE BOOL "add project title ?")
 set(PROJECT_MAIN_WIDGET         FALSE CACHE BOOL "add project main widget ?")
+set(PROJECT_CAMERA_MENU         FALSE CACHE BOOL "add project camera menu ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -40,6 +41,10 @@ endif()
 
 if(PROJECT_MAIN_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/MainWidget)
+endif()
+
+if(PROJECT_CAMERA_MENU)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CameraMenu)
 endif()
 
 if(STARTUP_PROJ)
