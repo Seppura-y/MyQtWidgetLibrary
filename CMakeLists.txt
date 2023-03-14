@@ -12,6 +12,7 @@ set(PROJECT_ROUND_WIDGET        FALSE CACHE BOOL "add project round widget ?")
 set(PROJECT_MENU_BUTTON         FALSE CACHE BOOL "add project menu button ?")
 set(PROJECT_VOLUME_BUTTON         FALSE CACHE BOOL "add project volume button ?")
 set(PROJECT_TITLE         FALSE CACHE BOOL "add project title ?")
+set(PROJECT_MAIN_WIDGET         FALSE CACHE BOOL "add project main widget ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -35,6 +36,10 @@ endif()
 
 if(PROJECT_TITLE)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/Title)
+endif()
+
+if(PROJECT_MAIN_WIDGET)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/MainWidget)
 endif()
 
 if(STARTUP_PROJ)

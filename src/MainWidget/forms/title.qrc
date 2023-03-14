@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/title">
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/css/title.css</file>
+    </qresource>
+</RCC>
