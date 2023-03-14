@@ -15,9 +15,7 @@ VolumeButton:hover {
 
 VolumeButton:pressed {
     /*background-image:url(:/volume_button/res/icons/audio_open.svg);*/
-    border: none;
-}
-
-VolumeButton:pressed {
+    /*border: none;*/
     color: #FF8033;
 }
+
