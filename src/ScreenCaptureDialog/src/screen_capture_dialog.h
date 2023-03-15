@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QLabel>
+#include <QTimer>
 
 #include "ui_screen_capture_dialog.h"
 
@@ -89,6 +90,7 @@ private:
     QPushButton* pb_cancel_ = nullptr;
     bool is_resize_stop_ = false;
     QRect previous_geom_;
+
 private:
     Ui::ScreenCaptureDialog ui;
 };

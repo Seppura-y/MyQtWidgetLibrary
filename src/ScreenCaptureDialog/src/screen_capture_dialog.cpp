@@ -223,7 +223,7 @@ void ScreenCaptureDialog::updateCursor()
             setCursor(Qt::SizeAllCursor);
             break;
         default:
-            if (m_activeSide) 
+            if (m_activeSide == CENTER) 
             {
                 setCursor(Qt::ClosedHandCursor);
             }
@@ -283,9 +283,10 @@ void ScreenCaptureDialog::resizeEvent(QResizeEvent*)
     //move_handle_area_ = QRect(this->width() / 2 - 30, this->height() / 2 - 30, 60, 60);
 }
 
-void ScreenCaptureDialog::moveEvent(QMoveEvent*)
+void ScreenCaptureDialog::moveEvent(QMoveEvent* ev)
 {
-    updateAreas();
+    //updateAreas();
+    QWidget::moveEvent(ev);
 }
 
 void ScreenCaptureDialog::mousePressEvent(QMouseEvent* e)
@@ -294,12 +295,8 @@ void ScreenCaptureDialog::mousePressEvent(QMouseEvent* e)
         return;
     }
 
-    //m_dragStartPos = e->pos();
-    //m_activeSide = getMouseSide(e->pos());
-
-    m_dragStartPos = parentWidget()->mapFromGlobal(QCursor::pos());
+    m_dragStartPos = mapToGlobal(e->pos());
     m_activeSide = getMouseSide(parentWidget()->mapFromGlobal(QCursor::pos()));
-    //updateCursor();
 }
 
 void ScreenCaptureDialog::mouseReleaseEvent(QMouseEvent* e)
@@ -322,378 +319,140 @@ void ScreenCaptureDialog::mouseMoveEvent(QMouseEvent* e)
 
     SideType mouseSide = m_activeSide;
     if (!m_activeSide) {
-        mouseSide = getMouseSide(parentWidget()->mapFromGlobal(QCursor::pos()));
+        mouseSide = getMouseSide(e->pos());
     }
 
-    QPoint pos = parentWidget()->mapFromGlobal(QCursor::pos());
-    auto geom = this->geometry();
+
+    bool is_minimum_width = width() == minimumWidth();
+    bool is_minimum_height = height() == minimumHeight();
+
+    QPoint pos = mapToGlobal(e->pos());
+    auto geom = geometry();
+
 
     QPoint newTopLeft = geom.topLeft(), newBottomRight = geom.bottomRight();
-    //QPoint newTopLeft = previous_geom_.topLeft(), newBottomRight = previous_geom_.bottomRight();
 
-    int& newLeft = newTopLeft.rx(), 
-       & newRight = newBottomRight.rx(),
-       & newTop = newTopLeft.ry(), 
-       & newBottom = newBottomRight.ry();
-
-
+    int& newLeft = newTopLeft.rx(), & newRight = newBottomRight.rx(),
+        & newTop = newTopLeft.ry(), & newBottom = newBottomRight.ry();
     switch (mouseSide) 
     {
-        case TOPLEFT_SIDE:
-            if (m_activeSide) 
+    case TOPLEFT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() > geom.x() && is_minimum_width))
             {
-                newTopLeft = pos;
+                return;
             }
-            break;
-        case BOTTOMRIGHT_SIDE:
-            if (m_activeSide) 
+            if ((pos.y() > geom.y() && is_minimum_height))
             {
-                newBottomRight = pos;
+                return;
             }
-            break;
-        case TOPRIGHT_SIDE:
-            if (m_activeSide) 
+            newTopLeft = pos;
+        }
+        break;
+    case BOTTOMRIGHT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() < geom.x() + minimumWidth() && is_minimum_width))
             {
-                newTop = pos.y();
-                newRight = pos.x();
+                return;
             }
-            break;
-        case BOTTOMLEFT_SIDE:
-            if (m_activeSide) 
+
+            if ((pos.y() > geom.y() && is_minimum_height))
             {
-                newBottom = pos.y();
-                newLeft = pos.x();
+                return;
             }
-            break;
-        case LEFT_SIDE:
-            if (m_activeSide) 
+            newBottomRight = pos;
+        }
+        break;
+    case TOPRIGHT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() < geom.x() + minimumWidth() && is_minimum_width))
             {
-                newLeft = pos.x();
+                return;
             }
-            break;
-        case RIGHT_SIDE:
-            if (m_activeSide) 
+            if ((pos.y() > geom.y() && is_minimum_height))
             {
-                newRight = pos.x();
+                return;
             }
-            break;
-        case TOP_SIDE:
-            if (m_activeSide) 
+            newTop = pos.y();
+            newRight = pos.x();
+        }
+        break;
+    case BOTTOMLEFT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() > geom.x() && is_minimum_width))
             {
-                newTop = pos.y();
+                return;
             }
-            break;
-        case BOTTOM_SIDE:
-            if (m_activeSide) 
+
+            if ((pos.y() < geom.y() + minimumHeight() && is_minimum_height))
             {
-                newBottom = pos.y();
+                return;
             }
-            break;
-        default:
-            if (m_activeSide == CENTER) 
+            newBottom = pos.y();
+            newLeft = pos.x();
+        }
+        break;
+    case LEFT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() > geom.x() && is_minimum_width))
             {
-                move(this->pos() + pos - m_dragStartPos);
-                m_dragStartPos = pos;
+                return;
             }
+            newLeft = pos.x();
+        }
+        break;
+    case RIGHT_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.x() < geom.x() + minimumWidth() && is_minimum_width))
+            {
+                return;
+            }
+            newRight = pos.x();
+        }
+        break;
+    case TOP_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.y() > geom.y() && is_minimum_height))
+            {
+                return;
+            }
+            newTop = pos.y();
+        }
+        break;
+    case BOTTOM_SIDE:
+        if (m_activeSide) 
+        {
+            if ((pos.y() < geom.y() + minimumHeight() && is_minimum_height))
+            {
+                return;
+            }
+            newBottom = pos.y();
+        }
+        break;
+    default:
+        if (m_activeSide == CENTER) 
+        {
+            move(this->pos() + pos - m_dragStartPos);
+            m_dragStartPos = pos;
+        }
         return;
     }
-
-    bool is_topleft_changed = false;
-    bool is_bottom_right_changed = false;
-
-
-    if (previous_geom_.topLeft() != newTopLeft)
-    {
-        is_topleft_changed = true;
-        //newTopLeft = geom.topLeft();
-    }
-    else
-    {
-        is_topleft_changed = false;
-        //newTopLeft = previous_geom_.topLeft();
-    }
-
-    if (previous_geom_.bottomRight() != newBottomRight)
-    {
-        is_bottom_right_changed = true;
-        //newBottomRight = geom.bottomRight();
-    }
-    else
-    {
-        is_bottom_right_changed = false;
-        //newBottomRight = previous_geom_.bottomRight();
-    }
-
-    if (m_activeSide)
-    {
-
-        QPoint deltaTopLeft = newTopLeft - geom.topLeft();
-        QPoint deltaBottomRight = newBottomRight - geom.bottomRight();
-        newTopLeft = geom.topLeft() + deltaTopLeft - deltaBottomRight;
-        newBottomRight =
-            geom.bottomRight() + deltaBottomRight - deltaTopLeft;
-        
-        geom = { newTopLeft, newBottomRight };
-        setGeometry(geom.normalized());
-        m_activeSide = getProperSide(m_activeSide, geom);
-
-        //QPoint deltaTopLeft = newTopLeft - previous_geom_.topLeft();
-        //QPoint deltaBottomRight = newBottomRight - previous_geom_.bottomRight();
-        //newTopLeft = previous_geom_.topLeft() + deltaTopLeft - deltaBottomRight;
-        //newBottomRight =
-        //    previous_geom_.bottomRight() + deltaBottomRight - deltaTopLeft;
-
-        //geom = { newTopLeft, newBottomRight };
-        //setGeometry(geom.normalized());
-        //m_activeSide = getProperSide(m_activeSide, geom);
-    }
-
     // finalize geometry change
-    if (0)
+    if (m_activeSide) 
     {
-        QRect new_geom = { newTopLeft, newBottomRight };
-        if (is_topleft_changed)
-        {
-            if (this->width() == this->minimumWidth())
-            {
-                if (previous_geom_.width() >= new_geom.width() && previous_geom_.height() >= new_geom.height())
-                {
-                    previous_geom_ = this->rect();
-                }
-                else
-                {
-                    previous_geom_ = QRect(new_geom.topLeft(), previous_geom_.bottomRight());
-                    this->move(new_geom.topLeft());
-                    this->resize(previous_geom_.size() + new_geom.size());
-                    //setGeometry(previous_geom_ = QRect(new_geom.topLeft(), previous_geom_.bottomRight()));
-                }
-            }
-            else
-            {
-                previous_geom_ = previous_geom_ = QRect(new_geom.topLeft(), previous_geom_.bottomRight());;
-                //setGeometry(previous_geom_ = QRect(new_geom.topLeft(), previous_geom_.bottomRight()));
-                this->move(new_geom.topLeft());
-                this->resize(previous_geom_.size() + new_geom.size());
-            }
-        }
-        else if (is_bottom_right_changed)
-        {
-            if (this->width() == this->minimumWidth())
-            {
-                if (previous_geom_.width() >= new_geom.width() && previous_geom_.height() >= new_geom.height())
-                {
-                    previous_geom_ = this->rect();
-                }
-                else
-                {
-                    previous_geom_ = new_geom;
-                    this->resize(previous_geom_.size() + new_geom.size());
-                }
-            }
-            else
-            {
-                previous_geom_ = new_geom;
-                this->resize(previous_geom_.size() + new_geom.size());
-            }
-        }
-
-
-        //if (this->minimumSize().width() == this->size().width() || this->minimumSize().height() == this->size().height())
-        //if (this->minimumSize() == this->size())
-        //{
-        //    if (previous_geom_.width() >= geom.width() && previous_geom_.height() >= geom.height())
-        //    {
-        //        previous_geom_ = this->rect();
-        //    }
-        //    else
-        //    {
-        //        //setGeometry(geom.normalized());
-        //        previous_geom_ = geom;
-        //        if (is_topleft_changed)
-        //            setGeometry(geom);
-        //        if (is_bottom_right_changed)
-        //            this->resize(geom.width(), geom.height());
-        //        //m_activeSide = getProperSide(m_activeSide, geom);
-        //    }
-        //}
-        //else
-        //{
-        //    //setGeometry(geom.normalized());
-        //    previous_geom_ = geom;
-        //    if (is_topleft_changed)
-        //        setGeometry(geom);
-        //    if (is_bottom_right_changed)
-        //        this->resize(geom.width(), geom.height());
-        //    //m_activeSide = getProperSide(m_activeSide, geom);
-        //}
+        geom = { newTopLeft, newBottomRight };
+        setGeometry(geom);
+        //setGeometry(geom.normalized());
     }
-
-    //// finalize geometry change
-    //if (m_activeSide) 
-    //{
-    //    geom = { newTopLeft, newBottomRight };
-    //    //if (this->minimumSize().width() == this->size().width() || this->minimumSize().height() == this->size().height())
-    //    if(this->minimumSize() == this->size())
-    //    {
-    //        if (previous_geom_.width() >= geom.width() && previous_geom_.height() >= geom.height())
-    //        {
-    //            previous_geom_ = this->rect();
-    //        }
-    //        else
-    //        {
-    //            //setGeometry(geom.normalized());
-    //            previous_geom_ = geom;
-    //            if(is_topleft_changed)
-    //                setGeometry(geom);
-    //            if (is_bottom_right_changed)
-    //                this->resize(geom.width(), geom.height());
-    //            //m_activeSide = getProperSide(m_activeSide, geom);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        //setGeometry(geom.normalized());
-    //        previous_geom_ = geom;
-    //        if (is_topleft_changed)
-    //            setGeometry(geom);
-    //        if (is_bottom_right_changed)
-    //            this->resize(geom.width(), geom.height());
-    //        //m_activeSide = getProperSide(m_activeSide, geom);
-    //    }
-    //}
-    //setGeometry(geom);
-    //m_activeSide = getProperSide(m_activeSide, geom);
-
-    m_dragStartPos = pos;
+    //m_dragStartPos = pos;
 }
-
-//void ScreenCaptureDialog::mouseMoveEvent(QMouseEvent* e)
-//{
-//    updateCursor();
-//
-//
-//    if (e->buttons() != Qt::LeftButton) {
-//        return;
-//    }
-//
-//
-//    SideType mouseSide = m_activeSide;
-//    if (!m_activeSide) {
-//        //mouseSide = getMouseSide(e->pos());
-//        //mouseSide = getMouseSide(parentWidget()->mapFromGlobal(QCursor::pos()));
-//        mouseSide = getMouseSide(mapFromGlobal(e->pos()));
-//    }
-//
-//    //if (!isVisible() || !mouseSide) {
-//    //    show();
-//    //    m_dragStartPos = e->pos();
-//    //    m_activeSide = TOPLEFT_SIDE;
-//    //    setGeometry({ e->pos(), e->pos() });
-//    //}
-//
-//    //QPoint pos = e->pos();
-//    QPoint pos = parentWidget()->mapFromGlobal(QCursor::pos());
-//    auto geom = geometry();
-//
-//    QPoint newTopLeft = geom.topLeft(), 
-//           newBottomRight = geom.bottomRight();
-//
-//    int & newLeft = newTopLeft.rx(), 
-//        & newRight = newBottomRight.rx(),
-//        & newTop = newTopLeft.ry(), 
-//        & newBottom = newBottomRight.ry();
-//
-//    switch (mouseSide) 
-//    {
-//    case TOPLEFT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newTopLeft = pos;
-//        }
-//        break;
-//    case BOTTOMRIGHT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newBottomRight = pos;
-//        }
-//        break;
-//    case TOPRIGHT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newTop = pos.y();
-//            newRight = pos.x();
-//        }
-//        break;
-//    case BOTTOMLEFT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newBottom = pos.y();
-//            newLeft = pos.x();
-//        }
-//        break;
-//    case LEFT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newLeft = pos.x();
-//        }
-//        break;
-//    case RIGHT_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newRight = pos.x();
-//        }
-//        break;
-//    case TOP_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newTop = pos.y();
-//        }
-//        break;
-//    case BOTTOM_SIDE:
-//        if (m_activeSide) 
-//        {
-//            newBottom = pos.y();
-//        }
-//        break;
-//    default:
-//        if (m_activeSide) 
-//        {
-//            move(this->pos() + pos - m_dragStartPos);
-//            m_dragStartPos = pos;
-//        }
-//        return;
-//    }
-//    // finalize geometry change
-//    if (m_activeSide) 
-//    {
-//        geom = { newTopLeft, newBottomRight };
-//        if (this->minimumSize().width() == this->size().width() || this->minimumSize().height() == this->size().height())
-//        {
-//            if (previous_geom_.width() >= geom.width() && previous_geom_.height() >= geom.height())
-//            {
-//                previous_geom_ = this->rect();
-//            }
-//            else
-//            {
-//                //setGeometry(geom.normalized());
-//                previous_geom_ = geom;
-//                setGeometry(geom);
-//                m_activeSide = getProperSide(m_activeSide, geom);
-//            }
-//        }
-//        else
-//        {
-//            //setGeometry(geom.normalized());
-//            previous_geom_ = geom;
-//            setGeometry(geom);
-//            m_activeSide = getProperSide(m_activeSide, geom);
-//        }
-//    }
-//        //setGeometry(geom);
-//        //m_activeSide = getProperSide(m_activeSide, geom);
-//
-//    m_dragStartPos = pos;
-//}
 
 // helper function
 ScreenCaptureDialog::SideType ScreenCaptureDialog::getProperSide(ScreenCaptureDialog::SideType side, const QRect& r)
@@ -731,13 +490,11 @@ QRect ScreenCaptureDialog::rect() const
 QRect ScreenCaptureDialog::getCaptureArea()
 {
     auto tl = this->geometry().topLeft();
-    //auto tl = parentWidget()->mapFromGlobal(this->rect().topLeft());
     tl += m_TLArea.center() + m_handleOffset;
 
     auto br = this->geometry().bottomRight();
-    //auto br = parentWidget()->mapFromGlobal(this->rect().bottomRight());
     br += m_BRArea.center() + m_handleOffset;
 
     return QRect(tl, br);
-    return QRect(m_TLArea.center() + m_handleOffset, m_BRArea.center() + m_handleOffset);
+    //return QRect(m_TLArea.center() + m_handleOffset, m_BRArea.center() + m_handleOffset);
 }
