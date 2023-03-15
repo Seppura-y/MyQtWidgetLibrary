@@ -10,11 +10,12 @@
 #include <QPainter>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include <QString>
 
 #include <iostream>
 
 
-DialogTitle::DialogTitle(QWidget* parent) : QWidget(parent)
+DialogTitle::DialogTitle(QWidget* parent, const QString& title) : QWidget(parent)
 {
 	ui = new Ui::DialogTitle();
 	ui->setupUi(this);
@@ -23,6 +24,8 @@ DialogTitle::DialogTitle(QWidget* parent) : QWidget(parent)
 	ui->pb_close->setCursor(QCursor(Qt::PointingHandCursor));
 
 	ui->pb_close->raise();
+
+	ui->lb_title->setText(title);
 
 	initUi();
 

@@ -1,0 +1,40 @@
+DialogContentTabBase {
+    background-color: #1c1c1c;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+QLabel{
+    color: darkgray;
+}
+
+QCheckBox{
+    color: darkgray;
+    word-spacing: 5px;
+}
+
+QCheckBox:checked {
+    color: darkorange;
+    word-spacing: 5px;
+}
+
+
+QCheckBox::indicator {
+    width: 12px;
+    height: 12px;
+    border:2px solid darkgray;
+    border-radius:7px;
+    background-color: #1e1e1e;
+}
+
+QCheckBox::indicator:checked {
+    background-color: darkorange;
+    color: orange;
+}
+
+QLineEdit{
+    border:1px solid darkorange;
+    border-radius: 4px;
+    background-color: #1f1f1f;
+    color: darkgray;
+}

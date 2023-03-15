@@ -1,0 +1,32 @@
+QPushButton{
+    color: white;
+    background-color: black;
+    border-radius: 20px;
+
+}
+
+QPushButton:hover{
+    color: black; 
+    background-color:white;
+}
+
+QPushButton:pressed{
+    color: white;
+    background-color:lightgray;
+}
+
+QLabel {
+    color: white;
+    background-color: black;
+    border-radius: 20px;
+}
+
+QLabel:hover {
+    color: black;
+    background-color: white;
+}
+
+QLabel:pressed {
+    color: white;
+    background-color: lightgray;
+}

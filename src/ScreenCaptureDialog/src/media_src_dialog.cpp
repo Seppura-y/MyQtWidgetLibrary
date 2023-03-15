@@ -17,6 +17,9 @@
 #include <QDebug>
 #include <QScreen>
 #include <QMouseEvent>
+#include <QList>
+#include <QStyleOption>
+#include <QPainter>
 
 #include <sstream>
 
@@ -55,16 +58,45 @@ MediaSrcDialog::MediaSrcDialog(QWidget* parent) : QDialog(parent)
     initConnect();
 }
 
+MediaSrcDialog::~MediaSrcDialog()
+{
+    if (capture_tab_)
+    {
+        delete capture_tab_;
+    }
+    if (desktop_tab_)
+    {
+        delete desktop_tab_;
+    }
+    if (title_)
+    {
+        delete title_;
+    }
+    if (tab_)
+    {
+        delete tab_;
+    }
+
+}
+
+void MediaSrcDialog::paintEvent(QPaintEvent* ev)
+{
+    QStyleOption option;
+    option.init(this);
+    QPainter painter(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
+    QWidget::paintEvent(ev);
+}
+
 void MediaSrcDialog::initUI() 
 {
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/media_src_dialog.css"));
-    title_ = new DialogTitle(this);
-
-
     setAttribute(Qt::WA_TranslucentBackground);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 
-    setFixedSize(600, 500);
+    setFixedSize(600, 380);
+
+    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/media_src_dialog.css"));
+    title_ = new DialogTitle(this, "Please select a media source");
 
     QPushButton* pb_open = new QPushButton();
     QPushButton* pb_cancel = new QPushButton();
@@ -75,49 +107,30 @@ void MediaSrcDialog::initUI()
     pb_cancel->setText("cancel");
 
     QHBoxLayout* pb_layout = new QHBoxLayout();
+    pb_layout->setSizeConstraint(QLayout::SetMaximumSize);
     pb_layout->addSpacerItem(new QSpacerItem(150, 20, QSizePolicy::Expanding, QSizePolicy::Expanding));
     pb_layout->addWidget(pb_open);
     pb_layout->addWidget(pb_cancel);
     QObject::connect(pb_open, &QPushButton::clicked, this, &QDialog::accept);
     QObject::connect(pb_cancel, &QPushButton::clicked, this, &QDialog::reject);
 
-    //QDialogButtonBox* btns = new QDialogButtonBox(QDialogButtonBox::Open | QDialogButtonBox::Cancel);
-    //connect(btns, &QDialogButtonBox::accepted, this, &MediaSrcDialog::accept);
-    //connect(btns, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    tab_ = new MyTabWidget();
+    desktop_tab_ = new DesktopTab(0);
+    capture_tab_ = new CaptureTab(1);
 
-    desktop_tab_ = new DesktopTab();
-
-    tab = new MyTabWidget(this);
-    //tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    capture_tab_->setStyleSheet("DialogContentTabBase{border-top-left-radius: #1c1c1c;}");
 
     //tab->addTab(new FileTab, QIcon(":/image/file.png"), tr("File"));
-    tab->addTab(new CaptureTab, tr("Webcam"));
-    tab->addTab(desktop_tab_, tr("Desktop"));
+    tab_->addTab(capture_tab_, tr("Camera"));
+    tab_->addTab(desktop_tab_, tr("Desktop"));
     //tab->addTab(new CaptureTab(nullptr, CAP_TYPE_AUDIO), QIcon(":/image/capture.png"), tr("ACapture"));
-
-    //tab->setCurrentIndex(g_confile->Get<int>("last_tab", "media", DEFAULT_MEDIA_TYPE));
-
-
-    //vbox->addWidget(tab);
-    //vbox->addWidget(btns);
-    QWidget* wid = new QWidget();
-    wid->setFixedSize(this->width(), this->height() - title_->height());
-    //wid->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/media_src_dialog.css"));
-    QVBoxLayout* content_layout = new QVBoxLayout;
-    content_layout->setContentsMargins(0, 0, 0, 0);
-    content_layout->setSpacing(0);
-    content_layout->addWidget(tab);
-    //content_layout->addLayout(&pb_layout);
-    //content_layout->addWidget(btns);
-    wid->setLayout(content_layout);
 
     QVBoxLayout* vbox = new QVBoxLayout();
     vbox->setContentsMargins(0, 0, 0, 0);
     vbox->setSpacing(0);
     vbox->addWidget(title_);
-    vbox->addWidget(wid);
-    vbox->addLayout(pb_layout);
-    //vbox->addItem(pb_layout);
+    vbox->addWidget(tab_,1);
+    vbox->addLayout(pb_layout,0);
     this->setLayout(vbox);
 
     QObject::connect(desktop_tab_, &DesktopTab::sigDeskTopTabProcessingScreenCap, this, [this] {emit sigMediaDialogProcessScreenCap(); qDebug() << " "; this->showMinimized(); });
@@ -136,10 +149,6 @@ void MediaSrcDialog::mousePressEvent(QMouseEvent* ev)
         left_bt_pressed_ = true;
         mouse_drag_point_ = ev->pos();
     }
-    //else
-    //{
-    //    return QMainWindow::mousePressEvent(ev);
-    //}
     return QDialog::mousePressEvent(ev);
 }
 
@@ -149,16 +158,12 @@ void MediaSrcDialog::mouseMoveEvent(QMouseEvent* ev)
     {
         this->move(ev->globalPos() - mouse_drag_point_);
     }
-    else
-    {
-        return QDialog::mouseMoveEvent(ev);
-    }
     return QDialog::mouseMoveEvent(ev);
 }
 
 void MediaSrcDialog::accept() 
 {
-    switch (tab->currentIndex()) 
+    switch (tab_->currentIndex())
     {
         //case MEDIA_TYPE_FILE:
         //{
@@ -236,287 +241,290 @@ void MediaSrcDialog::accept()
 //}
 
 
-FileTab::FileTab(QWidget* parent) : QWidget(parent) 
-{
-    QVBoxLayout* vbox = new QVBoxLayout;
-
-    vbox->addStretch();
-    vbox->addWidget(new QLabel(tr("File:")));
-
-    QHBoxLayout* hbox = new QHBoxLayout;
-    edit = new QLineEdit;
-    //std::string str = g_confile->GetValue("last_file_source", "media");
-    //if (!str.empty()) {
-    //    edit->setText(QString::fromUtf8(str.c_str()));
-    //}
-    hbox->addWidget(edit);
-    btnBrowse = new QPushButton("...");
-    connect(btnBrowse, &QPushButton::clicked, this, 
-        [=]() 
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Open Meida File"), "",
-                "Video Files(*.3gp *.amv *.asf *.avi *.flv *.m2v *.m4v *.mkv *.mp2 *.mp4 *.mpg *.swf *.ts *.rmvb *.wmv)\n"
-                "All Files(*)");
-            if (!file.isEmpty()) 
-            {
-                edit->setText(file);
-            }
-        }
-    );
-    hbox->addWidget(btnBrowse);
-
-    vbox->addLayout(hbox);
-    vbox->addStretch();
-
-    setLayout(vbox);
-}
-
-
-CaptureTab::CaptureTab(QWidget* parent, capture_type type) : QWidget(parent), cap_type_(type) 
-{
-    //QVBoxLayout* vbox = new QVBoxLayout;
-
-    //vbox->addStretch();
-    //vbox->addWidget(new QLabel(tr("Device:")));
-
-    //cb_dev_name_ = new QComboBox;
-    //cb_dev_resolution_ = new QComboBox;
-
-    //std::vector<CaptureDevice> devs;
-    //if (cap_type_ == CAP_TYPE_VIDEO)
-    //    //devs = getVideoCaptureDevices();
-    //    devs = CaptureDevice::getInstance()->getVideoDevicesList();
-    //else{}
-    //    //devs = getAudioCaptureDevices();
-
-    ////for (int i = 0; i < devs.size(); ++i) 
-    ////{
-    ////    cmb->addItem(devs[i].name);
-    ////}
-    //    for (auto it : devs)
-    //    {
-    //        cb_dev_name_->addItem(it.name);
-    //        for (auto i : it.properties_list)
-    //        {
-    //            QString str_pix_fmt;
-    //            for (auto fmt : ImageFormatTable)
-    //            {
-    //                if (fmt.directshowFormat == i.pixelFormat)
-    //                {
-    //                    str_pix_fmt = QString(fmt.name.c_str());
-    //                }
-    //            }
-    //            QString s = QString("%1x%2@%3").arg(i.width).arg(i.height).arg(str_pix_fmt);
-    //            cb_dev_resolution_->addItem(s);
-    //        }
-    //    }
-
-    //vbox->addWidget(cb_dev_name_);
-    //vbox->addStretch();
-    //vbox->addWidget(cb_dev_resolution_);
-
-
-    //setLayout(vbox);
-}
-
-DesktopTab::DesktopTab(QWidget* parent, capture_type type)
-{
-    ui.setupUi(this);
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/camera_menu.css"));
-
-    auto screen = QGuiApplication::primaryScreen();
-    screen_rect_ = screen->geometry();
-
-    group_type_ = new QButtonGroup(this);
-    group_type_->setExclusive(true);
-    
-    ck_dxgi_ = ui.ck_dxgi;
-    ck_dshow_ = ui.ck_dshow;
-    ck_gdi_ = ui.ck_gdi;
-
-    group_type_->addButton(ck_dxgi_);
-    group_type_->addButton(ck_dshow_);
-    group_type_->addButton(ck_gdi_);
-    ck_dxgi_->setChecked(true);
-
-    group_size_ = new QButtonGroup(this);
-    group_size_->setExclusive(true);
-
-    ck_capture_area_ = ui.ck_capture_area;
-    ck_full_screen_ = ui.ck_full_screen;
-    group_size_->addButton(ck_capture_area_);
-    group_size_->addButton(ck_full_screen_);
-    ck_full_screen_->setChecked(true);
-
-    le_width_ = ui.le_width;
-    //le_width_->setMaximumSize(100, 50);
-
-    le_height_ = ui.le_height;
-    //le_height_->setMaximumSize(100, 50);
-
-    le_x_ = ui.le_x;
-    le_y_ = ui.le_y;
-
-//    cb_dev_name_ = new QComboBox;
-//    cb_dev_resolution_ = new QComboBox;
+//FileTab::FileTab(QWidget* parent) : QWidget(parent) 
+//{
+//    QVBoxLayout* vbox = new QVBoxLayout;
 //
-//    std::vector<CaptureDevice> devs;
-//    if (cap_type_ == CAP_TYPE_VIDEO)
-//        //devs = getVideoCaptureDevices();
-//        devs = CaptureDevice::getInstance()->getVideoDevicesList();
-//    else {}
-//    //devs = getAudioCaptureDevices();
+//    vbox->addStretch();
+//    vbox->addWidget(new QLabel(tr("File:")));
 //
-////for (int i = 0; i < devs.size(); ++i) 
-////{
-////    cmb->addItem(devs[i].name);
-////}
-//    for (auto it : devs)
-//    {
-//        cb_dev_name_->addItem(it.name);
-//        for (auto i : it.properties_list)
+//    QHBoxLayout* hbox = new QHBoxLayout;
+//    edit = new QLineEdit;
+//    //std::string str = g_confile->GetValue("last_file_source", "media");
+//    //if (!str.empty()) {
+//    //    edit->setText(QString::fromUtf8(str.c_str()));
+//    //}
+//    hbox->addWidget(edit);
+//    btnBrowse = new QPushButton("...");
+//    connect(btnBrowse, &QPushButton::clicked, this, 
+//        [=]() 
 //        {
-//            QString str_pix_fmt;
-//            for (auto fmt : ImageFormatTable)
+//            QString file = QFileDialog::getOpenFileName(this, tr("Open Meida File"), "",
+//                "Video Files(*.3gp *.amv *.asf *.avi *.flv *.m2v *.m4v *.mkv *.mp2 *.mp4 *.mpg *.swf *.ts *.rmvb *.wmv)\n"
+//                "All Files(*)");
+//            if (!file.isEmpty()) 
 //            {
-//                if (fmt.directshowFormat == i.pixelFormat)
-//                {
-//                    str_pix_fmt = QString(fmt.name.c_str());
-//                }
+//                edit->setText(file);
 //            }
-//            QString s = QString("%1x%2@%3").arg(i.width).arg(i.height).arg(str_pix_fmt);
-//            cb_dev_resolution_->addItem(s);
+//        }
+//    );
+//    hbox->addWidget(btnBrowse);
+//
+//    vbox->addLayout(hbox);
+//    vbox->addStretch();
+//
+//    setLayout(vbox);
+//}
+//
+//
+//CaptureTab::CaptureTab(int tab_index, QWidget* parent, capture_type type) : QWidget(parent), cap_type_(type) 
+//{
+//    tab_index_ = tab_index;
+//    //QVBoxLayout* vbox = new QVBoxLayout;
+//
+//    //vbox->addStretch();
+//    //vbox->addWidget(new QLabel(tr("Device:")));
+//
+//    //cb_dev_name_ = new QComboBox;
+//    //cb_dev_resolution_ = new QComboBox;
+//
+//    //std::vector<CaptureDevice> devs;
+//    //if (cap_type_ == CAP_TYPE_VIDEO)
+//    //    //devs = getVideoCaptureDevices();
+//    //    devs = CaptureDevice::getInstance()->getVideoDevicesList();
+//    //else{}
+//    //    //devs = getAudioCaptureDevices();
+//
+//    ////for (int i = 0; i < devs.size(); ++i) 
+//    ////{
+//    ////    cmb->addItem(devs[i].name);
+//    ////}
+//    //    for (auto it : devs)
+//    //    {
+//    //        cb_dev_name_->addItem(it.name);
+//    //        for (auto i : it.properties_list)
+//    //        {
+//    //            QString str_pix_fmt;
+//    //            for (auto fmt : ImageFormatTable)
+//    //            {
+//    //                if (fmt.directshowFormat == i.pixelFormat)
+//    //                {
+//    //                    str_pix_fmt = QString(fmt.name.c_str());
+//    //                }
+//    //            }
+//    //            QString s = QString("%1x%2@%3").arg(i.width).arg(i.height).arg(str_pix_fmt);
+//    //            cb_dev_resolution_->addItem(s);
+//    //        }
+//    //    }
+//
+//    //vbox->addWidget(cb_dev_name_);
+//    //vbox->addStretch();
+//    //vbox->addWidget(cb_dev_resolution_);
+//
+//
+//    //setLayout(vbox);
+//}
+//
+//
+//DesktopTab::DesktopTab(int tab_index, QWidget* parent, capture_type type)
+//{
+//    tab_index_ = tab_index;
+//    ui.setupUi(this);
+//    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/my_tabwidget.css"));
+//
+//    auto screen = QGuiApplication::primaryScreen();
+//    screen_rect_ = screen->geometry();
+//
+//    group_type_ = new QButtonGroup(this);
+//    group_type_->setExclusive(true);
+//    
+//    ck_dxgi_ = ui.ck_dxgi;
+//    ck_dshow_ = ui.ck_dshow;
+//    ck_gdi_ = ui.ck_gdi;
+//
+//    group_type_->addButton(ck_dxgi_);
+//    group_type_->addButton(ck_dshow_);
+//    group_type_->addButton(ck_gdi_);
+//    ck_dxgi_->setChecked(true);
+//
+//    group_size_ = new QButtonGroup(this);
+//    group_size_->setExclusive(true);
+//
+//    ck_capture_area_ = ui.ck_capture_area;
+//    ck_full_screen_ = ui.ck_full_screen;
+//    group_size_->addButton(ck_capture_area_);
+//    group_size_->addButton(ck_full_screen_);
+//    ck_full_screen_->setChecked(true);
+//
+//    le_width_ = ui.le_width;
+//    //le_width_->setMaximumSize(100, 50);
+//
+//    le_height_ = ui.le_height;
+//    //le_height_->setMaximumSize(100, 50);
+//
+//    le_x_ = ui.le_x;
+//    le_y_ = ui.le_y;
+//
+////    cb_dev_name_ = new QComboBox;
+////    cb_dev_resolution_ = new QComboBox;
+////
+////    std::vector<CaptureDevice> devs;
+////    if (cap_type_ == CAP_TYPE_VIDEO)
+////        //devs = getVideoCaptureDevices();
+////        devs = CaptureDevice::getInstance()->getVideoDevicesList();
+////    else {}
+////    //devs = getAudioCaptureDevices();
+////
+//////for (int i = 0; i < devs.size(); ++i) 
+//////{
+//////    cmb->addItem(devs[i].name);
+//////}
+////    for (auto it : devs)
+////    {
+////        cb_dev_name_->addItem(it.name);
+////        for (auto i : it.properties_list)
+////        {
+////            QString str_pix_fmt;
+////            for (auto fmt : ImageFormatTable)
+////            {
+////                if (fmt.directshowFormat == i.pixelFormat)
+////                {
+////                    str_pix_fmt = QString(fmt.name.c_str());
+////                }
+////            }
+////            QString s = QString("%1x%2@%3").arg(i.width).arg(i.height).arg(str_pix_fmt);
+////            cb_dev_resolution_->addItem(s);
+////        }
+////    }
+////
+////    vbox->addWidget(cb_dev_name_);
+////    vbox->addStretch();
+////    vbox->addWidget(cb_dev_resolution_);
+//
+//
+//    //setLayout(vbox);
+//    connectSignals();
+//}
+//
+//void DesktopTab::connectSignals()
+//{
+//    //QObject::connect(ck_capture_area_, SIGNAL(stateChanged(int)), this, SLOT(onCaptureAreaChecked(int)));
+//    QObject::connect(ck_full_screen_, &QCheckBox::stateChanged, this, 
+//        [this] 
+//        {        
+//            std::stringstream stream;
+//            stream << screen_rect_.x();
+//            le_x_->setText(stream.str().c_str());
+//            //stream.clear();
+//            stream.str("");
+//
+//            stream << screen_rect_.y();
+//            le_y_->setText(stream.str().c_str());
+//            stream.str("");
+//
+//            stream << screen_rect_.width();
+//            le_width_->setText(stream.str().c_str());
+//            stream.str("");
+//
+//            stream << screen_rect_.height();
+//            le_height_->setText(stream.str().c_str());
+//            stream.str("");
+//            le_x_->setDisabled(true);
+//            le_y_->setDisabled(true);
+//            le_width_->setDisabled(true);
+//            le_height_->setDisabled(true); 
+//        });
+//    //QObject::connect(group_size_, SIGNAL(idClicked(int)), this, SLOT(onCaptureAreaChecked(int)));
+//}
+//
+//void DesktopTab::onCaptureAreaChecked(int index)
+////void DesktopTab::onCaptureAreaChecked()
+//{
+//    if (!ck_capture_area_->isChecked())
+//    {
+//        return;
+//    }
+//
+//    le_x_->setDisabled(false);
+//    le_y_->setDisabled(false);
+//    le_width_->setDisabled(false);
+//    le_height_->setDisabled(false);
+//
+//    ScreenCaptureDialog* dia = new ScreenCaptureDialog();
+//    Qt::WindowFlags flag = dia->windowFlags();
+//    dia->setWindowFlags(flag | Qt::MSWindowsFixedSizeDialogHint);
+//    emit sigDeskTopTabProcessingScreenCap();
+//    QObject::connect(dia, &ScreenCaptureDialog::accepted, this, [this] {qDebug() << "tab fin"; emit sigDeskTopTabProcessingScreenCapFinshed(); /*this->setVisible(true);*/ });
+//    QObject::connect(dia, &ScreenCaptureDialog::rejected, this, [this] {qDebug() << "tab fin"; emit sigDeskTopTabProcessingScreenCapFinshed(); /*this->setVisible(true);*/ });
+//    for (;;)
+//    {
+//        if (dia->exec() == QDialog::Accepted)
+//        {
+//            auto r = dia->getCaptureArea();
+//            std::stringstream stream;
+//            stream << r.x();
+//            le_x_->setText(stream.str().c_str());
+//            //stream.clear();
+//            stream.str("");
+//
+//            stream << r.y();
+//            le_y_->setText(stream.str().c_str());
+//            stream.str("");
+//
+//            stream << r.width();
+//            le_width_->setText(stream.str().c_str());
+//            stream.str("");
+//
+//            stream << r.height();
+//            le_height_->setText(stream.str().c_str());
+//            stream.str("");
+//
+//            qDebug() << "rect : " << r.x() << " , " << r.y() << " , " << r.width() << " : " << r.height();
+//            break;
+//        }
+//        else if (dia->close())
+//        {
+//
+//            return;
 //        }
 //    }
 //
-//    vbox->addWidget(cb_dev_name_);
-//    vbox->addStretch();
-//    vbox->addWidget(cb_dev_resolution_);
-
-
-    //setLayout(vbox);
-    connectSignals();
-}
-
-void DesktopTab::connectSignals()
-{
-    //QObject::connect(ck_capture_area_, SIGNAL(stateChanged(int)), this, SLOT(onCaptureAreaChecked(int)));
-    QObject::connect(ck_full_screen_, &QCheckBox::stateChanged, this, 
-        [this] 
-        {        
-            std::stringstream stream;
-            stream << screen_rect_.x();
-            le_x_->setText(stream.str().c_str());
-            //stream.clear();
-            stream.str("");
-
-            stream << screen_rect_.y();
-            le_y_->setText(stream.str().c_str());
-            stream.str("");
-
-            stream << screen_rect_.width();
-            le_width_->setText(stream.str().c_str());
-            stream.str("");
-
-            stream << screen_rect_.height();
-            le_height_->setText(stream.str().c_str());
-            stream.str("");
-            le_x_->setDisabled(true);
-            le_y_->setDisabled(true);
-            le_width_->setDisabled(true);
-            le_height_->setDisabled(true); 
-        });
-    //QObject::connect(group_size_, SIGNAL(idClicked(int)), this, SLOT(onCaptureAreaChecked(int)));
-}
-
-void DesktopTab::onCaptureAreaChecked(int index)
-//void DesktopTab::onCaptureAreaChecked()
-{
-    if (!ck_capture_area_->isChecked())
-    {
-        return;
-    }
-
-    le_x_->setDisabled(false);
-    le_y_->setDisabled(false);
-    le_width_->setDisabled(false);
-    le_height_->setDisabled(false);
-
-    ScreenCaptureDialog* dia = new ScreenCaptureDialog();
-    Qt::WindowFlags flag = dia->windowFlags();
-    dia->setWindowFlags(flag | Qt::MSWindowsFixedSizeDialogHint);
-    emit sigDeskTopTabProcessingScreenCap();
-    QObject::connect(dia, &ScreenCaptureDialog::accepted, this, [this] {qDebug() << "tab fin"; emit sigDeskTopTabProcessingScreenCapFinshed(); /*this->setVisible(true);*/ });
-    QObject::connect(dia, &ScreenCaptureDialog::rejected, this, [this] {qDebug() << "tab fin"; emit sigDeskTopTabProcessingScreenCapFinshed(); /*this->setVisible(true);*/ });
-    for (;;)
-    {
-        if (dia->exec() == QDialog::Accepted)
-        {
-            auto r = dia->getCaptureArea();
-            std::stringstream stream;
-            stream << r.x();
-            le_x_->setText(stream.str().c_str());
-            //stream.clear();
-            stream.str("");
-
-            stream << r.y();
-            le_y_->setText(stream.str().c_str());
-            stream.str("");
-
-            stream << r.width();
-            le_width_->setText(stream.str().c_str());
-            stream.str("");
-
-            stream << r.height();
-            le_height_->setText(stream.str().c_str());
-            stream.str("");
-
-            qDebug() << "rect : " << r.x() << " , " << r.y() << " , " << r.width() << " : " << r.height();
-            break;
-        }
-        else if (dia->close())
-        {
-
-            return;
-        }
-    }
-
-}
-
-DesktopTab::~DesktopTab()
-{
-    if (group_type_)
-    {
-        delete group_type_;
-    }
-
-    if (ck_dshow_)
-    {
-        delete ck_dshow_;
-    }
-
-    if (ck_dxgi_)
-    {
-        delete ck_dxgi_;
-    }
-
-    if (ck_gdi_)
-    {
-        delete ck_gdi_;
-    }
-
-    if (group_size_)
-    {
-        delete group_size_;
-    }
-
-    if (ck_full_screen_)
-    {
-        delete ck_full_screen_;
-    }
-
-    if (ck_capture_area_)
-    {
-        delete ck_capture_area_;
-    }
-}
+//}
+//
+//DesktopTab::~DesktopTab()
+//{
+//    if (group_type_)
+//    {
+//        delete group_type_;
+//    }
+//
+//    if (ck_dshow_)
+//    {
+//        delete ck_dshow_;
+//    }
+//
+//    if (ck_dxgi_)
+//    {
+//        delete ck_dxgi_;
+//    }
+//
+//    if (ck_gdi_)
+//    {
+//        delete ck_gdi_;
+//    }
+//
+//    if (group_size_)
+//    {
+//        delete group_size_;
+//    }
+//
+//    if (ck_full_screen_)
+//    {
+//        delete ck_full_screen_;
+//    }
+//
+//    if (ck_capture_area_)
+//    {
+//        delete ck_capture_area_;
+//    }
+//}

@@ -5,46 +5,28 @@ QDialog
     border-radius: 10px;
 }
 
-QWidget {
-    background-color: #2e3137;
+.MediaSrcDialog {
+    background-color: #2e2e2e;
 }
 
+/*QWidget {
+    background-color: #2e2e2e;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+*/
 
-DialogTitle 
-{
+DialogTitle {
     background-color: #2e3137;
     border: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-}
-
-QTabBar::tab {
-    color: silver;
-    background: #2e3137;
-    border: none;
-    font-family: Ubuntu;
-    font-size: 12px;
-}
-
-QTabBar::groove {
-    color: silver;
-    background: #2e3137;
-}
-
-QTabBar::tab:first {
-    border-top-left-radius: 0px;
-}
-
-QTabBar::tab:last {
-    border-top-right-radius: 0px;
-}
-
-QTabBar::tab:selected, QTabBar::tab:hover {
-    color: orange;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
 QPushButton {
-    background-color: black;
+    background-color: #1e1e1e;
     border-color: orange;
     color: white;
     font-family: Ubuntu;

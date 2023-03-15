@@ -14,7 +14,7 @@ class DialogTitle : public QWidget
 	Q_OBJECT
 
 public:
-	explicit DialogTitle(QWidget* parent = Q_NULLPTR);
+	explicit DialogTitle(QWidget* parent = nullptr, const QString& title = QString(""));
 	~DialogTitle();
 
 	void initUi();
