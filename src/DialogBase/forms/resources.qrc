@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>res/css/screen_capture_dialog.css</file>
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/css/button.css</file>
+        <file>res/css/slider.css</file>
+        <file>res/css/dialog_title.css</file>
+        <file>res/css/camera_menu.css</file>
+        <file>res/css/my_tabwidget.css</file>
+        <file>res/css/dialog_content.css</file>
+        <file>res/css/dialog_base.css</file>
+        <file>res/css/media_src_dialog.css</file>
+    </qresource>
+</RCC>

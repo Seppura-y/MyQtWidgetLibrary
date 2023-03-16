@@ -2,9 +2,13 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QPushButton>
+#include <QFormLayout>
+#include <QMessageBox>
 
 #include "media_src_dialog.h"
 #include "config_helper.h"
+
+#include "dialog_base.h"
 
 
 RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
@@ -21,22 +25,24 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
     pb->setFixedSize(32, 32);
     pb->setText("Open");
     pb->move(this->width(), this->height());
-    pb->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/screen_capture_dialog/res/css/button.css"));
+    pb->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/resources/res/css/button.css"));
 
     QObject::connect(pb, &QPushButton::clicked, [=]
         {
 
-            MediaSrcDialog* dialog = new MediaSrcDialog();
+            MediaFileDialog* dialog = new MediaFileDialog();
             for (;;)
             {
                 if (dialog->exec() == QDialog::Accepted)
                 {
-                    break;
+                    qDebug() << "accepted";
                 }
                 else if (dialog->close())
                 {
-                    break;
+                    qDebug() << "close";
                 }
+                delete dialog;
+                break;
             }
         }
     );

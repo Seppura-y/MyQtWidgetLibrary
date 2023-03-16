@@ -1,0 +1,39 @@
+QTabBar {
+    qproperty-drawBase: 0;
+}
+
+QTabBar::tab {
+    color: silver;
+    background: #2e3137;
+    border: none;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-family: Ubuntu;
+    font-size: 12px;
+}
+
+
+QTabBar::tab:first {
+    border-top-left-radius: 0px;
+}
+
+QTabBar::tab:last {
+    /*border-top-right-radius: 0px;*/
+}
+
+
+QTabBar::tab:selected {
+    color: orange;
+    background-color: #1c1c1c;
+}
+
+QTabBar::tab:hover {
+    color: darkorange;
+    background-color: #444444;
+}
+
+DialogContentTabBase {
+    background-color: #1c1c1c;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}

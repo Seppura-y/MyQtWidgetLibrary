@@ -15,6 +15,9 @@ set(PROJECT_TITLE                   FALSE CACHE BOOL "add project title ?")
 set(PROJECT_MAIN_WIDGET             FALSE CACHE BOOL "add project main widget ?")
 set(PROJECT_CAMERA_MENU             FALSE CACHE BOOL "add project camera menu ?")
 set(PROJECT_SCREEN_CAPTURE_DIALOG   FALSE CACHE BOOL "add project screen capture dialog ?")
+set(PROJECT_DISPLAY_WIDGET          FALSE CACHE BOOL "add project display widget ?")
+set(PROJECT_PLAYER_BASE             FALSE CACHE BOOL "add project player base ?")
+set(PROJECT_DIALOG_BASE             FALSE CACHE BOOL "add project dialog base ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -45,13 +48,24 @@ if(PROJECT_MAIN_WIDGET)
 endif()
 
 if(PROJECT_CAMERA_MENU)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CameraMenu)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CameraMenu2)
 endif()
 
 if(PROJECT_SCREEN_CAPTURE_DIALOG)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ScreenCaptureDialog)
 endif()
 
+if(PROJECT_DISPLAY_WIDGET)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DisplayWidget)
+endif()
+
+if(PROJECT_PLAYER_BASE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/PlayerBase)
+endif()
+
+if(PROJECT_DIALOG_BASE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DialogBase)
+endif()
 
 if(STARTUP_PROJ)
     set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUP_PROJ})

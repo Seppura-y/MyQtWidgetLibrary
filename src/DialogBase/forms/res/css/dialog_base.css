@@ -1,0 +1,50 @@
+*{
+    font-family: Consolas;
+    font-size: 16px;
+}
+
+QDialog 
+{
+    color: white;
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 8px;
+}
+
+
+DialogTitle {
+    color: white;
+    background-color: #2e3137;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+QPushButton {
+    color: darkorange;
+    background-color: #1e1e1e;
+    border-style: outset;
+    border-width: 1px;
+/*    border-color: #FF8033;*/
+    border-radius: 8px;
+    font-family: Consolas;
+    font-size: 16px;
+}
+
+QPushButton:hover {
+    color: orange;
+    background-color: #3a3a3a;
+    border-style: outset;
+    border-width: 1px;
+    border-color: orange;
+}
+
+QPushButton:pressed {
+    color: darkorange;
+    background-color: #1e1e1e;
+    border-style: outset;
+    border-width: 1px;
+    border-color: darkorange;
+}
