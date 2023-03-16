@@ -52,6 +52,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src/config
     ${CMAKE_CURRENT_LIST_DIR}/src/tabs
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs
+    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu
 )
 
 include_directories(${FORMS_DIR})
@@ -89,6 +90,14 @@ FILE(GLOB ${PROJECT_NAME}_DIALOG_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs/*.h
 )
 
+FILE(GLOB ${PROJECT_NAME}_PLAYER_MENU_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu/*.cpp
+)
+
+FILE(GLOB ${PROJECT_NAME}_PLAYER_MENU_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu/*.h
+)
+
 FILE(GLOB ${PROJECT_NAME}_CSS_FILES
     ${CMAKE_CURRENT_LIST_DIR}/forms/res/css/*.css
 )
@@ -120,6 +129,10 @@ source_group("Source Files//tabs" FILES ${${PROJECT_NAME}_TAB_SOURCES})
 source_group("Header Files//dialogs" FILES ${${PROJECT_NAME}_DIALOG_HEADERS})
 source_group("Source Files//dialogs" FILES ${${PROJECT_NAME}_DIALOG_SOURCES})
 
+source_group("Header Files//dialogs" FILES ${${PROJECT_NAME}_PLAYER_MENU_HEADERS})
+source_group("Source Files//dialogs" FILES ${${PROJECT_NAME}_PLAYER_MENU_SOURCES})
+
+
 #========================================= SETUP EXECTUABLE =========================================#
 # Enable debug logging on RELWITHDEBINFO configuration
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
@@ -146,6 +159,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_DIALOG_HEADERS}
         ${${PROJECT_NAME}_DIALOG_SOURCES}
+
+        ${${PROJECT_NAME}_PLAYER_MENU_HEADERS}
+        ${${PROJECT_NAME}_PLAYER_MENU_SOURCES}
 
         ${${PROJECT_NAME}_CSS_FILES}
 

@@ -8,5 +8,7 @@
         <file>res/fonts/Font Awesome 6 Duotone-Solid-900.otf</file>
         <file>res/css/main_widget.css</file>
         <file>res/css/title.css</file>
+        <file>res/css/display_widget.css</file>
+        <file>res/css/volume_button.css</file>
     </qresource>
 </RCC>

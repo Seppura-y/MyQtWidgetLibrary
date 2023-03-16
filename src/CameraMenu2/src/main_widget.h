@@ -13,7 +13,7 @@
 class MenuBar;
 class Title;
 class CameraMenu;
-class PanelWidget;
+class DisplayWidget;
 class QHBoxLayout;
 class QPushButton;
 
@@ -61,7 +61,7 @@ private:
     QPushButton* menu_extend_bt_ = nullptr;
     bool is_cam_menu_extend_ = true;
 
-    QWidget* panel_widget_ = nullptr;
+    DisplayWidget* display_widget_ = nullptr;
 
     ////////////////////////////////////////////////////////////////////
     //nativeEvent

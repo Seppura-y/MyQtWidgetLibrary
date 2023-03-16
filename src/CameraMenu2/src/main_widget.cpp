@@ -21,7 +21,8 @@
 #include "title.h"
 // #include "media_manager_gui_class.h"
 #include "menu_bar.h"
- #include "camera_menu.h"
+#include "camera_menu.h"
+#include "display_widget.h"
 // #include "mybutton.h"
 // #include "panel_widget.h"
 
@@ -376,7 +377,7 @@ void MainWidget::initMainWidget()
     //w->setAutoFillBackground(true);
     //w->setPalette(palette);
 
-    panel_widget_ = new QWidget;
+    display_widget_ = new DisplayWidget();
     //panel_widget_->setAutoFillBackground(true);
     //panel_widget_->setPalette(palette);
 
@@ -386,7 +387,7 @@ void MainWidget::initMainWidget()
     main_wid_layout_->addWidget(cam_menu_);
     main_wid_layout_->addWidget(wid);
     //main_wid_layout_->addWidget(w);
-    main_wid_layout_->addWidget(panel_widget_);
+    main_wid_layout_->addWidget(display_widget_);
 
     ui.main_wid->setLayout(main_wid_layout_);
 
