@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>res/css/slider.css</file>
+        <file>res/icons/audio_open.svg</file>
+        <file>res/icons/audio_open_hover.svg</file>
+        <file>res/css/button.css</file>
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/css/control_bar.css</file>
+    </qresource>
+</RCC>
