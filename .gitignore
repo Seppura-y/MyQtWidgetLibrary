@@ -23,6 +23,7 @@
 */assets/icons
 */vendor/
 */res
+/dependencies/*
 
 # Donut files
 *.log
