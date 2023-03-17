@@ -31,7 +31,7 @@ struct ImageFormatRow
 
 DialogContentBase::DialogContentBase(QWidget* parent) : QWidget(parent)
 {
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/dialog_content.css"));
+    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/dialog_base.css"));
 }
 
 void DialogContentBase::paintEvent(QPaintEvent* ev)
@@ -80,6 +80,7 @@ FileTab::FileTab(QWidget* parent) : DialogContentBase(parent)
             if (!file.isEmpty()) 
             {
                 le_path_->setText(file);
+                emit sigAcceptFilePath(file);
             }
         }
     );

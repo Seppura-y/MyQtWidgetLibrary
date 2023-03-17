@@ -74,6 +74,10 @@ void CameraMenu::initUi()
     ui.pb_set->setText(QChar(0xf304));
     ui.pb_del->setText(QChar(0xf65f));
 
+    //ui.pb_add->setFixedHeight(50);
+    //ui.pb_set->setFixedHeight(50);
+    //ui.pb_del->setFixedHeight(50);
+
     lw_camera_ = new ItemListWidget(0);
     //lw_camera_->setViewMode(QListView::ListMode);
     //lw_camera_->setDragDropMode(QAbstractItemView::InternalMove);

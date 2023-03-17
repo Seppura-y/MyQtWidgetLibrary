@@ -35,7 +35,9 @@ class FileTab : public DialogContentBase
 public:
     explicit FileTab(QWidget* parent = nullptr);
 
-public:
+signals:
+    void sigAcceptFilePath(QString);
+private:
     QLineEdit* le_path_;
     QPushButton* pb_open_;
 };

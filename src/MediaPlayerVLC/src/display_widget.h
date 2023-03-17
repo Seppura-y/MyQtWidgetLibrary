@@ -17,6 +17,7 @@ class QAbstractButton;
 class QPropertyAnimation;
 class VolumeButton;
 class RenderWidget;
+class ControlBar;
 
 class DisplayWidget : public QWidget
 {
@@ -36,6 +37,7 @@ private:
 	void initTitle();
 	void initContent();
 	void initToolBar();
+	void initControlBar();
 
 private slots:
 	void onPanelChanged(bool is_checked);
@@ -73,7 +75,10 @@ private:
 	int last_split_id_ = 0;
 	//////////////////////Render Widget//////////////////////
 	RenderWidget* render_widget_ = nullptr;
-	bool is_displaying_ = false;
+	bool is_playing_ = false;
+
+
+	ControlBar* control_bar_ = nullptr;
 	
 	////////////////////////canvas/////////////////////////////
 	//CanvasWidget* canvas_wid_ = nullptr;

@@ -18,6 +18,8 @@
 #include "config_helper.h"
 #include "volume_button.h"
 #include "render_widget.h"
+#include "control_bar.h"
+
 //#include "camera_menu.h"
 //#include "item_listwidget.h"
 
@@ -27,9 +29,10 @@ DisplayWidget::DisplayWidget(QWidget *parent)
 	ui.setupUi(this);
 	this->setAcceptDrops(true);
 
-	initToolBar();
 	initTitle();
 	initContent();
+	//initToolBar();
+	initControlBar();
 
 	this->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/display_widget.css"));
 }
@@ -48,6 +51,12 @@ DisplayWidget::~DisplayWidget()
 	// 	delete canvas_view_;
 	// 	canvas_view_ = nullptr;
 	// }
+
+	if (control_bar_)
+	{
+		delete control_bar_;
+		control_bar_ = nullptr;
+	}
 }
 
 void DisplayWidget::resizeEvent(QResizeEvent* ev)
@@ -115,7 +124,7 @@ void DisplayWidget::initTitle()
 
 	ui.wid_title->setLayout(layout_title_);
 
-	connect(btn_group_title_, SIGNAL(buttonToggled(QAbstractButton*, bool)), this, SLOT(onTitleButtonToggled(QAbstractButton*, bool)));
+	//connect(btn_group_title_, SIGNAL(buttonToggled(QAbstractButton*, bool)), this, SLOT(onTitleButtonToggled(QAbstractButton*, bool)));
 
 	btn_screen_cap_->setChecked(true);
 }
@@ -123,14 +132,16 @@ void DisplayWidget::initTitle()
 void DisplayWidget::initContent()
 {
 	QHBoxLayout* layout = new QHBoxLayout;
+	layout->setContentsMargins(0, 0, 0, 0);
 	render_widget_ = new RenderWidget();
 	render_widget_->setStyleSheet("RenderWidget{background-color: black;}");
 	layout->addWidget(render_widget_);
-	QObject::connect(render_widget_, &RenderWidget::sigOpenMediaFileSuccess, 
+	QObject::connect(render_widget_, &RenderWidget::sigOpenMediaFileSuccess,
 		[&] {
-			btn_start_push_->setChecked(true);
-			btn_start_push_->setText(QChar(0x23f9));
-			is_displaying_ = true;
+			//btn_start_push_->setChecked(true);
+			//btn_start_push_->setText(QChar(0x23f9));
+			control_bar_->setPlaying(true);
+			is_playing_ = true;
 		}
 	);
 	//QWidget* widget = new QWidget;
@@ -250,7 +261,7 @@ void DisplayWidget::initToolBar()
 	connect(btn_start_push_, &QPushButton::clicked, this, 
 		[&] 
 		{
-			if (!is_displaying_)
+			if (!is_playing_)
 			{
 				return;
 			}
@@ -324,6 +335,67 @@ void DisplayWidget::initToolBar()
 		{
 			QString filename = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("select file"), QString("./"), QString("Files (*.mp4)"));
 			render_widget_->openMediaFile(filename);
+		}
+	);
+}
+
+void DisplayWidget::initControlBar()
+{
+	control_bar_ = new ControlBar();
+	layout_toolbar_ = new QHBoxLayout;
+	layout_toolbar_->setContentsMargins(0, 0, 0, 0);
+	layout_toolbar_->setMargin(0);
+	layout_toolbar_->setSpacing(0);
+	layout_toolbar_->addWidget(control_bar_, 1);
+	ui.wid_toolbar->setLayout(layout_toolbar_);
+	ui.wid_toolbar->setFixedHeight(60);
+
+	QObject::connect(control_bar_, &ControlBar::sigOpenMediaFile, [&](QString file)
+		{
+			render_widget_->openMediaFile(file);
+		}
+	);
+
+	QObject::connect(control_bar_, &ControlBar::sigPlaying, [&](bool status)
+		{
+			is_playing_ = !status;
+			render_widget_->setMediaPause(is_playing_);
+		}
+	);
+
+	QObject::connect(control_bar_, &ControlBar::sigControlSliderChanged, [&](double value)
+		{
+			render_widget_->setSeekPos(value);
+		}
+	);
+
+	QObject::connect(control_bar_, &ControlBar::sigSoundVolumeChanged, [&](int value)
+		{
+			render_widget_->setSoundVolume(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateTotalDuration, [&](QTime value)
+		{
+			control_bar_->setTotalDuration(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentSoundVolume, [&](int value)
+		{
+			control_bar_->setSoundSliderValue(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentTimePos, [&](QTime value)
+		{
+			control_bar_->setCurrentDuration(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigRenderMediaEndReached, [&]()
+		{
+			control_bar_->setStop();
 		}
 	);
 }

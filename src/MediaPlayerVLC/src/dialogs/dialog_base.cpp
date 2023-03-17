@@ -144,6 +144,11 @@ MediaFileDialog::~MediaFileDialog()
 {
 }
 
+QString MediaFileDialog::getFilePath()
+{
+    return file_path_;
+}
+
 void MediaFileDialog::initUI()
 {
 
@@ -186,6 +191,12 @@ void MediaFileDialog::initUI()
 
     FileTab* tab_ = new FileTab();
     content_widget_ = tab_;
+
+    QObject::connect(tab_, &FileTab::sigAcceptFilePath, [&](QString file)
+        {
+            file_path_ = file;
+        }
+    );
 
 
     QVBoxLayout* vbox = new QVBoxLayout();

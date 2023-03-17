@@ -40,8 +40,10 @@ class MediaFileDialog : public DialogBase
 public:
     MediaFileDialog(QWidget* parent = nullptr);
     ~MediaFileDialog();
+
+    QString getFilePath();
 protected:
     virtual void initUI() override;
 private:
-
+    QString file_path_;
 };

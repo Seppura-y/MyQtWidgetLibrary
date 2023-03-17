@@ -10,5 +10,7 @@
         <file>res/css/title.css</file>
         <file>res/css/display_widget.css</file>
         <file>res/css/volume_button.css</file>
+        <file>res/css/control_bar.css</file>
+        <file>res/css/dialog_base.css</file>
     </qresource>
 </RCC>

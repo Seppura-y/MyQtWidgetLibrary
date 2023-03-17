@@ -1,8 +1,9 @@
 #ifndef VOLUME_SLIDER_DIALOG_H
 #define VOLUME_SLIDER_DIALOG_H
 
-#include <QSlider>
 #include <QDialog>
+
+class CustomSlider;
 
 class VolumeSliderDialog : public QDialog
 {
@@ -12,10 +13,7 @@ public:
 	VolumeSliderDialog(QWidget *parent = nullptr);
 	~VolumeSliderDialog();
 
-	void setSliderValue(int value)
-	{
-		slider_->setValue(value);
-	}
+	void setSliderValue(int value);
 
 protected:
 	bool event(QEvent* event) override;
@@ -24,7 +22,7 @@ signals:
 	void sigSliderValueChanged(int value);
 
 private:
-	QSlider* slider_ = nullptr;
+	CustomSlider* slider_ = nullptr;
 };
 
 #endif

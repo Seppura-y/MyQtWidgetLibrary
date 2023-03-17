@@ -84,12 +84,6 @@ QCheckBox::indicator:checked {
     color: orange;
 }
 
-QLineEdit{
-    border:1px solid darkorange;
-    border-radius: 4px;
-    background-color: #1f1f1f;
-    color: darkgray;
-}
 
 
 QWidget {
@@ -124,4 +118,11 @@ QPushButton#pb_close:hover {
 
 QPushButton#pb_close:pressed {
     color: tomato;
+}
+
+QLineEdit {
+    border: 1px solid darkorange;
+    border-radius: 4px;
+    background-color: #1f1f1f;
+    color: darkgray;
 }

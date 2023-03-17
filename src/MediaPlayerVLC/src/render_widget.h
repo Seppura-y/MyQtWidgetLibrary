@@ -1,13 +1,11 @@
-#pragma once
+#ifndef RENDER_WIDGET_H
+#define RENDER_WIDGET_H
 
-#include <QtWidgets/QWidget>
+#include <QWidget>
+#include <QTime>
+#include <memory>
 
-#ifdef _WIN32
-#include <basetsd.h>
-typedef SSIZE_T ssize_t;
-#endif
-
-#include "vlc/vlc.h"
+#include "vlc_manager.h"
 
 class RenderWidget : public QWidget
 {
@@ -18,18 +16,26 @@ public:
     ~RenderWidget();
 
     void openMediaFile(QString file_path);
-    void setMediaPause(bool status);
+    void setMediaPause(bool pause);
+    void setSeekPos(double value);
+    void setSoundVolume(int value);
 signals:
     void sigOpenMediaFileSuccess();
+    void sigUpdateTotalDuration(QTime time);
+    void sigUpdateCurrentTimePos(QTime time);
+    void sigUpdateCurrentSoundVolume(int value);
+    void sigRenderMediaEndReached();
 public slots:
-    void onOpenMediaFile(QString file_path);
+    //void onOpenMediaFile(QString file_path);
 protected:
     void mousePressEvent(QMouseEvent* ev) override;
+    void paintEvent(QPaintEvent* ev) override;
 private:
 
-    libvlc_instance_t* vlc_instance_ = nullptr;
-    libvlc_media_player_t* vlc_media_player_ = nullptr;
-    libvlc_media_t* vlc_media_ = nullptr;
-
     bool media_pause_ = false;
+
+    //std::unique_ptr <VlcManager> render_manager_;
+    VlcManager* render_manager_ = nullptr;
 };
+
+#endif

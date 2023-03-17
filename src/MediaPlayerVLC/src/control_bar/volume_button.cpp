@@ -16,7 +16,7 @@
 
 #include "config_helper.h"
 
-VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
+VolumeButton::VolumeButton(QWidget* parent) : QPushButton(parent)
 {
 	this->setAttribute(Qt::WA_StyledBackground);
 	this->setFixedSize(28, 28);
@@ -38,7 +38,7 @@ VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
 		this->setCursor(QCursor(Qt::PointingHandCursor));
 	}
 
-	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/volume_button.css"));
+	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/control_bar.css"));
 
 	graphics_effect_ = new QGraphicsOpacityEffect(this);
 	graphics_effect_->setOpacity(0);
@@ -62,7 +62,7 @@ VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
 		{
 			volume_slider_dialog_->hide();
 		}
-	);
+		);
 
 }
 
@@ -94,7 +94,7 @@ void VolumeButton::enterEvent(QEvent* ev)
 		volume_slider_dialog_ = new VolumeSliderDialog(this);
 		volume_slider_dialog_->setSliderValue(volume_);
 	}
-		
+
 	QPoint button_pos = this->mapToGlobal(QPoint(0, 0));
 	QRect button_rect = this->rect();
 	QRect dialog_rect = volume_slider_dialog_->rect();	//rect包含标题栏，去掉标题栏后height不变
@@ -106,8 +106,8 @@ void VolumeButton::enterEvent(QEvent* ev)
 	volume_slider_dialog_->show();
 	timer_id_ = startTimer(250);
 
-	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged, 
-		[=](int value) 
+	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged,
+		[=](int value)
 		{
 			if (value == volume_)
 			{

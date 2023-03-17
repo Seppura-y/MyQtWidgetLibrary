@@ -52,7 +52,7 @@ void DialogTitle::initUi()
 	ui->pb_close->setFont(font);
 	ui->pb_close->setText(QChar(0x00d7));
 
-	setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/dialog_title.css"));
+	setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/dialog_base.css"));
 }
 
 void DialogTitle::setTitleText(const QString& str)

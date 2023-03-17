@@ -52,7 +52,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src/config
     ${CMAKE_CURRENT_LIST_DIR}/src/tabs
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs
-    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu
+    ${CMAKE_CURRENT_LIST_DIR}/src/control_bar
 )
 
 include_directories(${FORMS_DIR})
@@ -90,12 +90,12 @@ FILE(GLOB ${PROJECT_NAME}_DIALOG_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs/*.h
 )
 
-FILE(GLOB ${PROJECT_NAME}_PLAYER_MENU_SOURCES 
-    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu/*.cpp
+FILE(GLOB ${PROJECT_NAME}_CONTROLBAR_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/control_bar/*.cpp
 )
 
-FILE(GLOB ${PROJECT_NAME}_PLAYER_MENU_HEADERS
-    ${CMAKE_CURRENT_LIST_DIR}/src/player_menu/*.h
+FILE(GLOB ${PROJECT_NAME}_CONTROLBAR_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/control_bar/*.h
 )
 
 FILE(GLOB ${PROJECT_NAME}_CSS_FILES
@@ -129,8 +129,8 @@ source_group("Source Files//tabs" FILES ${${PROJECT_NAME}_TAB_SOURCES})
 source_group("Header Files//dialogs" FILES ${${PROJECT_NAME}_DIALOG_HEADERS})
 source_group("Source Files//dialogs" FILES ${${PROJECT_NAME}_DIALOG_SOURCES})
 
-source_group("Header Files//dialogs" FILES ${${PROJECT_NAME}_PLAYER_MENU_HEADERS})
-source_group("Source Files//dialogs" FILES ${${PROJECT_NAME}_PLAYER_MENU_SOURCES})
+source_group("Header Files//control_bar" FILES ${${PROJECT_NAME}_CONTROLBAR_HEADERS})
+source_group("Source Files//control_bar" FILES ${${PROJECT_NAME}_CONTROLBAR_SOURCES})
 
 
 #========================================= SETUP EXECTUABLE =========================================#
@@ -160,8 +160,8 @@ if (WIN32)
         ${${PROJECT_NAME}_DIALOG_HEADERS}
         ${${PROJECT_NAME}_DIALOG_SOURCES}
 
-        ${${PROJECT_NAME}_PLAYER_MENU_HEADERS}
-        ${${PROJECT_NAME}_PLAYER_MENU_SOURCES}
+        ${${PROJECT_NAME}_CONTROLBAR_HEADERS}
+        ${${PROJECT_NAME}_CONTROLBAR_SOURCES}
 
         ${${PROJECT_NAME}_CSS_FILES}
 

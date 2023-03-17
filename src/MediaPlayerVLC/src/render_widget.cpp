@@ -2,129 +2,128 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QDir>
+#include <QStyleOption>
+#include <QPainter>
+#include <QPushButton>
 
 #include <string>
 
 RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 {
-	vlc_instance_ = libvlc_new(0, nullptr);
-	if (!vlc_instance_)
-	{
-		QMessageBox::information(this, "Error", "Create VLC instance failed!");
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		vlc_media_player_ = libvlc_media_player_new(vlc_instance_);
-		if (vlc_media_player_)
-		{
-
-		}
-		else
-		{
-			libvlc_release(vlc_instance_);
-			QMessageBox::information(this, "Error", "Create VLC media player failed!");
-			exit(EXIT_FAILURE);
-		}
-	}
+	setAttribute(Qt::WA_TranslucentBackground);
+	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 	this->setStyleSheet("RenderWdiget{background-color: black;}");
+
+	//render_manager_.reset(new VlcManager());
+	render_manager_ = new VlcManager();
+
+	int ret = render_manager_->initVLC();
+
+	switch (ret)
+	{
+	case -1:
+		QMessageBox::information(this, "error", "create vlc instance failed");
+		exit(EXIT_FAILURE);
+		break;
+
+	case -2:
+		QMessageBox::information(this, "error", "create vlc media player failed");
+		exit(EXIT_FAILURE);
+		break;
+	}
+
+	QObject::connect(render_manager_, &VlcManager::sigUpdateTotalDuration, [=](QTime time)
+		{
+			emit this->sigUpdateTotalDuration(time);
+		});
+
+	QObject::connect(render_manager_, &VlcManager::sigUpdateTimePos, [=](QTime value)
+		{
+			emit this->sigUpdateCurrentTimePos(value);
+		});
+
+	QObject::connect(render_manager_, &VlcManager::sigUpdateSoundVolume, [=](int value)
+		{
+			emit this->sigUpdateCurrentSoundVolume(value);
+		});
+
+	QObject::connect(render_manager_, &VlcManager::sigMediaEndReached, [=]()
+		{
+			emit this->sigRenderMediaEndReached();
+		});
+
+
+	//QObject::connect(render_manager_.get(), &VlcManager::sigUpdateTotalDuration, [=](QTime time)
+	//	{
+	//		emit this->sigUpdateTotalDuration(time);
+	//	});
+
+	//QObject::connect(render_manager_.get(), &VlcManager::sigUpdateTimePos, [=](QTime time)
+	//	{
+	//		emit this->sigUpdateCurrentTimePos(time);
+	//	});
+
+	//QObject::connect(render_manager_.get(), &VlcManager::sigUpdateSoundVolume, [=](QTime time)
+	//	{
+	//		emit this->sigUpdateTotalDuration(time);
+	//	});
 }
 
 RenderWidget::~RenderWidget()
 {
-	if (vlc_media_player_)
-	{
-		libvlc_media_player_release(vlc_media_player_);
-		vlc_media_player_ = nullptr;
-	}
 
-	if (vlc_instance_)
-	{
-		libvlc_release(vlc_instance_);
-		vlc_instance_ = nullptr;
-	}
 }
 
 void RenderWidget::openMediaFile(QString file_path)
 {
-
 	QString path = QDir::toNativeSeparators(file_path);
-
-	// set path
-	vlc_media_ = libvlc_media_new_path(vlc_instance_, path.toStdString().c_str());
-
-	if (vlc_media_)
+	if (render_manager_->openMediaFile(path, (void*)(this->winId())) != 0)
 	{
-		// parse media
-		libvlc_media_parse(vlc_media_);
+		QMessageBox::information(this, "warnning", "open file failed");
+	}
+	emit sigOpenMediaFileSuccess();
+}
 
-		// set media
-		libvlc_media_player_set_media(vlc_media_player_, vlc_media_);
-
-		// set the window's handle on which the media is played
-		libvlc_media_player_set_hwnd(vlc_media_player_, (void*)(winId()));
-
-		// release media
-		libvlc_media_release(vlc_media_);
-		vlc_media_ = nullptr;
-
-		// play 
-		libvlc_media_player_play(vlc_media_player_);
-
-		emit sigOpenMediaFileSuccess();
+void RenderWidget::setMediaPause(bool pause)
+{
+	if (pause)
+	{
+		render_manager_->setPause();
 	}
 	else
 	{
-		if (vlc_media_player_)
-		{
-			libvlc_media_player_release(vlc_media_player_);
-			vlc_media_player_ = nullptr;
-		}
-
-		if (vlc_instance_)
-		{
-			libvlc_release(vlc_instance_);
-			vlc_instance_ = nullptr;
-		}
-
-		QMessageBox::information(this, "Error", "Open media file failed!");
-		exit(EXIT_FAILURE);
+		render_manager_->setPlaying();
 	}
-
 }
 
-void RenderWidget::setMediaPause(bool status)
+void RenderWidget::setSeekPos(double value)
 {
-	if (!vlc_media_player_)
-	{
-		return;
-	}
-	media_pause_ = status;
-	
-	if (media_pause_)
-	{
-		if (libvlc_media_player_get_state(vlc_media_player_) == libvlc_state_t::libvlc_Playing)
-		{
-			libvlc_media_player_pause(vlc_media_player_);
-		}
-	}
-	else if(!media_pause_)
-	{
-		if (libvlc_media_player_get_state(vlc_media_player_) == libvlc_state_t::libvlc_Paused)
-		{
-			libvlc_media_player_play(vlc_media_player_);
-		}
-	}
-
+	render_manager_->setTimePos(value);
 }
 
-void RenderWidget::onOpenMediaFile(QString file_path)
+void RenderWidget::setSoundVolume(int value)
 {
-
+	render_manager_->setSoundVolume(value);
 }
+
+//void RenderWidget::onOpenMediaFile(QString file_path)
+//{
+//
+//}
 
 void RenderWidget::mousePressEvent(QMouseEvent* ev)
 {
 	qDebug() << "render widget mouse pressed";
 	return QWidget::mousePressEvent(ev);
+}
+
+void RenderWidget::paintEvent(QPaintEvent* ev)
+{
+
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
+	QWidget::paintEvent(ev);
 }

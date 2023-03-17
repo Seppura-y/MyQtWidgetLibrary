@@ -33,7 +33,12 @@ public:
     {
         return volume_;
     }
-
+    
+    void setVolume(int value)
+    {
+        volume_ = value;
+        //volume_slider_dialog_->setSliderValue(value);
+    }
 signals:
     void sigVolumeValueChanged(int value);
 protected:
@@ -45,8 +50,6 @@ protected:
 private:
     void initUi();
 private:
-    QMenu* main_menu_ = nullptr;
-
     int timer_id_ = -1;
     int volume_ = 10;
 
