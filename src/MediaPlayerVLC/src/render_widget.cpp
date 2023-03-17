@@ -32,6 +32,12 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 
 RenderWidget::~RenderWidget()
 {
+	if (vlc_media_player_)
+	{
+		libvlc_media_player_release(vlc_media_player_);
+		vlc_media_player_ = nullptr;
+	}
+
 	if (vlc_instance_)
 	{
 		libvlc_release(vlc_instance_);
@@ -69,7 +75,18 @@ void RenderWidget::openMediaFile(QString file_path)
 	}
 	else
 	{
-		libvlc_release(vlc_instance_);
+		if (vlc_media_player_)
+		{
+			libvlc_media_player_release(vlc_media_player_);
+			vlc_media_player_ = nullptr;
+		}
+
+		if (vlc_instance_)
+		{
+			libvlc_release(vlc_instance_);
+			vlc_instance_ = nullptr;
+		}
+
 		QMessageBox::information(this, "Error", "Open media file failed!");
 		exit(EXIT_FAILURE);
 	}

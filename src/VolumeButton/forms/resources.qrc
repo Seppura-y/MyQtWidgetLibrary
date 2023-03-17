@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/volume_button">
+    <qresource prefix="/resources">
         <file>res/css/slider.css</file>
         <file>res/icons/audio_open.svg</file>
         <file>res/icons/audio_open_hover.svg</file>

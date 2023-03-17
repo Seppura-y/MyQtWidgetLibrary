@@ -1,9 +1,10 @@
-#include "volume_slider_dialog.h"
+ï»¿#include "volume_slider_dialog.h"
 #include <QVBoxLayout>
 #include <QEvent>
 #include <windows.h>
 
 #include "config_helper.h"
+#include "custom_slider.h"
 
 //#pragma comment(lib, "user32.lib")
 
@@ -14,20 +15,27 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
     this->setAttribute(Qt::WA_TranslucentBackground);
 
 	QVBoxLayout* v_layout = new QVBoxLayout(this);
-	slider_ = new QSlider(this);
+	slider_ = new CustomSlider(this);
 	slider_->setOrientation(Qt::Vertical);
-    slider_->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":volume_button/res/css/slider.css"));
+    slider_->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/slider.css"));
     v_layout->addWidget(slider_);
 
 	setFixedSize(40, 120);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Qt::ToolTip Ðü¸¡ÏÔÊ¾Ð§¹û
+    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Qt::ToolTip æ‚¬æµ®æ˜¾ç¤ºæ•ˆæžœ
     setStyleSheet("QDialog{background-color: rgba(54, 54, 54, 0.5);}");
 
-	connect(slider_, &QSlider::valueChanged,
+	connect(slider_, &CustomSlider::sigCustomSliderValueChanged,
         [=](int value)
         {
 		    emit sigSliderValueChanged(value);
 		}
+    );
+
+    connect(slider_, &CustomSlider::sliderPressed,
+        [=]()
+        {
+            emit sigSliderValueChanged(slider_->value());
+        }
     );
 }
 
@@ -35,6 +43,10 @@ VolumeSliderDialog::~VolumeSliderDialog()
 {
 }
 
+void VolumeSliderDialog::setSliderValue(int value)
+{
+    slider_->setValue(value);
+}
 
 bool VolumeSliderDialog::event(QEvent* event)
 {

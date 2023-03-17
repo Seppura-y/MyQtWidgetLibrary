@@ -16,7 +16,6 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
 	QVBoxLayout* v_layout = new QVBoxLayout(this);
 	slider_ = new QSlider(this);
 	slider_->setOrientation(Qt::Vertical);
-    slider_->setPageStep(100);
     slider_->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/volume_button.css"));
     v_layout->addWidget(slider_);
 

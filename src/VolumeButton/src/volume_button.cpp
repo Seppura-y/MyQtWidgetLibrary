@@ -12,13 +12,15 @@
 #include <QSequentialAnimationGroup>
 #include <QParallelAnimationGroup>
 
+#include <QDebug>
+
 #include "config_helper.h"
 
-VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
+VolumeButton::VolumeButton(QWidget* parent) : QPushButton(parent)
 {
 	this->setAttribute(Qt::WA_StyledBackground);
 	this->setFixedSize(28, 28);
-	int id = QFontDatabase::addApplicationFont(":/volume_button/res/fonts/Font Awesome 6 Pro-Light-300.otf");
+	int id = QFontDatabase::addApplicationFont(":/resources/res/fonts/Font Awesome 6 Pro-Light-300.otf");
 	if (id < 0)
 	{
 		std::cout << "VolumeButton -> load font failed" << std::endl;
@@ -36,7 +38,7 @@ VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
 		this->setCursor(QCursor(Qt::PointingHandCursor));
 	}
 
-	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":volume_button/res/css/button.css"));
+	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/button.css"));
 
 	graphics_effect_ = new QGraphicsOpacityEffect(this);
 	graphics_effect_->setOpacity(0);
@@ -60,7 +62,7 @@ VolumeButton::VolumeButton(QWidget *parent) : QPushButton(parent)
 		{
 			volume_slider_dialog_->hide();
 		}
-	);
+		);
 
 }
 
@@ -85,11 +87,14 @@ void VolumeButton::paintEvent(QPaintEvent* ev)
 
 void VolumeButton::enterEvent(QEvent* ev)
 {
+	// when the cursor enter the button rect, stop the animation
+	parallel_animation_group_->stop();
 	if (!volume_slider_dialog_)
 	{
 		volume_slider_dialog_ = new VolumeSliderDialog(this);
+		volume_slider_dialog_->setSliderValue(volume_);
 	}
-		
+
 	QPoint button_pos = this->mapToGlobal(QPoint(0, 0));
 	QRect button_rect = this->rect();
 	QRect dialog_rect = volume_slider_dialog_->rect();	//rect包含标题栏，去掉标题栏后height不变
@@ -101,10 +106,26 @@ void VolumeButton::enterEvent(QEvent* ev)
 	volume_slider_dialog_->show();
 	timer_id_ = startTimer(250);
 
-	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged, 
-		[=](int value) 
+	connect(volume_slider_dialog_, &VolumeSliderDialog::sigSliderValueChanged,
+		[=](int value)
 		{
-			emit sigVolumeValueChanged(value);
+			if (value == volume_)
+			{
+				return;
+			}
+
+	emit sigVolumeValueChanged(value);
+	if (value != 0)
+	{
+		this->setText(QChar(0xf028));
+		is_mute_ = false;
+	}
+	else
+	{
+		this->setText(QChar(0xf2e2));
+		is_mute_ = true;
+	}
+	volume_ = value;
 		}
 	);
 }
@@ -124,7 +145,7 @@ void VolumeButton::mousePressEvent(QMouseEvent* ev)
 		{
 			this->setText(QChar(0xf028));
 			if (volume_slider_dialog_)
-				volume_slider_dialog_->setSliderValue(50);
+				volume_slider_dialog_->setSliderValue(volume_);
 		}
 	}
 }
@@ -161,6 +182,8 @@ void VolumeButton::timerEvent(QTimerEvent* event)
 			}
 			else
 			{
+				// when the cursor enter the slider space, stop the animation
+				parallel_animation_group_->stop();
 				graphics_effect_->setOpacity(1);
 				volume_slider_dialog_->setGraphicsEffect(graphics_effect_);
 			}

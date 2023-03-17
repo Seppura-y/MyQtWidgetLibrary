@@ -29,6 +29,11 @@ public:
         is_mute_ = mute;
     }
 
+    int getVolume()
+    {
+        return volume_;
+    }
+
 signals:
     void sigVolumeValueChanged(int value);
 protected:
@@ -43,6 +48,7 @@ private:
     QMenu* main_menu_ = nullptr;
 
     int timer_id_ = -1;
+    int volume_ = 10;
 
     bool is_mute_ = false;
     VolumeSliderDialog* volume_slider_dialog_ = nullptr;
