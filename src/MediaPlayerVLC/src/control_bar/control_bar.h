@@ -24,7 +24,7 @@ public:
     void setFullscreen(bool status);
     void setStop();
     void setSoundSliderValue(int value);
-
+    void reset();
 protected:
     void paintEvent(QPaintEvent* ev) override;
 

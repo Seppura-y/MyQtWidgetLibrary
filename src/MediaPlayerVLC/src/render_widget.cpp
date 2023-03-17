@@ -106,6 +106,11 @@ void RenderWidget::setSoundVolume(int value)
 	render_manager_->setSoundVolume(value);
 }
 
+void RenderWidget::setMediaStop()
+{
+	render_manager_->setStop();
+}
+
 //void RenderWidget::onOpenMediaFile(QString file_path)
 //{
 //

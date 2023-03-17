@@ -363,6 +363,14 @@ void DisplayWidget::initControlBar()
 		}
 	);
 
+	QObject::connect(control_bar_, &ControlBar::sigStopPlaying, [&]()
+		{
+			is_playing_ = false;
+			render_widget_->setMediaStop();
+			control_bar_->reset();
+		}
+	);
+
 	QObject::connect(control_bar_, &ControlBar::sigControlSliderChanged, [&](double value)
 		{
 			render_widget_->setSeekPos(value);

@@ -358,6 +358,18 @@ void ControlBar::setSoundSliderValue(int value)
     volume_button_->setVolume(value);
 }
 
+void ControlBar::reset()
+{
+    is_playing_ = false;
+    is_stoped_ = true;
+    is_fullscreen_ = false;
+    btn_play_or_pause_->setChecked(false);
+    btn_fullscreen_->setChecked(false);
+    t_edit_total_->setTime(QTime(0, 0, 0, 0));
+    t_edit_current_->setTime(QTime(0, 0, 0, 0));
+    play_slider_->setValue(0);
+}
+
 
 void ControlBar::paintEvent(QPaintEvent* ev)
 {

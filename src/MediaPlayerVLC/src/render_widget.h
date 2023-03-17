@@ -19,6 +19,7 @@ public:
     void setMediaPause(bool pause);
     void setSeekPos(double value);
     void setSoundVolume(int value);
+    void setMediaStop();
 signals:
     void sigOpenMediaFileSuccess();
     void sigUpdateTotalDuration(QTime time);
