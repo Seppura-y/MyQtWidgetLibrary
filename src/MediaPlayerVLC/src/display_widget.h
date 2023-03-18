@@ -33,11 +33,15 @@ protected:
 	void dragEnterEvent(QDragEnterEvent* ev)override;
 	void dropEvent(QDropEvent* ev) override;
 	bool eventFilter(QObject* watched, QEvent* event) override;
+	void mouseDoubleClickEvent(QMouseEvent* ev) override;
 private:
 	void initTitle();
 	void initContent();
 	void initToolBar();
 	void initControlBar();
+
+signals:
+	void sigDisplayShowFullscreen(bool);
 
 private slots:
 	void onPanelChanged(bool is_checked);

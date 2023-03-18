@@ -24,7 +24,7 @@ DialogBase::DialogBase(QWidget* parent) : QDialog(parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
     //setAttribute(Qt::WA_DeleteOnClose);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowStaysOnTopHint);
     this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/resources/res/css/dialog_base.css"));
     //initUI();
 }

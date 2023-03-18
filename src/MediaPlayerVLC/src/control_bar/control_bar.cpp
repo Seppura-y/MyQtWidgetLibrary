@@ -260,13 +260,13 @@ void ControlBar::initUI()
         t_edit_current_ = new QTimeEdit();
         t_edit_current_->setReadOnly(true);
         t_edit_current_->setDisplayFormat("HH:mm:ss");
-        //t_edit_current_->setEnabled(false); // disable text selection
+        t_edit_current_->setEnabled(false); // disable text selection
         t_edit_current_->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
         t_edit_total_ = new QTimeEdit();
         t_edit_total_->setReadOnly(true);
         t_edit_total_->setDisplayFormat("HH:mm:ss");
-        //t_edit_total_->setEnabled(false);
+        t_edit_total_->setEnabled(false);
         t_edit_total_->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
         QLabel* lab = new QLabel();
@@ -364,6 +364,7 @@ void ControlBar::reset()
     is_stoped_ = true;
     is_fullscreen_ = false;
     btn_play_or_pause_->setChecked(false);
+    btn_play_or_pause_->setText(QChar(0x25b6));
     btn_fullscreen_->setChecked(false);
     t_edit_total_->setTime(QTime(0, 0, 0, 0));
     t_edit_current_->setTime(QTime(0, 0, 0, 0));

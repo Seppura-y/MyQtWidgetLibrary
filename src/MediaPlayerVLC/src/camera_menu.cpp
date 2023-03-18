@@ -38,11 +38,11 @@ CameraMenu::CameraMenu(QWidget* parent)
     QObject::connect(ui.pb_set, &QPushButton::clicked, this, &CameraMenu::onCmrMenuSetButtonClicked);
     QObject::connect(ui.pb_del, &QPushButton::clicked, this, &CameraMenu::onCmrMenuDelButtonClicked);
 
-    ui.tw_item->removeTab(2);
-    ui.tw_item->removeTab(0);
+    //ui.tw_item->removeTab(2);
+    //ui.tw_item->removeTab(0);
 
     //ui.tw_item->setTabText(0, "");
-    ui.tw_item->setStyleSheet("QTabBar::tab{border-top-left-radius: 12px; border-top-right-radius: 12px;}");
+    //ui.tw_item->setStyleSheet("QTabBar::tab{border-top-left-radius: 12px; border-top-right-radius: 12px;}");
 }
 
 CameraMenu::~CameraMenu()

@@ -5,11 +5,40 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QPushButton>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QScreen>
+#include <QGuiApplication>
+
+#include <Windows.h>
 
 #include <string>
 
+BOOL CALLBACK EnumVLC(HWND hwnd, LPARAM lParam)
+{
+	TCHAR szTitle[1024];
+	int len = GetWindowText(hwnd, szTitle, 1024);
+
+	if (len > 0)
+	{
+		EnableWindow(hwnd, FALSE);
+		KillTimer(NULL, 1);
+	}
+	return TRUE;
+}
+
+void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
+{
+	HWND wnd = FindWindowEx(NULL, NULL, NULL, "MediaManager");
+	if(wnd)
+	{
+		EnumChildWindows(wnd, EnumVLC, NULL);
+	}
+}
+
 RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 {
+	this->setWindowTitle("RenderWidget");
 	setAttribute(Qt::WA_TranslucentBackground);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 	this->setStyleSheet("RenderWdiget{background-color: black;}");
@@ -82,6 +111,7 @@ void RenderWidget::openMediaFile(QString file_path)
 		QMessageBox::information(this, "warnning", "open file failed");
 	}
 	emit sigOpenMediaFileSuccess();
+	SetTimer(NULL, 1, 300, TimeProc);
 }
 
 void RenderWidget::setMediaPause(bool pause)
@@ -131,4 +161,34 @@ void RenderWidget::paintEvent(QPaintEvent* ev)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
 	QWidget::paintEvent(ev);
+}
+
+void RenderWidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	if (this->isFullScreen())
+	{
+		this->showNormal();
+		emit sigShowFullscreen(false);
+		qDebug() << "show normal";
+	}
+	else
+	{
+		auto screen = QGuiApplication::primaryScreen();
+		QRect screen_rect = screen->geometry();
+		this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+		this->showFullScreen();
+		emit sigShowFullscreen(true);
+		qDebug() << "show full";
+	}
+}
+
+void RenderWidget::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Escape)
+	{
+		if (this->isFullScreen())
+		{
+			this->showNormal();
+		}
+	}
 }

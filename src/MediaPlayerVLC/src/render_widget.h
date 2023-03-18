@@ -26,11 +26,15 @@ signals:
     void sigUpdateCurrentTimePos(QTime time);
     void sigUpdateCurrentSoundVolume(int value);
     void sigRenderMediaEndReached();
+
+    void sigShowFullscreen(bool);
 public slots:
     //void onOpenMediaFile(QString file_path);
 protected:
     void mousePressEvent(QMouseEvent* ev) override;
     void paintEvent(QPaintEvent* ev) override;
+    void mouseDoubleClickEvent(QMouseEvent* ev) override;
+    void keyPressEvent(QKeyEvent* ev) override;
 private:
 
     bool media_pause_ = false;

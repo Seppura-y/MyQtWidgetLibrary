@@ -14,6 +14,9 @@
 
 #include <QOpenGLWidget>
 
+#include <QScreen>
+#include <QGuiApplication>
+
 
 #include "config_helper.h"
 #include "volume_button.h"
@@ -142,6 +145,22 @@ void DisplayWidget::initContent()
 			//btn_start_push_->setText(QChar(0x23f9));
 			control_bar_->setPlaying(true);
 			is_playing_ = true;
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigShowFullscreen,
+		[&](bool status) {
+			//btn_start_push_->setChecked(true);
+			//btn_start_push_->setText(QChar(0x23f9));
+			if (status)
+			{
+				ui.wid_title->hide(); 
+			}
+			else
+			{
+				ui.wid_title->show();
+			}
+			emit sigDisplayShowFullscreen(status);
 		}
 	);
 	//QWidget* widget = new QWidget;
@@ -539,4 +558,22 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 
 	ev->setDropAction(Qt::MoveAction);
 	ev->accept();
+}
+
+void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	if (this->isFullScreen())
+	{
+		this->showNormal();
+		qDebug() << "display show normal";
+	}
+	else
+	{
+		this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+		auto screen = QGuiApplication::primaryScreen();
+		QRect screen_rect = screen->geometry();
+		this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+		this->showFullScreen();
+		qDebug() << "display show full";
+	}
 }

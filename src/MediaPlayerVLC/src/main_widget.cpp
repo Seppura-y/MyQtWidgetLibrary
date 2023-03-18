@@ -14,6 +14,7 @@
 #include <QFontDatabase>
 #include <QtWinExtras/QtWin>
 //#include <dwmapi.h>
+#include <QScreen>
 
 
 #include "config_helper.h"
@@ -178,7 +179,7 @@ bool MainWidget::nativeEvent(const QByteArray& eventType, void* message, long* r
         }
 
         default:
-            *result = ::DefWindowProc(msg->hwnd, msg->message, msg->wParam, msg->lParam);
+            //*result = ::DefWindowProc(msg->hwnd, msg->message, msg->wParam, msg->lParam);
             break;
     }
 
@@ -380,6 +381,29 @@ void MainWidget::initMainWidget()
     //w->setPalette(palette);
 
     display_widget_ = new DisplayWidget();
+
+    QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
+        {
+            if(status)
+            {
+                cam_menu_->hide();
+                menu_extend_bt_->hide();
+                ui.title_wid->hide();
+                this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+                auto screen = QGuiApplication::primaryScreen();
+                QRect screen_rect = screen->geometry();
+                this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+                this->showFullScreen();
+                qDebug() << "display show full";
+            }
+            else
+            {
+                cam_menu_->show();
+                menu_extend_bt_->show();
+                ui.title_wid->show();
+                this->showNormal();
+            }
+        });
     //panel_widget_->setAutoFillBackground(true);
     //panel_widget_->setPalette(palette);
 
