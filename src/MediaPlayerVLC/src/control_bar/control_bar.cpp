@@ -120,9 +120,23 @@ void ControlBar::initUI()
 
 
         volume_button_ = new VolumeButton;
-        QObject::connect(volume_button_, &VolumeButton::sigVolumeValueChanged, [&](int value)
+        QObject::connect(volume_button_, &VolumeButton::sigVolumeValueChanged, [=](int value)
             {
+                volume_ = value;
                 emit sigSoundVolumeChanged(value);
+            }
+        );
+
+        QObject::connect(volume_button_, &VolumeButton::sigVolumeMute, [=](bool mute)
+            {
+                if (mute)
+                {
+                    emit sigSoundVolumeChanged(0);
+                }
+                else
+                {
+                    emit sigSoundVolumeChanged(volume_);
+                }
             }
         );
 
@@ -212,6 +226,9 @@ void ControlBar::initUI()
                 if (is_stoped_)
                 {
                     btn_fullscreen_->setChecked(false);
+                    btn_fullscreen_->setText(QChar(0xf065));
+                    is_fullscreen_ = false;
+                    emit sigFullscreen(false);
                     return;
                 }
                 if (btn_fullscreen_->isChecked())

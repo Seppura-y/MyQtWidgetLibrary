@@ -114,7 +114,6 @@ void VolumeButton::enterEvent(QEvent* ev)
 				return;
 			}
 
-			emit sigVolumeValueChanged(value);
 			if (value != 0)
 			{
 				this->setText(QChar(0xf028));
@@ -126,28 +125,41 @@ void VolumeButton::enterEvent(QEvent* ev)
 				is_mute_ = true;
 			}
 			volume_ = value;
+			emit sigVolumeValueChanged(value);
 		}
 	);
+
+	connect(this, &VolumeButton::sigVolumeMute, volume_slider_dialog_, &VolumeSliderDialog::onVolumeMute);
 }
 
 void VolumeButton::mousePressEvent(QMouseEvent* ev)
 {
 	if (ev->button() == Qt::LeftButton)
 	{
-		is_mute_ = !is_mute_;
 		if (is_mute_)
 		{
-			this->setText(QChar(0xf2e2));
+			is_mute_ = false;
+			this->setText(QChar(0xf028));
 			if (volume_slider_dialog_)
-				volume_slider_dialog_->setSliderValue(0);
+			{
+				volume_slider_dialog_->setSliderValue(volume_);
+				//emit sigVolumeValueChanged(volume_);
+				emit sigVolumeMute(false);
+			}
 		}
 		else
 		{
-			this->setText(QChar(0xf028));
+			is_mute_ = true;
+			this->setText(QChar(0xf2e2));
 			if (volume_slider_dialog_)
-				volume_slider_dialog_->setSliderValue(volume_);
+			{
+				volume_slider_dialog_->setSliderValue(0);
+				//emit sigVolumeValueChanged(0);
+				emit sigVolumeMute(true);
+			}
 		}
 	}
+	QPushButton::mousePressEvent(ev);
 }
 
 void VolumeButton::timerEvent(QTimerEvent* event)

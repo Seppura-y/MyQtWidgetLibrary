@@ -57,6 +57,7 @@ private:
     bool is_playing_ = false;
     bool is_fullscreen_ = false;
     bool is_stoped_ = true;
+    int volume_ = 100;
 
     CustomSlider*   play_slider_ = nullptr;
     VolumeButton*   volume_button_ = nullptr;

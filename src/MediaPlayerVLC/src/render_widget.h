@@ -44,6 +44,9 @@ protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     //void mouseDoubleClickEvent(QMouseEvent* ev) override;
     //bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+
+private:
+    void initVlcManager();
 private:
 
     bool media_pause_ = false;

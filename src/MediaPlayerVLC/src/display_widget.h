@@ -33,7 +33,7 @@ protected:
 	void dragEnterEvent(QDragEnterEvent* ev)override;
 	void dropEvent(QDropEvent* ev) override;
 	//bool eventFilter(QObject* watched, QEvent* event) override;
-	//void mouseDoubleClickEvent(QMouseEvent* ev) override;
+	void mouseDoubleClickEvent(QMouseEvent* ev) override;
 
 private:
 	void initTitle();
@@ -88,6 +88,7 @@ private:
 	//////////////////////Render Widget//////////////////////
 	RenderWidget* render_widget_ = nullptr;
 	bool is_playing_ = false;
+	bool is_open_success_ = false;
 
 
 

@@ -41,6 +41,7 @@ public:
     }
 signals:
     void sigVolumeValueChanged(int value);
+    void sigVolumeMute(bool);
 protected:
     void paintEvent(QPaintEvent* ev) override;
     void enterEvent(QEvent* ev) override;
@@ -51,7 +52,7 @@ private:
     void initUi();
 private:
     int timer_id_ = -1;
-    int volume_ = 10;
+    int volume_ = 100;
 
     bool is_mute_ = false;
     VolumeSliderDialog* volume_slider_dialog_ = nullptr;

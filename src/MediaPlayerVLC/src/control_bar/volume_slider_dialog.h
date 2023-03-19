@@ -18,11 +18,16 @@ public:
 protected:
 	bool event(QEvent* event) override;
 
+
+public slots:
+	void onVolumeMute(bool status);
 signals:
 	void sigSliderValueChanged(int value);
 
 private:
 	CustomSlider* slider_ = nullptr;
+	int volume_ = 100;
+	bool flip_ = false;
 };
 
 #endif

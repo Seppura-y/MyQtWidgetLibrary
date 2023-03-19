@@ -28,6 +28,11 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
 	connect(slider_, &CustomSlider::sigCustomSliderValueChanged,
         [=](int value)
         {
+            if (flip_)
+            {
+                return;
+            }
+            volume_ = value;
 		    emit sigSliderValueChanged(value);
 		}
     );
@@ -35,7 +40,9 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
     connect(slider_, &CustomSlider::sliderPressed,
         [=]()
         {
-            emit sigSliderValueChanged(slider_->value());
+            flip_ = false;
+            volume_ = slider_->value();
+            emit sigSliderValueChanged(volume_);
         }
     );
 }
@@ -67,4 +74,18 @@ bool VolumeSliderDialog::event(QEvent* event)
     //}
 
 	return QWidget::event(event);
+}
+
+void VolumeSliderDialog::onVolumeMute(bool status)
+{
+    if (status)
+    {
+        flip_ = true;
+        slider_->setValue(0);
+    }
+    else
+    {
+        flip_ = false;
+        slider_->setValue(volume_);
+    }
 }

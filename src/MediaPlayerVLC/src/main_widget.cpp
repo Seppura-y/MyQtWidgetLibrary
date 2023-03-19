@@ -446,28 +446,33 @@ void MainWidget::initMainWidget()
     display_widget_ = new DisplayWidget();
     //display_widget_->installEventFilter(this);
 
-    //QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
-    //    {
-    //        if(status)
-    //        {
-    //            cam_menu_->hide();
-    //            menu_extend_bt_->hide();
-    //            ui.title_wid->hide();
-    //            //this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    //            auto screen = QGuiApplication::primaryScreen();
-    //            QRect screen_rect = screen->geometry();
-    //            this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-    //            this->showFullScreen();
-    //            qDebug() << "display show full";
-    //        }
-    //        else
-    //        {
-    //            cam_menu_->show();
-    //            menu_extend_bt_->show();
-    //            ui.title_wid->show();
-    //            this->showNormal();
-    //        }
-    //    });
+    QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
+        {
+            if(status)
+            {
+                is_fullscreen_ = true;
+
+                cam_menu_->hide();
+                menu_extend_bt_->hide();
+                ui.title_wid->hide();
+                //this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+                auto screen = QGuiApplication::primaryScreen();
+                QRect screen_rect = screen->geometry();
+                this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+                this->showFullScreen();
+                //emit sigShowFullscreen(true);
+            }
+            else
+            {
+                is_fullscreen_ = false;
+                cam_menu_->show();
+                menu_extend_bt_->show();
+                ui.title_wid->show();
+                this->showNormal();
+                this->setGeometry(normal_rect_);
+                //emit sigShowFullscreen(false);
+            }
+        });
     //panel_widget_->setAutoFillBackground(true);
     //panel_widget_->setPalette(palette);
 

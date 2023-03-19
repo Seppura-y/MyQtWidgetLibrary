@@ -43,6 +43,7 @@ void CustomSlider::mouseReleaseEvent(QMouseEvent* ev)
     QSlider::mouseReleaseEvent(ev);
 
     is_pressed_ = false;
+    emit sigCustomSliderValueChanged(this->value());
 }
 
 void CustomSlider::mouseMoveEvent(QMouseEvent* ev)

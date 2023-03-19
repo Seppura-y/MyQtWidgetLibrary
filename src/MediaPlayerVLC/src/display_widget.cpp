@@ -1,4 +1,4 @@
-#include "display_widget.h"
+ï»¿#include "display_widget.h"
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QFontDatabase>
@@ -245,42 +245,42 @@ void DisplayWidget::initToolBar()
 	btn_split_1_->setText(QChar(0x23f9));
 	btn_split_1_->setFixedSize(28, 28);
 	btn_split_1_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_1_->setToolTip(QString::fromLocal8Bit("1x1ÊÓÍ¼"));
+	btn_split_1_->setToolTip(QString::fromLocal8Bit("1x1è§†å›¾"));
 
 	btn_split_4_->setCheckable(true);
 	btn_split_4_->setFont(font);
 	btn_split_4_->setText(QChar(0xe196));
 	btn_split_4_->setFixedSize(28, 28);
 	btn_split_4_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_4_->setToolTip(QString::fromLocal8Bit("4x4ÊÓÍ¼"));
+	btn_split_4_->setToolTip(QString::fromLocal8Bit("4x4è§†å›¾"));
 
 	btn_split_9_->setCheckable(true);
 	btn_split_9_->setFont(font);
 	btn_split_9_->setText(QChar(0xe195));
 	btn_split_9_->setFixedSize(28, 28);
 	btn_split_9_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_9_->setToolTip(QString::fromLocal8Bit("9x9ÊÓÍ¼"));
+	btn_split_9_->setToolTip(QString::fromLocal8Bit("9x9è§†å›¾"));
 
 	btn_split_16_->setCheckable(true);
 	btn_split_16_->setFont(font);
 	btn_split_16_->setText(QChar(0xe198));
 	btn_split_16_->setFixedSize(28, 28);
 	btn_split_16_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_16_->setToolTip(QString::fromLocal8Bit("16x16ÊÓÍ¼"));
+	btn_split_16_->setToolTip(QString::fromLocal8Bit("16x16è§†å›¾"));
 
 	btn_split_25_->setCheckable(true);
 	btn_split_25_->setFont(font);
 	btn_split_25_->setText(QChar(0xe199));
 	btn_split_25_->setFixedSize(28, 28);
 	btn_split_25_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_25_->setToolTip(QString::fromLocal8Bit("25x25ÊÓÍ¼"));
+	btn_split_25_->setToolTip(QString::fromLocal8Bit("25x25è§†å›¾"));
 
 	btn_split_custom_->setCheckable(true);
 	btn_split_custom_->setFont(font);
 	btn_split_custom_->setText(QChar(0xe3c1));
 	btn_split_custom_->setFixedSize(28, 28);
 	btn_split_custom_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_custom_->setToolTip(QString::fromLocal8Bit("×Ô¶¨ÒåÊÓÍ¼"));
+	btn_split_custom_->setToolTip(QString::fromLocal8Bit("è‡ªå®šä¹‰è§†å›¾"));
 
 	seperator->setEnabled(false);
 	seperator->setMinimumWidth(20);
@@ -330,12 +330,12 @@ void DisplayWidget::initToolBar()
 	btn_add_source_->setText(QChar(0xe59e));
 	btn_add_source_->setFixedSize(28, 28);
 	btn_add_source_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_add_source_->setToolTip(QString::fromLocal8Bit("Ìí¼Ó²¶»ñÔ´"));
+	btn_add_source_->setToolTip(QString::fromLocal8Bit("æ·»åŠ æ•èŽ·æº"));
 
 	int vol = 19;
 	btn_volume_->setFixedSize(28, 28);
 	btn_volume_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_volume_->setToolTip(QString::fromLocal8Bit("ÒôÁ¿") + QString(vol) + QString("%"));
+	btn_volume_->setToolTip(QString::fromLocal8Bit("éŸ³é‡") + QString(vol) + QString("%"));
 
 	layout_toolbar_->addSpacerItem(hor_spacer1);
 	layout_toolbar_->addWidget(btn_split_1_);
@@ -412,12 +412,20 @@ void DisplayWidget::initControlBar()
 
 	QObject::connect(control_bar_, &ControlBar::sigControlSliderChanged, [=](double value)
 		{
+			//if (!is_playing_)
+			//{
+			//	return;
+			//}
 			render_widget_->setSeekPos(value);
 		}
 	);
 
 	QObject::connect(control_bar_, &ControlBar::sigSoundVolumeChanged, [=](int value)
 		{
+			//if (!is_playing_)
+			//{
+			//	return;
+			//}
 			render_widget_->setSoundVolume(value);
 		}
 	);
@@ -483,7 +491,7 @@ void DisplayWidget::onToolBarButtonToggled(QAbstractButton* bt, bool checked)
 
 void DisplayWidget::onSoundVolumeValueChanged(int value)
 {
-	QString str = QString::fromLocal8Bit("ÒôÁ¿ ");
+	QString str = QString::fromLocal8Bit("éŸ³é‡ ");
 	QString str2;
 	str2.sprintf("%d %%", value);
 
@@ -560,26 +568,26 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 	ev->accept();
 }
 
-//void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
-//{
-//	//if (this->isFullScreen())
-//	//{
-//	//	this->showNormal();
-//	//	emit sigDisplayShowFullscreen(false);
-//	//	qDebug() << "display show normal";
-//	//}
-//	//else
-//	//{
-//	//	//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-//	//	//auto screen = QGuiApplication::primaryScreen();
-//	//	//QRect screen_rect = screen->geometry();
-//	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-//	//	this->showFullScreen();
-//	//	emit sigDisplayShowFullscreen(true);
-//	//	qDebug() << "display show full";
-//	//}
-//	return QWidget::mouseDoubleClickEvent(event);
-//}
+void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	//if (this->isFullScreen())
+	//{
+	//	this->showNormal();
+	//	emit sigDisplayShowFullscreen(false);
+	//	qDebug() << "display show normal";
+	//}
+	//else
+	//{
+	//	//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+	//	//auto screen = QGuiApplication::primaryScreen();
+	//	//QRect screen_rect = screen->geometry();
+	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+	//	this->showFullScreen();
+	//	emit sigDisplayShowFullscreen(true);
+	//	qDebug() << "display show full";
+	//}
+	return QWidget::mouseDoubleClickEvent(event);
+}
 
 
 
@@ -629,6 +637,7 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		QScreen* current_screen = screen();
 
 		is_fullscreen_ = true;
+		this->showFullScreen();
 		ui.wid_title->hide();
 
 		//render_widget_->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
@@ -660,8 +669,8 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		ui.wid_toolbar->setGeometry(rect_control_bar_show_);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget | Qt::WindowStaysOnTopHint);
-		ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::WindowStaysOnTopHint);
-		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::SubWindow | Qt::Tool);
+		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::WindowStaysOnTopHint);
+		ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::SubWindow | Qt::Tool);
 		ui.wid_toolbar->raise();
 		//ui.wid_toolbar->setFocus();
 		ui.wid_toolbar->setWindowOpacity(0.5);
@@ -672,12 +681,13 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		timer_control_bar_.start();
 		timer_mouse_detect_.start();
 		//this->setFocus();
-		//emit sigDisplayShowFullscreen(true);
+		emit sigDisplayShowFullscreen(true);
 		
 	}
 	else
 	{
 		is_fullscreen_ = false;
+		this->showNormal();
 		ani_control_bar_show_->stop();
 		ani_control_bar_hide_->stop();
 
@@ -692,7 +702,7 @@ void DisplayWidget::fullscreenDisplay(bool status)
 
 		ui.wid_toolbar->showNormal();
 		//render_widget_->showNormal();
-		//emit sigDisplayShowFullscreen(false);
+		emit sigDisplayShowFullscreen(false);
 		timer_control_bar_.stop();
 		timer_mouse_detect_.stop();
 

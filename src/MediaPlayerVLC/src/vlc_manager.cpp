@@ -212,13 +212,13 @@ void VlcManager::setStop()
 
 void VlcManager::setTimePos(double value)
 {
-    if(vlc_media_player_)
+    if (!vlc_media_player_) return;
         libvlc_media_player_set_position(vlc_media_player_, value / total_duration_);
     //libvlc_media_player_set_position(vlc_media_player_, value / 100.0);
 }
 
 void VlcManager::setSoundVolume(int value)
 {
-    if (vlc_media_player_)
+    if (!vlc_media_player_) return;
         libvlc_audio_set_volume(vlc_media_player_, value);
 }

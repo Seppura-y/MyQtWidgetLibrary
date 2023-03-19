@@ -55,24 +55,93 @@ void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
 
 RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 {
-
 	this->setWindowTitle("RenderWidget");
 	setAttribute(Qt::WA_TranslucentBackground);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 	this->setStyleSheet("RenderWdiget{background-color: black;}");
 
-	//render_manager_.reset(new VlcManager());
-	render_manager_ = new VlcManager();
 
 	this->setMouseTracking(true);
-	timer_mouse_hide_.start(1000);
 	QObject::connect(&timer_mouse_hide_, &QTimer::timeout, this, &RenderWidget::onMouseHideTimeout);
-	//QObject::connect(&timer_fullscreen_, &QTimer::timeout, [=]
-	//	{
-	//		//emit sigShowFullscreen(is_fullscreen);
-	//		is_fullscreen_ = is_fullscreen;
-	//	});
+	timer_mouse_hide_.start(1000);
 
+}
+
+RenderWidget::~RenderWidget()
+{
+
+}
+
+void RenderWidget::openMediaFile(QString file_path)
+{
+	if (!render_manager_)
+	{
+		initVlcManager();
+	}
+	QString path = QDir::toNativeSeparators(file_path);
+	if (render_manager_->openMediaFile(path, (void*)(this->winId())) != 0)
+	{
+		QMessageBox::information(this, "warnning", "open file failed");
+	}
+	emit sigOpenMediaFileSuccess();
+	//SetTimer(NULL, 1, 300, TimeProc);
+}
+
+void RenderWidget::setMediaPause(bool pause)
+{
+	if (!render_manager_) return;
+	if (pause)
+	{
+		render_manager_->setPause();
+	}
+	else
+	{
+		render_manager_->setPlaying();
+	}
+}
+
+void RenderWidget::setSeekPos(double value)
+{
+	if (!render_manager_) return;
+	render_manager_->setTimePos(value);
+}
+
+void RenderWidget::setSoundVolume(int value)
+{
+	if (!render_manager_) return;
+	render_manager_->setSoundVolume(value);
+}
+
+void RenderWidget::setMediaStop()
+{
+	if (render_manager_)
+	{
+		render_manager_->setStop();
+		delete render_manager_;
+		render_manager_ = nullptr;
+	}
+}
+
+void RenderWidget::paintEvent(QPaintEvent* ev)
+{
+
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
+	QWidget::paintEvent(ev);
+}
+
+void RenderWidget::mouseMoveEvent(QMouseEvent* ev)
+{
+	//this->setCursor(QCursor(Qt::ArrowCursor));
+	QWidget::mouseMoveEvent(ev);
+}
+
+void RenderWidget::initVlcManager()
+{
+	render_manager_ = new VlcManager();
 
 	//hHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, NULL, 0);
 	//if (hHook == NULL)
@@ -80,9 +149,7 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 	//	qDebug() << "hook failed";
 	//}
 
-
 	int ret = render_manager_->initVLC();
-
 	switch (ret)
 	{
 	case -1:
@@ -116,7 +183,6 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 			emit this->sigRenderMediaEndReached();
 		});
 
-
 	//QObject::connect(render_manager_.get(), &VlcManager::sigUpdateTotalDuration, [=](QTime time)
 	//	{
 	//		emit this->sigUpdateTotalDuration(time);
@@ -132,76 +198,6 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 	//		emit this->sigUpdateTotalDuration(time);
 	//	});
 
-}
-
-RenderWidget::~RenderWidget()
-{
-
-}
-
-void RenderWidget::openMediaFile(QString file_path)
-{
-	QString path = QDir::toNativeSeparators(file_path);
-	if (render_manager_->openMediaFile(path, (void*)(this->winId())) != 0)
-	{
-		QMessageBox::information(this, "warnning", "open file failed");
-	}
-	emit sigOpenMediaFileSuccess();
-	//SetTimer(NULL, 1, 300, TimeProc);
-}
-
-void RenderWidget::setMediaPause(bool pause)
-{
-	if (pause)
-	{
-		render_manager_->setPause();
-	}
-	else
-	{
-		render_manager_->setPlaying();
-	}
-}
-
-void RenderWidget::setSeekPos(double value)
-{
-	render_manager_->setTimePos(value);
-}
-
-void RenderWidget::setSoundVolume(int value)
-{
-	render_manager_->setSoundVolume(value);
-}
-
-void RenderWidget::setMediaStop()
-{
-	render_manager_->setStop();
-}
-
-bool RenderWidget::getFullscreen()
-{
-	return is_fullscreen_;
-}
-
-//void RenderWidget::onOpenMediaFile(QString file_path)
-//{
-//
-//}
-
-void RenderWidget::paintEvent(QPaintEvent* ev)
-{
-
-	QStyleOption opt;
-	opt.init(this);
-	QPainter p(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-
-	QWidget::paintEvent(ev);
-}
-
-void RenderWidget::mouseMoveEvent(QMouseEvent* ev)
-{
-	//this->setCursor(QCursor(Qt::ArrowCursor));
-	QWidget::mouseMoveEvent(ev);
 }
 
 //void RenderWidget::mouseDoubleClickEvent(QMouseEvent* ev)

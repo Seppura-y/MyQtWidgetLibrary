@@ -86,7 +86,7 @@
         <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
        <widget class="ItemListWidget" name="itm_list_1">
         <attribute name="title">
