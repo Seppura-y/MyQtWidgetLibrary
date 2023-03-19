@@ -24,12 +24,13 @@ class MainWidget : public QMainWindow
 public:
     MainWidget(QWidget *parent = Q_NULLPTR);
 
-private:
+protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     void mousePressEvent(QMouseEvent* ev) override;
     void mouseReleaseEvent(QMouseEvent* ev) override;
+    void mouseDoubleClickEvent(QMouseEvent* ev) override;
     bool nativeEvent(const QByteArray& eventType,void* message,long* result) override;
-
+    bool eventFilter(QObject* watched, QEvent* event) override;
 protected:
     void initTitle();
     void initMainWidget();
@@ -42,6 +43,7 @@ private:
 signals:
     void sigWindowMaximized();
     void sigWindowNormal();
+    void sigShowFullscreen(bool);
 private:
     MenuBar* menu_bar_ = nullptr;
     Title* title_ = nullptr;

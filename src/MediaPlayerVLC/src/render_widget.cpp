@@ -165,30 +165,30 @@ void RenderWidget::paintEvent(QPaintEvent* ev)
 
 void RenderWidget::mouseDoubleClickEvent(QMouseEvent* event)
 {
-	if (this->isFullScreen())
-	{
-		this->showNormal();
-		emit sigShowFullscreen(false);
-		qDebug() << "show normal";
-	}
-	else
-	{
-		auto screen = QGuiApplication::primaryScreen();
-		QRect screen_rect = screen->geometry();
-		this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-		this->showFullScreen();
-		emit sigShowFullscreen(true);
-		qDebug() << "show full";
-	}
+	//if (this->isFullScreen())
+	//{
+	//	this->showNormal();
+	//	//emit sigShowFullscreen(false);
+	//	qDebug() << "show normal";
+	//}
+	//else
+	//{
+	//	//auto screen = QGuiApplication::primaryScreen();
+	//	//QRect screen_rect = screen->geometry();
+	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+	//	this->showFullScreen();
+	//	emit sigShowFullscreen(true);
+	//	qDebug() << "show full";
+	//}
 }
 
 void RenderWidget::keyPressEvent(QKeyEvent* event)
 {
-	if (event->key() == Qt::Key_Escape)
-	{
-		if (this->isFullScreen())
-		{
-			this->showNormal();
-		}
-	}
+	//if (event->key() == Qt::Key_Escape)
+	//{
+	//	if (this->isFullScreen())
+	//	{
+	//		this->showNormal();
+	//	}
+	//}
 }

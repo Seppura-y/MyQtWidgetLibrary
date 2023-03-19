@@ -565,15 +565,22 @@ void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
 	if (this->isFullScreen())
 	{
 		this->showNormal();
+		emit sigDisplayShowFullscreen(false);
 		qDebug() << "display show normal";
 	}
 	else
 	{
-		this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-		auto screen = QGuiApplication::primaryScreen();
-		QRect screen_rect = screen->geometry();
-		this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+		//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+		//auto screen = QGuiApplication::primaryScreen();
+		//QRect screen_rect = screen->geometry();
+		//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
 		this->showFullScreen();
+		emit sigDisplayShowFullscreen(true);
 		qDebug() << "display show full";
 	}
+}
+
+void DisplayWidget::onShowFullScreen(bool status)
+{
+
 }

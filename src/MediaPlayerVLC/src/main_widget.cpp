@@ -27,6 +27,7 @@
 // #include "mybutton.h"
 // #include "panel_widget.h"
 
+#include <Windows.h>
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lParam)    ((int)(short)LOWORD(lParam))
 #endif
@@ -35,6 +36,30 @@
 #endif
 
 using namespace std;
+//
+//BOOL CALLBACK EnumVLC(HWND hwnd, LPARAM lParam)
+//{
+//    TCHAR szTitle[1024];
+//    int len = GetWindowText(hwnd, szTitle, 1024);
+//
+//    if (len > 0)
+//    {
+//        EnableWindow(hwnd, FALSE);
+//        KillTimer(NULL, 1);
+//    }
+//    return TRUE;
+//}
+//
+//void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
+//{
+//    HWND wnd = FindWindowEx(NULL, NULL, NULL, "MediaManager");
+//    if (wnd)
+//    {
+//        EnumChildWindows(wnd, EnumVLC, NULL);
+//    }
+//}
+
+
 MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -111,6 +136,34 @@ void MainWidget::mouseReleaseEvent(QMouseEvent* ev)
         }
     }
     return QMainWindow::mouseReleaseEvent(ev);
+}
+
+void MainWidget::mouseDoubleClickEvent(QMouseEvent* ev)
+{
+    if (this->isFullScreen())
+    {
+        cam_menu_->show();
+        menu_extend_bt_->show();
+        ui.title_wid->show();
+        this->setWindowFlag(Qt::WindowStaysOnTopHint, false);
+        this->showNormal();
+        emit sigShowFullscreen(false);
+        qDebug() << "show normal";
+    }
+    else
+    {
+        cam_menu_->hide();
+        menu_extend_bt_->hide();
+        ui.title_wid->hide();
+        this->setWindowFlag(Qt::WindowStaysOnTopHint,true);
+
+        auto screen = QGuiApplication::primaryScreen();
+        QRect screen_rect = screen->geometry();
+        this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+        this->showFullScreen();
+        emit sigShowFullscreen(true);
+        qDebug() << "show full";
+    }
 }
 
 bool MainWidget::nativeEvent(const QByteArray& eventType, void* message, long* result)
@@ -342,6 +395,7 @@ void MainWidget::initMainWidget()
 
     menu_extend_bt_ = new QPushButton;
     menu_extend_bt_->setMaximumSize(8, 90);
+    menu_extend_bt_->setFixedSize(8, 90);
     menu_extend_bt_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/narrow_button.css"));
 
     int id = QFontDatabase::addApplicationFont(":/resources/res/fonts/Font Awesome 6 Duotone-Solid-900.otf");
@@ -358,23 +412,23 @@ void MainWidget::initMainWidget()
     menu_extend_bt_->setFont(font);
     menu_extend_bt_->setText(QChar(0xf32e));
 
-    QHBoxLayout* layout2 = new QHBoxLayout;
-    layout2->setContentsMargins(0, 0, 0, 0);
-    layout2->setMargin(0);
-    layout2->addWidget(menu_extend_bt_);
-    layout2->setSpacing(0);
+    QHBoxLayout* left_extent_bt_layout = new QHBoxLayout;
+    left_extent_bt_layout->setContentsMargins(0, 0, 0, 0);
+    left_extent_bt_layout->setMargin(0);
+    left_extent_bt_layout->addWidget(menu_extend_bt_);
+    left_extent_bt_layout->setSpacing(0);
 
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(0, 255, 0, 0));
 
-    QWidget* wid = new QWidget;
-    wid->setMaximumSize(8, 10000);
-    wid->setMinimumWidth(8);
-    wid->setAutoFillBackground(true);
-    wid->setPalette(palette);
-    wid->setLayout(layout2);
+    //QWidget* wid = new QWidget;
+    //wid->setMaximumSize(8, 10000);
+    //wid->setMinimumWidth(8);
+    //wid->setAutoFillBackground(true);
+    //wid->setPalette(palette);
+    //wid->setLayout(left_extent_bt_layout);
 
-    palette.setColor(QPalette::Background, QColor(0, 255, 0, 50));
+    //palette.setColor(QPalette::Background, QColor(0, 255, 0, 50));
 
     //QWidget* w = new QWidget;
     //w->setAutoFillBackground(true);
@@ -411,7 +465,8 @@ void MainWidget::initMainWidget()
     main_wid_layout_->setMargin(0);
     main_wid_layout_->setSpacing(0);
     main_wid_layout_->addWidget(cam_menu_);
-    main_wid_layout_->addWidget(wid);
+    //main_wid_layout_->addWidget(wid);
+    main_wid_layout_->addLayout(left_extent_bt_layout);
     //main_wid_layout_->addWidget(w);
     main_wid_layout_->addWidget(display_widget_);
 
@@ -434,4 +489,7 @@ void MainWidget::initMainWidget()
             }
         }
         );
+
+
+    QObject::connect(this, &MainWidget::sigShowFullscreen, display_widget_, &DisplayWidget::onShowFullScreen);
 }
