@@ -38,6 +38,7 @@ set(CMAKE_PREFIX_PATH $ENV{Qt515_64})
 # set(AUTOGEN_BUILD_DIR ${CMAKE_CURRENT_LIST_DIR}/gens)
 
 find_package(Qt5 COMPONENTS 
+    Core
     Widgets 
     OpenGL
     OpenGLExtensions
@@ -202,6 +203,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} 
+    Qt5::Core
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::OpenGLExtensions

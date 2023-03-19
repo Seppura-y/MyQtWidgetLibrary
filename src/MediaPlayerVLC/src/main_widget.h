@@ -22,6 +22,17 @@ class MainWidget : public QMainWindow
     Q_OBJECT
 
 public:
+    static MainWidget* getInstance()
+    {
+        if (!instance_)
+        {
+            instance_ = new MainWidget();
+        }
+        return instance_;
+    }
+    MainWidget(const MainWidget& other) = delete;
+    MainWidget operator=(const MainWidget& other) = delete;
+private:
     MainWidget(QWidget *parent = Q_NULLPTR);
 
 protected:
@@ -30,7 +41,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent* ev) override;
     void mouseDoubleClickEvent(QMouseEvent* ev) override;
     bool nativeEvent(const QByteArray& eventType,void* message,long* result) override;
-    bool eventFilter(QObject* watched, QEvent* event) override;
+    void resizeEvent(QResizeEvent* ev) override;
+    //bool eventFilter(QObject* watched, QEvent* event) override;
 protected:
     void initTitle();
     void initMainWidget();
@@ -51,6 +63,8 @@ private:
 private:
     Ui::MainWidgetClass ui;
 
+    static MainWidget* instance_;
+
     bool left_bt_pressed_ = false;
     QPoint mouse_drag_point_;
 
@@ -65,8 +79,11 @@ private:
 
     DisplayWidget* display_widget_ = nullptr;
 
+    bool is_fullscreen_ = false;
+
     ////////////////////////////////////////////////////////////////////
     //nativeEvent
     bool is_maximized_ = false;
     bool is_minimized_ = false;
 };
+

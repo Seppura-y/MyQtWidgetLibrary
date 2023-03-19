@@ -24,6 +24,7 @@
 #include "menu_bar.h"
 #include "camera_menu.h"
 #include "display_widget.h"
+#include "render_widget.h"
 // #include "mybutton.h"
 // #include "panel_widget.h"
 
@@ -36,6 +37,9 @@
 #endif
 
 using namespace std;
+
+MainWidget* MainWidget::instance_ = nullptr;
+
 //
 //BOOL CALLBACK EnumVLC(HWND hwnd, LPARAM lParam)
 //{
@@ -87,6 +91,8 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     main_wid_layout_ = new QHBoxLayout;
     initTitle();
     initMainWidget();
+
+    this->setMouseTracking(true);
 
     //installEventFilter(title_);
 }
@@ -142,20 +148,23 @@ void MainWidget::mouseDoubleClickEvent(QMouseEvent* ev)
 {
     if (this->isFullScreen())
     {
+        is_fullscreen_ = false;
+        this->showNormal();
+        this->setGeometry(normal_rect_);
         cam_menu_->show();
         menu_extend_bt_->show();
         ui.title_wid->show();
-        this->setWindowFlag(Qt::WindowStaysOnTopHint, false);
-        this->showNormal();
+        //this->setWindowFlag(Qt::WindowStaysOnTopHint, false);
         emit sigShowFullscreen(false);
         qDebug() << "show normal";
     }
     else
     {
+        is_fullscreen_ = true;
         cam_menu_->hide();
         menu_extend_bt_->hide();
         ui.title_wid->hide();
-        this->setWindowFlag(Qt::WindowStaysOnTopHint,true);
+        //this->setWindowFlag(Qt::WindowStaysOnTopHint,true);
 
         auto screen = QGuiApplication::primaryScreen();
         QRect screen_rect = screen->geometry();
@@ -239,6 +248,19 @@ bool MainWidget::nativeEvent(const QByteArray& eventType, void* message, long* r
 #endif
     return QWidget::nativeEvent(eventType, message, result);
 }
+
+void MainWidget::resizeEvent(QResizeEvent* ev)
+{
+    if (!is_fullscreen_)
+    {
+        normal_rect_ = this->geometry();
+    }
+    else
+    {
+        return QWidget::resizeEvent(ev);
+    }
+}
+
 
 LRESULT MainWidget::calculateBorder(const QPoint& pt)
 {
@@ -421,43 +443,31 @@ void MainWidget::initMainWidget()
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(0, 255, 0, 0));
 
-    //QWidget* wid = new QWidget;
-    //wid->setMaximumSize(8, 10000);
-    //wid->setMinimumWidth(8);
-    //wid->setAutoFillBackground(true);
-    //wid->setPalette(palette);
-    //wid->setLayout(left_extent_bt_layout);
-
-    //palette.setColor(QPalette::Background, QColor(0, 255, 0, 50));
-
-    //QWidget* w = new QWidget;
-    //w->setAutoFillBackground(true);
-    //w->setPalette(palette);
-
     display_widget_ = new DisplayWidget();
+    //display_widget_->installEventFilter(this);
 
-    QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
-        {
-            if(status)
-            {
-                cam_menu_->hide();
-                menu_extend_bt_->hide();
-                ui.title_wid->hide();
-                this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-                auto screen = QGuiApplication::primaryScreen();
-                QRect screen_rect = screen->geometry();
-                this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-                this->showFullScreen();
-                qDebug() << "display show full";
-            }
-            else
-            {
-                cam_menu_->show();
-                menu_extend_bt_->show();
-                ui.title_wid->show();
-                this->showNormal();
-            }
-        });
+    //QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
+    //    {
+    //        if(status)
+    //        {
+    //            cam_menu_->hide();
+    //            menu_extend_bt_->hide();
+    //            ui.title_wid->hide();
+    //            //this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    //            auto screen = QGuiApplication::primaryScreen();
+    //            QRect screen_rect = screen->geometry();
+    //            this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+    //            this->showFullScreen();
+    //            qDebug() << "display show full";
+    //        }
+    //        else
+    //        {
+    //            cam_menu_->show();
+    //            menu_extend_bt_->show();
+    //            ui.title_wid->show();
+    //            this->showNormal();
+    //        }
+    //    });
     //panel_widget_->setAutoFillBackground(true);
     //panel_widget_->setPalette(palette);
 

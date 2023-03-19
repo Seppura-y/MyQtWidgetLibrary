@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="ver_layout">
+    <layout class="QVBoxLayout" name="ver_layout" stretch="0,1,0">
      <property name="spacing">
       <number>0</number>
      </property>

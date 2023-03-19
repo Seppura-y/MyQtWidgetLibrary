@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QWidget>
-
+#include <QTimer>
 // #include "canvas/canvas_scene.h"
 // #include "canvas/canvas_view.h"
 // #include "canvas/canvas_widget.h"
@@ -34,11 +34,14 @@ protected:
 	void dropEvent(QDropEvent* ev) override;
 	bool eventFilter(QObject* watched, QEvent* event) override;
 	void mouseDoubleClickEvent(QMouseEvent* ev) override;
+	void mouseMoveEvent(QMouseEvent* ev) override;
 private:
 	void initTitle();
 	void initContent();
 	void initToolBar();
 	void initControlBar();
+
+	void fullscreenDisplay(bool status);
 
 signals:
 	void sigDisplayShowFullscreen(bool);
@@ -49,6 +52,10 @@ public slots:
 	void onToolBarButtonToggled(QAbstractButton* bt, bool checked);
 	void onSoundVolumeValueChanged(int value);
 	void onShowFullScreen(bool status);
+
+
+private slots:
+	void onMouseDetectTimeout();
 private:
 	Ui::DisplayWidget ui;
 
@@ -83,7 +90,19 @@ private:
 	bool is_playing_ = false;
 
 
+
+	//////////////////////Control Bar//////////////////////
 	ControlBar* control_bar_ = nullptr;
+	QPropertyAnimation* ani_control_bar_show_ = nullptr;
+	QPropertyAnimation* ani_control_bar_hide_ = nullptr;
+	QRect rect_control_bar_show_;
+	QRect rect_control_bar_hide_;
+	QTimer timer_control_bar_;
+	QTimer timer_mouse_detect_;
+	bool is_fullscreen_ = false;
+	bool is_control_bar_show_ = true;
+
+	QTimer timer_check_fullscreen_;
 	
 	////////////////////////canvas/////////////////////////////
 	//CanvasWidget* canvas_wid_ = nullptr;

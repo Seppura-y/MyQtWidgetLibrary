@@ -9,35 +9,53 @@
 #include <QKeyEvent>
 #include <QScreen>
 #include <QGuiApplication>
+#include <QApplication>
 
 #include <Windows.h>
 
 #include <string>
+#include <iostream>
 
-BOOL CALLBACK EnumVLC(HWND hwnd, LPARAM lParam)
-{
-	TCHAR szTitle[1024];
-	int len = GetWindowText(hwnd, szTitle, 1024);
-
-	if (len > 0)
+static HHOOK hHook = NULL;
+static bool is_fullscreen = false;
+LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
+	switch (wParam)
 	{
-		EnableWindow(hwnd, FALSE);
-		KillTimer(NULL, 1);
+
+		case WM_LBUTTONDBLCLK:
+		{
+			qDebug() << "left double click";
+			is_fullscreen = !is_fullscreen;
+		}
 	}
-	return TRUE;
+	return CallNextHookEx(hHook, nCode, wParam, lParam);
 }
 
-void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
-{
-	HWND wnd = FindWindowEx(NULL, NULL, NULL, "MediaManager");
-	if(wnd)
-	{
-		EnumChildWindows(wnd, EnumVLC, NULL);
-	}
-}
+//BOOL CALLBACK EnumVLC(HWND hwnd, LPARAM lParam)
+//{
+//	TCHAR szTitle[1024];
+//	int len = GetWindowText(hwnd, szTitle, 1024);
+//
+//	if (len > 0)
+//	{
+//		EnableWindow(hwnd, FALSE);
+//		KillTimer(NULL, 1);
+//	}
+//	return TRUE;
+//}
+//
+//void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
+//{
+//	HWND wnd = FindWindowEx(NULL, NULL, NULL, "MediaManager");
+//	if(wnd)
+//	{
+//		EnumChildWindows(wnd, EnumVLC, NULL);
+//	}
+//}
 
 RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 {
+
 	this->setWindowTitle("RenderWidget");
 	setAttribute(Qt::WA_TranslucentBackground);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
@@ -45,6 +63,23 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 
 	//render_manager_.reset(new VlcManager());
 	render_manager_ = new VlcManager();
+
+	this->setMouseTracking(true);
+	timer_mouse_hide_.start(1000);
+	QObject::connect(&timer_mouse_hide_, &QTimer::timeout, this, &RenderWidget::onMouseHideTimeout);
+	QObject::connect(&timer_fullscreen_, &QTimer::timeout, [=]
+		{
+			//emit sigShowFullscreen(is_fullscreen);
+			is_fullscreen_ = is_fullscreen;
+		});
+
+
+	hHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, NULL, 0);
+	if (hHook == NULL)
+	{
+		qDebug() << "hook failed";
+	}
+
 
 	int ret = render_manager_->initVLC();
 
@@ -96,6 +131,7 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 	//	{
 	//		emit this->sigUpdateTotalDuration(time);
 	//	});
+
 }
 
 RenderWidget::~RenderWidget()
@@ -111,7 +147,7 @@ void RenderWidget::openMediaFile(QString file_path)
 		QMessageBox::information(this, "warnning", "open file failed");
 	}
 	emit sigOpenMediaFileSuccess();
-	SetTimer(NULL, 1, 300, TimeProc);
+	//SetTimer(NULL, 1, 300, TimeProc);
 }
 
 void RenderWidget::setMediaPause(bool pause)
@@ -141,16 +177,15 @@ void RenderWidget::setMediaStop()
 	render_manager_->setStop();
 }
 
+bool RenderWidget::getFullscreen()
+{
+	return is_fullscreen_;
+}
+
 //void RenderWidget::onOpenMediaFile(QString file_path)
 //{
 //
 //}
-
-void RenderWidget::mousePressEvent(QMouseEvent* ev)
-{
-	qDebug() << "render widget mouse pressed";
-	return QWidget::mousePressEvent(ev);
-}
 
 void RenderWidget::paintEvent(QPaintEvent* ev)
 {
@@ -163,32 +198,45 @@ void RenderWidget::paintEvent(QPaintEvent* ev)
 	QWidget::paintEvent(ev);
 }
 
-void RenderWidget::mouseDoubleClickEvent(QMouseEvent* event)
+void RenderWidget::mouseMoveEvent(QMouseEvent* ev)
 {
-	//if (this->isFullScreen())
-	//{
-	//	this->showNormal();
-	//	//emit sigShowFullscreen(false);
-	//	qDebug() << "show normal";
-	//}
-	//else
-	//{
-	//	//auto screen = QGuiApplication::primaryScreen();
-	//	//QRect screen_rect = screen->geometry();
-	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-	//	this->showFullScreen();
-	//	emit sigShowFullscreen(true);
-	//	qDebug() << "show full";
-	//}
+	//this->setCursor(QCursor(Qt::ArrowCursor));
+	QWidget::mouseMoveEvent(ev);
 }
 
-void RenderWidget::keyPressEvent(QKeyEvent* event)
+void RenderWidget::mouseDoubleClickEvent(QMouseEvent* ev)
 {
-	//if (event->key() == Qt::Key_Escape)
-	//{
-	//	if (this->isFullScreen())
-	//	{
-	//		this->showNormal();
-	//	}
-	//}
+	qDebug() << "render widget double click";
+	QWidget::mouseDoubleClickEvent(ev);
 }
+
+void RenderWidget::onMouseHideTimeout()
+{
+	//this->setCursor(QCursor(Qt::BlankCursor));
+}
+
+//
+//bool RenderWidget::nativeEventFilter(const QByteArray& eventType, void* message, long* result)
+//{
+//	if (eventType == "windows_generic_MSG" || eventType == "windows_dispatcher_MSG") {
+//		MSG* pMsg = reinterpret_cast<MSG*>(message);
+//		std::cout << "msg id = " << pMsg->message << std::endl;
+//		if (pMsg->message == 32) 
+//		{
+//			if (is_fullscreen_)
+//			{
+//				is_fullscreen_ = false;
+//				//emit sigShowFullscreen(false);
+//			}
+//			else
+//			{
+//				is_fullscreen_ = true;
+//				//emit sigShowFullscreen(true);
+//			}
+//			return false;
+//		}
+//	}
+//			//return QAbstractNativeEventFilter::nativeEventFilter(eventType, message, result);
+//
+//	return false;
+//}
