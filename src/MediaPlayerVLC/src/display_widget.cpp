@@ -25,8 +25,8 @@
 #include "render_widget.h"
 #include "control_bar.h"
 
-//#include "camera_menu.h"
-//#include "item_listwidget.h"
+#include "camera_menu.h"
+#include "item_listwidget.h"
 
 DisplayWidget::DisplayWidget(QWidget *parent)
 	: QWidget(parent)
@@ -43,7 +43,7 @@ DisplayWidget::DisplayWidget(QWidget *parent)
 	timer_mouse_detect_.setInterval(300);
 	//QObject::connect(&timer_control_bar_, &QTimer::timeout, [=] {QApplication::setOverrideCursor(Qt::BlankCursor); });
 	QObject::connect(&timer_mouse_detect_, &QTimer::timeout, this, &DisplayWidget::onMouseDetectTimeout);
-	this->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/display_widget.css"));
+	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
 	this->setMouseTracking(true);
 }
 
@@ -543,8 +543,8 @@ void DisplayWidget::dragEnterEvent(QDragEnterEvent* ev)
 
 void DisplayWidget::dropEvent(QDropEvent* ev)
 {
-	//int itemIndex = ((ItemListWidget*)ev->source())->currentIndex().row();
-	//CameraMenu::ItemListType itemType = (CameraMenu::ItemListType)((ItemListWidget*)ev->source())->item_type_;
+	int itemIndex = ((ItemListWidget*)ev->source())->currentIndex().row();
+	CameraMenu::ItemListType item_type = (CameraMenu::ItemListType)((ItemListWidget*)ev->source())->item_type_;
 
 	QByteArray arr = ev->mimeData()->data("application/json");
 	qDebug() << arr;
@@ -552,8 +552,8 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 	QJsonDocument doc(QJsonDocument::fromJson(arr, &err));
 	QJsonObject obj = doc.object();
 
-	QString name = obj.find("name").value().toString();
-	qDebug() << "get name : " << name;
+	//QString name = obj.find("name").value().toString();
+	//qDebug() << "get name : " << name;
 
 	//this->name_ = obj.find("name").value().toString();
 	//this->url_ = obj.find("url").value().toString();
@@ -561,10 +561,18 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 	//this->server_url_ = obj.find("server_url").value().toString();
 	//this->item_type_ = itemType;
 
-	//emit SigConfigAndStartHandler();
-	render_widget_->openMediaFile(name);
+	auto name = obj.find("name").value().toString();
+	auto str_name = name.toStdString();
+	auto url = obj.find("url").value().toString();
+	auto sub_url = obj.find("sub_url").value().toString().toStdString();
+	auto server_url = obj.find("server_url").value().toString().toStdString();
 
-	ev->setDropAction(Qt::MoveAction);
+
+	//emit SigConfigAndStartHandler();
+	render_widget_->openMediaFile(url);
+
+	ev->setDropAction(Qt::CopyAction);
+	//ev->setDropAction(Qt::MoveAction);
 	ev->accept();
 }
 

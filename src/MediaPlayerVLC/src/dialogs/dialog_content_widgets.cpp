@@ -31,7 +31,7 @@ struct ImageFormatRow
 
 DialogContentBase::DialogContentBase(QWidget* parent) : QWidget(parent)
 {
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/dialog_base.css"));
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/dialog_base.css"));
 }
 
 void DialogContentBase::paintEvent(QPaintEvent* ev)
@@ -140,7 +140,7 @@ DesktopTab::DesktopTab(int tab_index, QWidget* parent, capture_type type) : Dial
 {
     tab_index_ = tab_index;
     ui.setupUi(this);
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/resources/res/css/my_tabwidget.css"));
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":/resources/res/css/my_tabwidget.css"));
     auto screen = QGuiApplication::primaryScreen();
     screen_rect_ = screen->geometry();
 
@@ -213,7 +213,7 @@ DesktopTab::DesktopTab(int tab_index, QWidget* parent, capture_type type) : Dial
 
     //setLayout(vbox);
     connectSignals();
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/dialog_content.css"));
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/dialog_content.css"));
 }
 
 void DesktopTab::connectSignals()

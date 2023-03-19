@@ -15,7 +15,7 @@
 ItemListWidget::ItemListWidget(int item_type,QWidget* parent) : QListWidget(parent)
 {
 	item_type_ = item_type;
-    this->verticalScrollBar()->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/my_scrollbar.css"));
+    this->verticalScrollBar()->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
     this->setSelectionMode(SelectionMode::SingleSelection);
     this->setDefaultDropAction(Qt::MoveAction);
     this->setViewMode(QListView::ListMode);
@@ -69,8 +69,8 @@ void ItemListWidget::mouseMoveEvent(QMouseEvent* ev)
         if (temp.manhattanLength() > QApplication::startDragDistance())
         {
             QJsonObject send;
-            ConfigHelper* conf = ConfigHelper::GetInstance();
-            QJsonObject* obj = conf->GetObject((ConfigHelper::JsonObjType)this->item_type_);
+            ConfigHelper* conf = ConfigHelper::getInstance();
+            QJsonObject* obj = conf->getObject((ConfigHelper::JsonObjType)this->item_type_);
             if (drag_item_ == nullptr || obj == nullptr)
             {
                 return;

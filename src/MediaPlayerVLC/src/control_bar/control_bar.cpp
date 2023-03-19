@@ -89,7 +89,7 @@ ControlBar::~ControlBar()
 
 void ControlBar::initUI()
 {
-    setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/control_bar.css"));
+    setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/control_bar.css"));
     int id = QFontDatabase::addApplicationFont(":/resources/res/fonts/Font Awesome 6 Pro-Light-300.otf");
     if (id < 0)
     {
@@ -104,7 +104,7 @@ void ControlBar::initUI()
         font.setPointSize(16);
 
         play_slider_ = new CustomSlider;
-        play_slider_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/control_bar.css"));
+        play_slider_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/control_bar.css"));
         play_slider_->setOrientation(Qt::Horizontal);
         play_slider_->setFixedHeight(16);
         QObject::connect(play_slider_, &CustomSlider::sigCustomSliderValueChanged, 

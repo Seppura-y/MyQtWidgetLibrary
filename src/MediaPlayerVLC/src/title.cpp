@@ -68,7 +68,7 @@ void Title::initUi()
 	ani_menu_show_->setDuration(200);
 	QObject::connect(ani_menu_show_, SIGNAL(finished()), this, SLOT(onAniFinished()));
 
-	setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/title.css"));
+	setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/title.css"));
 }
 
 void Title::initExtendMenu()

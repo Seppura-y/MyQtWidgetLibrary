@@ -48,7 +48,7 @@ MenuTabWidget::MenuTabWidget(QWidget* a_parent) : QTabWidget(a_parent)
     setTabBar(tab_bar_);
     setTabPosition(QTabWidget::West);
     this->setDocumentMode(true);
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/camera_menu.css"));
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/camera_menu.css"));
 }
 
 MenuTabWidget::~MenuTabWidget()

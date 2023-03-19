@@ -72,7 +72,7 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_Hover);
-    setStyleSheet(ConfigHelper::GetQssString(":resources/res/css/main_widget.css"));
+    setStyleSheet(ConfigHelper::getQssString(":resources/res/css/main_widget.css"));
 
     HWND hwnd = reinterpret_cast<HWND>(this->winId());
     DWORD style = GetWindowLong(hwnd, GWL_STYLE);
@@ -418,7 +418,7 @@ void MainWidget::initMainWidget()
     menu_extend_bt_ = new QPushButton;
     menu_extend_bt_->setMaximumSize(8, 90);
     menu_extend_bt_->setFixedSize(8, 90);
-    menu_extend_bt_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/narrow_button.css"));
+    menu_extend_bt_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/narrow_button.css"));
 
     int id = QFontDatabase::addApplicationFont(":/resources/res/fonts/Font Awesome 6 Duotone-Solid-900.otf");
 

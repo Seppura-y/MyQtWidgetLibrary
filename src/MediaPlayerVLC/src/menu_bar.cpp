@@ -31,7 +31,7 @@ MenuBar::MenuBar(QWidget* parent) : QMenuBar(parent)
     addMenu(menu_opt_ = new OptionMenu());
     addMenu(menu_about_ = new AboutMenu());
 
-    setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/media_manager.css"));
+    setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/media_manager.css"));
 
 }
 

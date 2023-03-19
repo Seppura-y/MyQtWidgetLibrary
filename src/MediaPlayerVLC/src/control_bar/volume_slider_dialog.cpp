@@ -18,7 +18,7 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
 	slider_ = new CustomSlider(this);
 	slider_->setOrientation(Qt::Vertical);
     slider_->setMaximum(100);
-    slider_->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/control_bar.css"));
+    slider_->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/control_bar.css"));
     v_layout->addWidget(slider_);
 
 	setFixedSize(40, 120);

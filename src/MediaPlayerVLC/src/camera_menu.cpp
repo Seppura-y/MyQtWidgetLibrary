@@ -12,6 +12,7 @@
 #include "config_helper.h"
 #include "item_set_dialog.h"
 #include "media_src_dialog.h"
+#include "dialog_base.h"
 
 #define ITEM_LIST_CONFIG "./config/configuration.json"
 #define ITEM_LIST_COUNT 3
@@ -30,8 +31,8 @@ CameraMenu::CameraMenu(QWidget* parent)
     //lw_camera_ = (ItemListWidget*)ui.tw_item->widget(1);
     //lw_camera_->setDragEnabled(true);
 
-    config_tools_ = ConfigHelper::GetInstance();
-    config_tools_->InitJson();
+    config_tools_ = ConfigHelper::getInstance();
+    config_tools_->initJson();
     initItemList();
 
     QObject::connect(ui.pb_add, &QPushButton::clicked, this, &CameraMenu::onCmrMenuAddButtonClicked);
@@ -55,7 +56,7 @@ CameraMenu::~CameraMenu()
 
 void CameraMenu::initUi()
 {
-    setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/camera_menu.css"));
+    setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/camera_menu.css"));
     int id = QFontDatabase::addApplicationFont(":/resources/res/fonts/Font Awesome 6 Pro-Light-300.otf");
     if (id < 0)
         qWarning() << "FontAwesome cannot be loaded !";
@@ -83,7 +84,7 @@ void CameraMenu::initUi()
     //lw_camera_->setDragDropMode(QAbstractItemView::InternalMove);
     //lw_camera_->setDragEnabled(true);
     //lw_camera_->setFrameShape(QFrame::NoFrame);
-    lw_camera_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/item_list_widget.css"));
+    lw_camera_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/item_list_widget.css"));
     vb_camera_ = new QVBoxLayout();
     vb_camera_->setContentsMargins(0, 0, 0, 0);
     vb_camera_->setMargin(0);
@@ -96,7 +97,7 @@ void CameraMenu::initUi()
     //lw_local_file_->setDragDropMode(QAbstractItemView::InternalMove);
     //lw_local_file_->setDragEnabled(true);
     //lw_local_file_->setFrameShape(QFrame::NoFrame);
-    lw_local_file_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/item_list_widget.css"));
+    lw_local_file_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/item_list_widget.css"));
     vb_local_file_ = new QVBoxLayout();
     vb_local_file_->setContentsMargins(0, 0, 0, 0);
     vb_local_file_->setMargin(0);
@@ -111,7 +112,7 @@ void CameraMenu::initUi()
     //lw_media_src_->setDragEnabled(true);
     //lw_local_file_->setFrameShape(QFrame::NoFrame);
     //ev_handle->handleEventsOf(lw_media_src_);
-    lw_media_src_->setStyleSheet(ConfigHelper::GetQssString(":/resources/res/css/item_list_widget.css"));
+    lw_media_src_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/item_list_widget.css"));
     vb_media_src_ = new QVBoxLayout();
     vb_media_src_->setContentsMargins(0, 0, 0, 0);
     vb_media_src_->setMargin(0);
@@ -333,7 +334,7 @@ void CameraMenu::setListItem(ItemListType item_type, int item_index)
         ItemListWidget* lwCur = (ItemListWidget*)ui.tw_item->currentWidget()->layout()->itemAt(0)->widget();
         lwCur->setItemType((int)item_type);
         key = lwCur->currentItem()->text();
-        obj = *config_tools_->GetObject((ConfigHelper::JsonObjType)item_type);
+        obj = *config_tools_->getObject((ConfigHelper::JsonObjType)item_type);
 
         if (!obj.contains(key))
         {
@@ -391,8 +392,8 @@ void CameraMenu::setListItem(ItemListType item_type, int item_index)
             info.insert("server_url", dia->getServerUrl());
             info.insert("item_type", (int)item_type);
 
-            config_tools_->WriteJson(dia->getName(), info, (ConfigHelper::JsonObjType)item_type);
-            config_tools_->SaveJson(ITEM_LIST_CONFIG);
+            config_tools_->writeJson(dia->getName(), info, (ConfigHelper::JsonObjType)item_type);
+            config_tools_->saveJson(ITEM_LIST_CONFIG);
             initItemList();
             break;
         }
@@ -402,11 +403,11 @@ void CameraMenu::setListItem(ItemListType item_type, int item_index)
             {
                 return;
             }
-            config_tools_->WriteJson(key, obj, (ConfigHelper::JsonObjType)item_type);
+            config_tools_->writeJson(key, obj, (ConfigHelper::JsonObjType)item_type);
             ////QJsonDocument doc;
             ////doc.setObject(obj);
             ////QByteArray arr = doc.toJson();
-            config_tools_->SaveJson(ITEM_LIST_CONFIG);
+            config_tools_->saveJson(ITEM_LIST_CONFIG);
             initItemList();
             return;
         }
@@ -415,26 +416,60 @@ void CameraMenu::setListItem(ItemListType item_type, int item_index)
 
 void CameraMenu::setLocalListItem(ItemListType item_type, int item_index)
 {
-    QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择文件"), QString("./"), QString("Files (*.mp4)"));
-    QString openPicName = openPicUrl.right(openPicUrl.size() - openPicUrl.lastIndexOf('/') - 1);
-    if (openPicName.size())
+    QString file_path;
+    QString file_name;
+    MediaFileDialog* dialog = new MediaFileDialog();
+    for (;;)
     {
-        if (item_index >= 0)
+        if (dialog->exec() == QDialog::Accepted)
         {
-            ItemListWidget* lwCur = (ItemListWidget*)ui.tw_item->currentWidget()->layout()->itemAt(0)->widget();
-            //lwCur->itemType = itemType;
-            lwCur->currentItem()->setText(openPicName);
-            deleteItem(item_type, item_index);
-        }
+            file_path = dialog->getFilePath();
+            file_name = file_path.right(file_path.size() - file_path.lastIndexOf('/') - 1);
+            if (file_name.size())
+            {
+                if (item_index >= 0)
+                {
+                    ItemListWidget* lw_cur = (ItemListWidget*)ui.tw_item->currentWidget()->layout()->itemAt(0)->widget();
+                    //lwCur->itemType = itemType;
+                    lw_cur->currentItem()->setText(file_name);
+                    deleteItem(item_type, item_index);
+                }
 
-        QJsonObject obj;
-        obj.insert("name", openPicName);
-        obj.insert("url", openPicUrl);
-        obj.insert("item_type", (int)item_type);
-        config_tools_->WriteJson(openPicName, obj, (ConfigHelper::JsonObjType)item_type);
-        config_tools_->SaveJson(ITEM_LIST_CONFIG);
-        initItemList();
+                QJsonObject obj;
+                obj.insert("name", file_name);
+                obj.insert("url", file_path);
+                obj.insert("item_type", (int)item_type);
+                config_tools_->writeJson(file_name, obj, (ConfigHelper::JsonObjType)item_type);
+                config_tools_->saveJson(ITEM_LIST_CONFIG);
+                initItemList();
+            }
+            break;
+        }
+        else if (dialog->close())
+        {
+            break;
+        }
     }
+    //QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择文件"), QString("./"), QString("Files (*.mp4)"));
+    //QString openPicName = openPicUrl.right(openPicUrl.size() - openPicUrl.lastIndexOf('/') - 1);
+    //if (openPicName.size())
+    //{
+    //    if (item_index >= 0)
+    //    {
+    //        ItemListWidget* lwCur = (ItemListWidget*)ui.tw_item->currentWidget()->layout()->itemAt(0)->widget();
+    //        //lwCur->itemType = itemType;
+    //        lwCur->currentItem()->setText(openPicName);
+    //        deleteItem(item_type, item_index);
+    //    }
+
+    //    QJsonObject obj;
+    //    obj.insert("name", openPicName);
+    //    obj.insert("url", openPicUrl);
+    //    obj.insert("item_type", (int)item_type);
+    //    config_tools_->WriteJson(openPicName, obj, (ConfigHelper::JsonObjType)item_type);
+    //    config_tools_->SaveJson(ITEM_LIST_CONFIG);
+    //    initItemList();
+    //}
 
 }
 
@@ -453,13 +488,13 @@ void CameraMenu::deleteItem()
 void CameraMenu::deleteItem(ItemListType itemType, int index)
 {
     QString key = ((ItemListWidget*)ui.tw_item->currentWidget()->layout()->itemAt(0)->widget())->currentItem()->text();
-    QJsonObject* obj = config_tools_->GetObject((ConfigHelper::JsonObjType)itemType);
+    QJsonObject* obj = config_tools_->getObject((ConfigHelper::JsonObjType)itemType);
     if (obj->contains(key))
     {
         //QJsonObject::iterator it = obj.find(key);
         //obj.erase(it);
         obj->take(key);
-        config_tools_->SaveJson(ITEM_LIST_CONFIG);
+        config_tools_->saveJson(ITEM_LIST_CONFIG);
         initItemList();
     }
 
@@ -467,7 +502,7 @@ void CameraMenu::deleteItem(ItemListType itemType, int index)
 
 void CameraMenu::initItemList()
 {
-    if (config_tools_->LoadJson(ITEM_LIST_CONFIG))
+    if (config_tools_->loadJson(ITEM_LIST_CONFIG))
     {
         QMessageBox::information(nullptr, "error", QString("load %1 failed").arg(ITEM_LIST_CONFIG));
         return;
@@ -478,7 +513,7 @@ void CameraMenu::initItemList()
     {
         ItemListWidget* list = (ItemListWidget*)ui.tw_item->widget(i)->layout()->itemAt(0)->widget();
         list->clear();
-        src = config_tools_->GetObject((ConfigHelper::JsonObjType)i);
+        src = config_tools_->getObject((ConfigHelper::JsonObjType)i);
         if (!src)
         {
             break;

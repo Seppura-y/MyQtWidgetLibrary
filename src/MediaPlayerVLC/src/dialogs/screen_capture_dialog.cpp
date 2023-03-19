@@ -97,7 +97,7 @@ ScreenCaptureDialog::ScreenCaptureDialog(QWidget *parent)
     QObject::connect(pb_ok_, &QPushButton::clicked, this, &ScreenCaptureDialog::accept);
     QObject::connect(pb_cancel_, &QPushButton::clicked, this, &ScreenCaptureDialog::reject);
 
-    this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":/resouces/res/css/screen_capture_dialog.css"));
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":/resouces/res/css/screen_capture_dialog.css"));
 }
 
 ScreenCaptureDialog::~ScreenCaptureDialog()

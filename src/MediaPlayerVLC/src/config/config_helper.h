@@ -14,18 +14,18 @@ public:
 	};
 
 public:
-	static ConfigHelper* GetInstance();
-	static QString GetQssString(QString path);
-	static void SetButtonIcon(QPushButton* pb, int size, QChar icon);
-	static void SetItemIcon(QWidget* item, int size, QChar icon);
+	static ConfigHelper* getInstance();
+	static QString getQssString(QString path);
+	static void setButtonIcon(QPushButton* pb, int size, QChar icon);
+	static void setItemIcon(QWidget* item, int size, QChar icon);
 
 
-	QJsonObject* GetObject(JsonObjType type);
-	void InitJson();
-	int LoadJson(const QString filePath);
-	int SaveJson(const QString filepath);
-	int DeleteObject(const QString key, JsonObjType type);
-	int WriteJson(const QString key, QJsonObject object, enum JsonObjType type);
+	QJsonObject* getObject(JsonObjType type);
+	void initJson();
+	int loadJson(const QString filePath);
+	int saveJson(const QString filepath);
+	int deleteObject(const QString key, JsonObjType type);
+	int writeJson(const QString key, QJsonObject object, enum JsonObjType type);
 
 protected:
 

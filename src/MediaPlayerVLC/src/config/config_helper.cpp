@@ -25,13 +25,13 @@ ConfigHelper::ConfigHelper()
 	}
 }
 
-ConfigHelper* ConfigHelper::GetInstance()
+ConfigHelper* ConfigHelper::getInstance()
 {
 	static ConfigHelper conf_tools;
 	return &conf_tools;
 }
 
-QString ConfigHelper::GetQssString(QString path)
+QString ConfigHelper::getQssString(QString path)
 {
 	QString QssString;
 	QFile QssFile(path);
@@ -47,7 +47,7 @@ QString ConfigHelper::GetQssString(QString path)
 	return QssString;
 }
 
-void ConfigHelper::SetButtonIcon(QPushButton* pb, int size, QChar icon)
+void ConfigHelper::setButtonIcon(QPushButton* pb, int size, QChar icon)
 {
 	QFont font;
 	font.setFamily("FontAwesome");
@@ -57,7 +57,7 @@ void ConfigHelper::SetButtonIcon(QPushButton* pb, int size, QChar icon)
 	pb->setText(icon);
 }
 
-void ConfigHelper::SetItemIcon(QWidget* item, int size, QChar icon)
+void ConfigHelper::setItemIcon(QWidget* item, int size, QChar icon)
 {
 	QFont font;
 	font.setFamily("FontAwesome");
@@ -68,7 +68,7 @@ void ConfigHelper::SetItemIcon(QWidget* item, int size, QChar icon)
 }
 
 
-QJsonObject* ConfigHelper::GetObject(JsonObjType type)
+QJsonObject* ConfigHelper::getObject(JsonObjType type)
 {
 	QJsonObject temp;
 	QString key;
@@ -93,12 +93,12 @@ QJsonObject* ConfigHelper::GetObject(JsonObjType type)
 	}
 }
 
-void ConfigHelper::InitJson()
+void ConfigHelper::initJson()
 {
-	LoadJson(config_file_path);
+	loadJson(config_file_path);
 }
 
-int ConfigHelper::LoadJson(const QString filePath)
+int ConfigHelper::loadJson(const QString filePath)
 {
 	QFile load_file(filePath);
 
@@ -142,7 +142,7 @@ int ConfigHelper::LoadJson(const QString filePath)
 	return 0;
 }
 
-int ConfigHelper::SaveJson(const QString filepath)
+int ConfigHelper::saveJson(const QString filepath)
 {
 	QFile save_file(filepath);
 	QJsonObject save_object;
@@ -164,7 +164,7 @@ int ConfigHelper::SaveJson(const QString filepath)
 	return 0;
 }
 
-int ConfigHelper::DeleteObject(const QString key, JsonObjType type)
+int ConfigHelper::deleteObject(const QString key, JsonObjType type)
 {
 	QJsonObject* temp = nullptr;
 	switch (type)
@@ -204,7 +204,7 @@ int ConfigHelper::DeleteObject(const QString key, JsonObjType type)
 	return true;
 }
 
-int ConfigHelper::WriteJson(const QString key, QJsonObject object, enum JsonObjType type)
+int ConfigHelper::writeJson(const QString key, QJsonObject object, enum JsonObjType type)
 {
 
 	QJsonObject* temp = nullptr;

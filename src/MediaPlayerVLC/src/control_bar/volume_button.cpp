@@ -38,7 +38,7 @@ VolumeButton::VolumeButton(QWidget* parent) : QPushButton(parent)
 		this->setCursor(QCursor(Qt::PointingHandCursor));
 	}
 
-	this->setStyleSheet(ConfigHelper::GetInstance()->GetQssString(":resources/res/css/control_bar.css"));
+	this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/control_bar.css"));
 
 	graphics_effect_ = new QGraphicsOpacityEffect(this);
 	graphics_effect_->setOpacity(0);
