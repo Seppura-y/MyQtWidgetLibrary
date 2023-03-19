@@ -108,7 +108,7 @@ void ControlBar::initUI()
         play_slider_->setOrientation(Qt::Horizontal);
         play_slider_->setFixedHeight(16);
         QObject::connect(play_slider_, &CustomSlider::sigCustomSliderValueChanged, 
-            [&] 
+            [=] 
             {
                 //double percent_value = play_slider_->value() * 1.0 / play_slider_->maximum();
                 //emit sigControlSliderChanged(percent_value);
@@ -134,7 +134,7 @@ void ControlBar::initUI()
         btn_play_or_pause_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_play_or_pause_->setToolTip(QString::fromLocal8Bit("play"));
         connect(btn_play_or_pause_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 if (is_stoped_)
                 {
@@ -165,7 +165,7 @@ void ControlBar::initUI()
         btn_stop_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_stop_->setToolTip(QString::fromLocal8Bit("stop"));
         connect(btn_stop_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 emit sigStopPlaying();
                 is_playing_ = false;
@@ -180,7 +180,7 @@ void ControlBar::initUI()
         btn_next_clip_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_next_clip_->setToolTip(QString::fromLocal8Bit("next"));
         connect(btn_next_clip_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 emit sigNextClip();
             }
@@ -193,7 +193,7 @@ void ControlBar::initUI()
         btn_previous_clip_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_previous_clip_->setToolTip(QString::fromLocal8Bit("previous"));
         connect(btn_stop_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 emit sigPreviousClip();
             }
@@ -207,7 +207,7 @@ void ControlBar::initUI()
         btn_fullscreen_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_fullscreen_->setToolTip(QString::fromLocal8Bit("fullscreen"));
         connect(btn_fullscreen_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 if (is_stoped_)
                 {
@@ -238,7 +238,7 @@ void ControlBar::initUI()
         btn_open_file_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_open_file_->setToolTip(QString::fromLocal8Bit("open"));
         connect(btn_open_file_, &QPushButton::clicked, this,
-            [&]
+            [=]
             {
                 MediaFileDialog* dialog = new MediaFileDialog();
                 for (;;)

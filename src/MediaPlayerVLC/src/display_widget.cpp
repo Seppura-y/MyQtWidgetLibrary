@@ -155,29 +155,29 @@ void DisplayWidget::initContent()
 		}
 	);
 
-	//QObject::connect(render_widget_, &RenderWidget::sigShowFullscreen,
-	//	[=](bool status) {
-	//		//btn_start_push_->setChecked(true);
-	//		//btn_start_push_->setText(QChar(0x23f9));
-	//		if (status)
-	//		{
-	//			ui.wid_title->hide(); 
-	//		}
-	//		else
-	//		{
-	//			ui.wid_title->show();
-	//		}
-	//		emit sigDisplayShowFullscreen(status);
-	//	}
-	//);
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateTotalDuration, [&](QTime value)
+		{
+			control_bar_->setTotalDuration(value);
+		}
+	);
 
-	QObject::connect(render_widget_, &RenderWidget::sigShowFullscreen, this, &DisplayWidget::onShowFullScreen);
-	timer_check_fullscreen_.start(20);
-	//QObject::connect(&timer_check_fullscreen_, &QTimer::timeout, [=]()
-	//	{
-	//		bool status = render_widget_->getFullscreen();
-	//		onShowFullScreen(status);
-	//	});
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentSoundVolume, [&](int value)
+		{
+			control_bar_->setSoundSliderValue(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentTimePos, [&](QTime value)
+		{
+			control_bar_->setCurrentDuration(value);
+		}
+	);
+
+	QObject::connect(render_widget_, &RenderWidget::sigRenderMediaEndReached, [&]()
+		{
+			control_bar_->setStop();
+		}
+	);
 
 
 	//QWidget* widget = new QWidget;
@@ -389,20 +389,20 @@ void DisplayWidget::initControlBar()
 	ani_control_bar_show_ = new QPropertyAnimation(ui.wid_toolbar, "geometry");
 	ani_control_bar_hide_ = new QPropertyAnimation(ui.wid_toolbar, "geometry");
 
-	QObject::connect(control_bar_, &ControlBar::sigOpenMediaFile, [&](QString file)
+	QObject::connect(control_bar_, &ControlBar::sigOpenMediaFile, [=](QString file)
 		{
 			render_widget_->openMediaFile(file);
 		}
 	);
 
-	QObject::connect(control_bar_, &ControlBar::sigPlaying, [&](bool status)
+	QObject::connect(control_bar_, &ControlBar::sigPlaying, [=](bool status)
 		{
 			is_playing_ = !status;
 			render_widget_->setMediaPause(is_playing_);
 		}
 	);
 
-	QObject::connect(control_bar_, &ControlBar::sigStopPlaying, [&]()
+	QObject::connect(control_bar_, &ControlBar::sigStopPlaying, [=]()
 		{
 			is_playing_ = false;
 			render_widget_->setMediaStop();
@@ -410,17 +410,19 @@ void DisplayWidget::initControlBar()
 		}
 	);
 
-	QObject::connect(control_bar_, &ControlBar::sigControlSliderChanged, [&](double value)
+	QObject::connect(control_bar_, &ControlBar::sigControlSliderChanged, [=](double value)
 		{
 			render_widget_->setSeekPos(value);
 		}
 	);
 
-	QObject::connect(control_bar_, &ControlBar::sigSoundVolumeChanged, [&](int value)
+	QObject::connect(control_bar_, &ControlBar::sigSoundVolumeChanged, [=](int value)
 		{
 			render_widget_->setSoundVolume(value);
 		}
 	);
+
+	QObject::connect(control_bar_, &ControlBar::sigFullscreen, this, &DisplayWidget::onShowFullScreen);
 }
 
 void DisplayWidget::onPanelChanged(bool is_checked)
@@ -488,59 +490,43 @@ void DisplayWidget::onSoundVolumeValueChanged(int value)
 	btn_volume_->setToolTip(str + str2);
 }
 
-bool DisplayWidget::eventFilter(QObject* watched, QEvent* event)
-{
-	// CanvasView* window = qobject_cast<CanvasView*>(watched);
-	// if (window == nullptr)
-	// 	return false;
-	//qDebug() << event->type();
-	//switch (event->type())
-	//{
-	//	case QEvent::Drop:
-	//	{
-	//		this->dropEvent((QDropEvent*)event);
-	//		return true;
-	//		break;
-	//	}
-	//	case QEvent::DragEnter:
-	//	{
-	//		this->dragEnterEvent((QDragEnterEvent*)event);
-	//		return true;
-	//	}
-	//	case QEvent::MouseButtonPress:
-	//	{
-	//		qDebug() << "mouse button press";
-	//		return true;
-	//	}
-	//	case QEvent::MouseMove:
-	//	{
-	//		qDebug() << "mouse move";
-	//		return true;
-	//	}
-	//	default:
-	//	{
-	//		return false;
-	//	}
-	//}
-
-	//RenderWidget* render_widget = qobject_cast<RenderWidget*>(watched);
-	//if (render_widget == nullptr)
-	//	return false;
-
-	//switch (event->type()) 
-	//{
-	//case QEvent::MouseButtonDblClick: 
-	//{
-	//	qDebug() << "display filter";
-	//	return true;
-	//}
-
-	//default:
-	//	break;
-	//}
-
-	return QWidget::eventFilter(watched, event);
-}
+//bool DisplayWidget::eventFilter(QObject* watched, QEvent* event)
+//{
+//	// CanvasView* window = qobject_cast<CanvasView*>(watched);
+//	// if (window == nullptr)
+//	// 	return false;
+//	//qDebug() << event->type();
+//	//switch (event->type())
+//	//{
+//	//	case QEvent::Drop:
+//	//	{
+//	//		this->dropEvent((QDropEvent*)event);
+//	//		return true;
+//	//		break;
+//	//	}
+//	//	case QEvent::DragEnter:
+//	//	{
+//	//		this->dragEnterEvent((QDragEnterEvent*)event);
+//	//		return true;
+//	//	}
+//	//	case QEvent::MouseButtonPress:
+//	//	{
+//	//		qDebug() << "mouse button press";
+//	//		return true;
+//	//	}
+//	//	case QEvent::MouseMove:
+//	//	{
+//	//		qDebug() << "mouse move";
+//	//		return true;
+//	//	}
+//	//	default:
+//	//	{
+//	//		return false;
+//	//	}
+//	//}
+//
+//	return QWidget::eventFilter(watched, event);
+//}
 
 void DisplayWidget::dragEnterEvent(QDragEnterEvent* ev)
 {
@@ -574,34 +560,28 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 	ev->accept();
 }
 
-void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
-{
-	//if (this->isFullScreen())
-	//{
-	//	this->showNormal();
-	//	emit sigDisplayShowFullscreen(false);
-	//	qDebug() << "display show normal";
-	//}
-	//else
-	//{
-	//	//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-	//	//auto screen = QGuiApplication::primaryScreen();
-	//	//QRect screen_rect = screen->geometry();
-	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-	//	this->showFullScreen();
-	//	emit sigDisplayShowFullscreen(true);
-	//	qDebug() << "display show full";
-	//}
-	return QWidget::mouseDoubleClickEvent(event);
-}
+//void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
+//{
+//	//if (this->isFullScreen())
+//	//{
+//	//	this->showNormal();
+//	//	emit sigDisplayShowFullscreen(false);
+//	//	qDebug() << "display show normal";
+//	//}
+//	//else
+//	//{
+//	//	//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+//	//	//auto screen = QGuiApplication::primaryScreen();
+//	//	//QRect screen_rect = screen->geometry();
+//	//	//this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+//	//	this->showFullScreen();
+//	//	emit sigDisplayShowFullscreen(true);
+//	//	qDebug() << "display show full";
+//	//}
+//	return QWidget::mouseDoubleClickEvent(event);
+//}
 
-void DisplayWidget::mouseMoveEvent(QMouseEvent* ev)
-{
-	//qDebug() << "display widget mouse move";
-	//QApplication::setOverrideCursor(Qt::ArrowCursor);
-	//this->setCursor(QCursor(Qt::ArrowCursor));
-	QWidget::mouseMoveEvent(ev);
-}
+
 
 void DisplayWidget::onMouseDetectTimeout()
 {
@@ -636,8 +616,7 @@ void DisplayWidget::onMouseDetectTimeout()
 				is_control_bar_show_ = false;
 				ani_control_bar_hide_->start();
 				timer_control_bar_.singleShot(1000, this, [=] {});
-				//QApplication::setOverrideCursor(Qt::BlankCursor);
-				//this->setCursor(QCursor(Qt::BlankCursor));
+
 			}
 		}
 	}
@@ -652,14 +631,21 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		is_fullscreen_ = true;
 		ui.wid_title->hide();
 
-		//render_widget_->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);
+		//render_widget_->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
 		//render_widget_->showFullScreen();
 		//render_widget_->windowHandle()->setScreen(current_screen);
 
 
 		QRect screen_rect = current_screen->geometry();
+
+		render_widget_->setGeometry(screen_rect);
+
 		int control_bar_height = control_bar_->height();
-		int x = render_widget_->x();
+		//int x = render_widget_->x();
+		//rect_control_bar_show_ = QRect(x, screen_rect.height() - control_bar_height, screen_rect.width(), control_bar_height);
+		//rect_control_bar_hide_ = QRect(x, screen_rect.height(), screen_rect.width(), control_bar_height);
+
+		int x = screen_rect.x();
 		rect_control_bar_show_ = QRect(x, screen_rect.height() - control_bar_height, screen_rect.width(), control_bar_height);
 		rect_control_bar_hide_ = QRect(x, screen_rect.height(), screen_rect.width(), control_bar_height);
 
@@ -671,24 +657,16 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		ani_control_bar_hide_->setEndValue(rect_control_bar_hide_);
 		ani_control_bar_hide_->setDuration(1000);
 
-		//ui.wid_toolbar->setGeometry(rect_control_bar_show_);
+		ui.wid_toolbar->setGeometry(rect_control_bar_show_);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget | Qt::WindowStaysOnTopHint);
 		ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::WindowStaysOnTopHint);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::SubWindow | Qt::Tool);
-		//ui.wid_toolbar->raise();
+		ui.wid_toolbar->raise();
 		//ui.wid_toolbar->setFocus();
 		ui.wid_toolbar->setWindowOpacity(0.5);
 		ui.wid_toolbar->showNormal();
-		if (ui.wid_toolbar->window()->isTopLevel())
-		{
-			//ui.wid_toolbar->window()->
-			qDebug() << "control bar top level";
-		}
-		else
-		{
-			qDebug() << "control bar not top level";
-		}
+		//render_widget_->showNormal();
 		//ui.wid_toolbar->windowHandle()->setScreen(current_screen);
 
 		timer_control_bar_.start();
@@ -708,6 +686,7 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		ui.wid_toolbar->show();
 		ui.wid_toolbar->setWindowOpacity(1);
 		ui.wid_toolbar->setWindowFlag(Qt::Window, false);
+		//render_widget_->setWindowFlag(Qt::Window, false);
 		//ui.wid_toolbar->setWindowFlag(Qt::SubWindow, true);
 		//render_widget_->setWindowFlag(Qt::SubWindow, true);
 
@@ -725,13 +704,5 @@ void DisplayWidget::fullscreenDisplay(bool status)
 
 void DisplayWidget::onShowFullScreen(bool status)
 {
-	//if (status)
-	//{
-	//	ui.wid_title->hide();
-	//}
-	//else
-	//{
-	//	ui.wid_title->show();
-	//}
 	fullscreenDisplay(status);
 }

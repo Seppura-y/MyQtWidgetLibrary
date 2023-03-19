@@ -42,7 +42,7 @@ private slots:
 protected:
     void paintEvent(QPaintEvent* ev) override;
     void mouseMoveEvent(QMouseEvent* ev) override;
-    void mouseDoubleClickEvent(QMouseEvent* ev) override;
+    //void mouseDoubleClickEvent(QMouseEvent* ev) override;
     //bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
 private:
 

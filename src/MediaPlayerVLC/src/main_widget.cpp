@@ -146,33 +146,33 @@ void MainWidget::mouseReleaseEvent(QMouseEvent* ev)
 
 void MainWidget::mouseDoubleClickEvent(QMouseEvent* ev)
 {
-    if (this->isFullScreen())
-    {
-        is_fullscreen_ = false;
-        this->showNormal();
-        this->setGeometry(normal_rect_);
-        cam_menu_->show();
-        menu_extend_bt_->show();
-        ui.title_wid->show();
-        //this->setWindowFlag(Qt::WindowStaysOnTopHint, false);
-        emit sigShowFullscreen(false);
-        qDebug() << "show normal";
-    }
-    else
-    {
-        is_fullscreen_ = true;
-        cam_menu_->hide();
-        menu_extend_bt_->hide();
-        ui.title_wid->hide();
-        //this->setWindowFlag(Qt::WindowStaysOnTopHint,true);
+    //if (this->isFullScreen())
+    //{
+    //    is_fullscreen_ = false;
+    //    this->showNormal();
+    //    this->setGeometry(normal_rect_);
+    //    cam_menu_->show();
+    //    menu_extend_bt_->show();
+    //    ui.title_wid->show();
+    //    //this->setWindowFlag(Qt::WindowStaysOnTopHint, false);
+    //    emit sigShowFullscreen(false);
+    //    qDebug() << "show normal";
+    //}
+    //else
+    //{
+    //    is_fullscreen_ = true;
+    //    cam_menu_->hide();
+    //    menu_extend_bt_->hide();
+    //    ui.title_wid->hide();
+    //    //this->setWindowFlag(Qt::WindowStaysOnTopHint,true);
 
-        auto screen = QGuiApplication::primaryScreen();
-        QRect screen_rect = screen->geometry();
-        this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
-        this->showFullScreen();
-        emit sigShowFullscreen(true);
-        qDebug() << "show full";
-    }
+    //    auto screen = QGuiApplication::primaryScreen();
+    //    QRect screen_rect = screen->geometry();
+    //    this->setGeometry(0, 0, screen_rect.width(), screen_rect.height());
+    //    this->showFullScreen();
+    //    emit sigShowFullscreen(true);
+    //    qDebug() << "show full";
+    //}
 }
 
 bool MainWidget::nativeEvent(const QByteArray& eventType, void* message, long* result)

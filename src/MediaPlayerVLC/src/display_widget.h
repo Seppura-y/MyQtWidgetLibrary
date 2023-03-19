@@ -32,9 +32,9 @@ protected:
 	void resizeEvent(QResizeEvent* ev) override;
 	void dragEnterEvent(QDragEnterEvent* ev)override;
 	void dropEvent(QDropEvent* ev) override;
-	bool eventFilter(QObject* watched, QEvent* event) override;
-	void mouseDoubleClickEvent(QMouseEvent* ev) override;
-	void mouseMoveEvent(QMouseEvent* ev) override;
+	//bool eventFilter(QObject* watched, QEvent* event) override;
+	//void mouseDoubleClickEvent(QMouseEvent* ev) override;
+
 private:
 	void initTitle();
 	void initContent();
