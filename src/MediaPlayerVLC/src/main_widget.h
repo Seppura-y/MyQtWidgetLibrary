@@ -42,6 +42,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent* ev) override;
     bool nativeEvent(const QByteArray& eventType,void* message,long* result) override;
     void resizeEvent(QResizeEvent* ev) override;
+    void keyPressEvent(QKeyEvent* ev) override;
     //bool eventFilter(QObject* watched, QEvent* event) override;
 protected:
     void initTitle();

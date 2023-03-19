@@ -34,7 +34,7 @@ protected:
 	void dropEvent(QDropEvent* ev) override;
 	//bool eventFilter(QObject* watched, QEvent* event) override;
 	void mouseDoubleClickEvent(QMouseEvent* ev) override;
-
+	void keyPressEvent(QKeyEvent* ev) override;
 private:
 	void initTitle();
 	void initContent();

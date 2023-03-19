@@ -597,6 +597,15 @@ void DisplayWidget::mouseDoubleClickEvent(QMouseEvent* event)
 	return QWidget::mouseDoubleClickEvent(event);
 }
 
+void DisplayWidget::keyPressEvent(QKeyEvent* ev)
+{
+	if (ev->key() == Qt::Key_Q)
+	{
+		qDebug() << "q key pressed";
+	}
+	return QWidget::keyPressEvent(ev);
+}
+
 
 
 void DisplayWidget::onMouseDetectTimeout()

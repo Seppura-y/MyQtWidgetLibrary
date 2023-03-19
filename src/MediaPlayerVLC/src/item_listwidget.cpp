@@ -16,6 +16,7 @@ ItemListWidget::ItemListWidget(int item_type,QWidget* parent) : QListWidget(pare
 {
 	item_type_ = item_type;
     this->verticalScrollBar()->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
+    this->horizontalScrollBar()->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
     this->setSelectionMode(SelectionMode::SingleSelection);
     this->setDefaultDropAction(Qt::MoveAction);
     this->setViewMode(QListView::ListMode);

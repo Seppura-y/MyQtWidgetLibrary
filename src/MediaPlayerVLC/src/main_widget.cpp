@@ -508,3 +508,13 @@ void MainWidget::initMainWidget()
 
     QObject::connect(this, &MainWidget::sigShowFullscreen, display_widget_, &DisplayWidget::onShowFullScreen);
 }
+
+
+void MainWidget::keyPressEvent(QKeyEvent* ev)
+{
+    if (ev->key() == Qt::Key_Q)
+    {
+        //qDebug() << "q key pressed";
+    }
+    return QWidget::keyPressEvent(ev);
+}
