@@ -62,8 +62,7 @@ VolumeButton::VolumeButton(QWidget* parent) : QPushButton(parent)
 		{
 			volume_slider_dialog_->hide();
 		}
-		);
-
+	);
 }
 
 VolumeButton::~VolumeButton()
@@ -72,6 +71,7 @@ VolumeButton::~VolumeButton()
 
 void VolumeButton::initUi()
 {
+
 }
 
 
@@ -129,7 +129,7 @@ void VolumeButton::enterEvent(QEvent* ev)
 		}
 	);
 
-	connect(this, &VolumeButton::sigVolumeMute, volume_slider_dialog_, &VolumeSliderDialog::onVolumeMute);
+	//connect(this, &VolumeButton::sigVolumeMute, volume_slider_dialog_, &VolumeSliderDialog::onVolumeMute);
 }
 
 void VolumeButton::mousePressEvent(QMouseEvent* ev)
@@ -142,9 +142,10 @@ void VolumeButton::mousePressEvent(QMouseEvent* ev)
 			this->setText(QChar(0xf028));
 			if (volume_slider_dialog_)
 			{
-				volume_slider_dialog_->setSliderValue(volume_);
+				volume_slider_dialog_->setMute(false);
+				//volume_slider_dialog_->setSliderValue(volume_);
 				//emit sigVolumeValueChanged(volume_);
-				emit sigVolumeMute(false);
+				//emit sigVolumeMute(false);
 			}
 		}
 		else
@@ -153,9 +154,10 @@ void VolumeButton::mousePressEvent(QMouseEvent* ev)
 			this->setText(QChar(0xf2e2));
 			if (volume_slider_dialog_)
 			{
-				volume_slider_dialog_->setSliderValue(0);
+				volume_slider_dialog_->setMute(true);
+				//volume_slider_dialog_->setSliderValue(0);
 				//emit sigVolumeValueChanged(0);
-				emit sigVolumeMute(true);
+				//emit sigVolumeMute(true);
 			}
 		}
 	}

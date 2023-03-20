@@ -14,6 +14,7 @@ public:
 	~VolumeSliderDialog();
 
 	void setSliderValue(int value);
+	void setMute(bool status);
 
 protected:
 	bool event(QEvent* event) override;

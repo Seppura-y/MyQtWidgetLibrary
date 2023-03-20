@@ -17,12 +17,16 @@ public:
 	void setItemType(int type) { item_type_ = type; }
 	int getItemType() { return item_type_; }
 	int item_type_ = -1;
+
+signals:
+	
 protected:
 	void mousePressEvent(QMouseEvent* ev) override;
 	void mouseMoveEvent(QMouseEvent* ev) override;
 	void dropEvent(QDropEvent* ev) override;
 	void dragEnterEvent(QDragEnterEvent* ev) override;
 	void dragMoveEvent(QDragMoveEvent* ev) override;
+	//void keyPressEvent(QKeyEvent* ev) override;
 private:
 
     bool is_drag_outside_ = false;

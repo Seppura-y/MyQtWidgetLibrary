@@ -27,10 +27,20 @@ public:
     void reset();
 protected:
     void paintEvent(QPaintEvent* ev) override;
-
+    bool eventFilter(QObject* watched, QEvent* ev) override;
 private:
     //void onPlaySliderValueChanged();
     //void onVolumeSliderValueChanged();
+
+    void setIgnoreKeyPress();
+
+public slots:
+    void onSeekForwardByKeyboard();
+    void onSeekBackwardByKeyboard();
+    void onVolumeAddByKeyboard();
+    void onVolumeSubByKeyboard();
+    void onPauseByKeyboard();
+    void onMuteByKeyboard();
 private slots:
 
 signals:
@@ -53,7 +63,7 @@ signals:
     //void sigShowSetting();
 private:
     int total_duration_;
-    double m_dLastVolumePercent;
+    double last_volume_persent_;
     bool is_playing_ = false;
     bool is_fullscreen_ = false;
     bool is_stoped_ = true;

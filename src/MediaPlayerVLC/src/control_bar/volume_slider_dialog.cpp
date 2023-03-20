@@ -40,7 +40,21 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
     connect(slider_, &CustomSlider::sliderPressed,
         [=]()
         {
-            flip_ = false;
+            //flip_ = false;
+            volume_ = slider_->value();
+            emit sigSliderValueChanged(volume_);
+        }
+    );
+
+    connect(slider_, &CustomSlider::valueChanged,
+        [=]()
+        {
+            if (flip_)
+            {
+                emit sigSliderValueChanged(0);
+                return;
+            }
+            //flip_ = false;
             volume_ = slider_->value();
             emit sigSliderValueChanged(volume_);
         }
@@ -53,7 +67,22 @@ VolumeSliderDialog::~VolumeSliderDialog()
 
 void VolumeSliderDialog::setSliderValue(int value)
 {
+    //volume_ = value;
     slider_->setValue(value);
+}
+
+void VolumeSliderDialog::setMute(bool status)
+{
+    if (status)
+    {
+        flip_ = true;
+        setSliderValue(0);
+    }
+    else
+    {
+        flip_ = false;
+        setSliderValue(volume_);
+    }
 }
 
 bool VolumeSliderDialog::event(QEvent* event)
@@ -78,14 +107,16 @@ bool VolumeSliderDialog::event(QEvent* event)
 
 void VolumeSliderDialog::onVolumeMute(bool status)
 {
-    if (status)
-    {
-        flip_ = true;
-        slider_->setValue(0);
-    }
-    else
-    {
-        flip_ = false;
-        slider_->setValue(volume_);
-    }
+    //if (status)
+    //{
+    //    flip_ = true;
+    //    setSliderValue(0);
+    //    //slider_->setValue(0);
+    //}
+    //else
+    //{
+    //    flip_ = false;
+    //    setSliderValue(volume_);
+    //    //slider_->setValue(volume_);
+    //}
 }

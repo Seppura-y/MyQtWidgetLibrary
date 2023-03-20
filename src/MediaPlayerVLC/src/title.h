@@ -44,6 +44,9 @@ public:
 	public:
 		bool is_need_draw_ = false;
 	};
+
+protected:
+	void keyPressEvent(QKeyEvent* ev) override;
 private:
 	void paintEvent(QPaintEvent* ev) override;
 	void mouseDoubleClickEvent(QMouseEvent* ev) override;

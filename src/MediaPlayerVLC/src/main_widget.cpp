@@ -1,4 +1,7 @@
 #include "main_widget.h"
+
+#include "media_player_gui_class.h"
+
 #include <iostream>
 #include <QPushButton>
 #include <QFont>
@@ -68,6 +71,7 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
+    this->setFocus();
     ui.statusBar->close();
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -95,6 +99,8 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     this->setMouseTracking(true);
 
     //installEventFilter(title_);
+
+    MediaPlayerGuiClass::getInstance().setMainWidget(this);
 }
 
 void MainWidget::mousePressEvent(QMouseEvent* ev)
@@ -512,9 +518,44 @@ void MainWidget::initMainWidget()
 
 void MainWidget::keyPressEvent(QKeyEvent* ev)
 {
-    if (ev->key() == Qt::Key_Q)
+    if (ev->key() == Qt::Key_Space)
     {
-        //qDebug() << "q key pressed";
+        qDebug() << "key space pressed";
+        emit sigSpaceKeyPressed();
     }
+
+    if (ev->key() == Qt::Key_M)
+    {
+        qDebug() << "key m pressed";
+        emit sigMKeyPressed();
+    }
+
+    if (ev->key() == Qt::Key_Up)
+    {
+        //qDebug() << "key up pressed";
+        emit sigUpArrowKeyPressed();
+    }
+
+    if (ev->key() == Qt::Key_Down)
+    {
+        //qDebug() << "key down pressed";
+        emit sigDownArrowKeyPressed();
+    }
+
+    if (ev->key() == Qt::Key_Left)
+    {
+        //qDebug() << "key left pressed";
+        emit sigLeftArrowKeyPressed();
+    }
+
+    if (ev->key() == Qt::Key_Right)
+    {
+        //qDebug() << "key right pressed";
+        emit sigRightArrowKeyPressed();
+
+    }
+
+
+
     return QWidget::keyPressEvent(ev);
 }

@@ -16,6 +16,7 @@ class CameraMenu;
 class DisplayWidget;
 class QHBoxLayout;
 class QPushButton;
+class ControlBar;
 
 class MainWidget : public QMainWindow
 {
@@ -57,6 +58,13 @@ signals:
     void sigWindowMaximized();
     void sigWindowNormal();
     void sigShowFullscreen(bool);
+
+    void sigUpArrowKeyPressed();
+    void sigDownArrowKeyPressed();
+    void sigLeftArrowKeyPressed();
+    void sigRightArrowKeyPressed();
+    void sigSpaceKeyPressed();
+    void sigMKeyPressed();
 private:
     MenuBar* menu_bar_ = nullptr;
     Title* title_ = nullptr;
@@ -86,5 +94,9 @@ private:
     //nativeEvent
     bool is_maximized_ = false;
     bool is_minimized_ = false;
+
+    ////////////////////////////////////////////////////////////////////
+    // Control bar
+    ControlBar* control_bar_ = nullptr;
 };
 

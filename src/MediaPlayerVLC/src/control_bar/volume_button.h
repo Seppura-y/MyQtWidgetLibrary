@@ -36,8 +36,9 @@ public:
     
     void setVolume(int value)
     {
-        volume_ = value;
-        //volume_slider_dialog_->setSliderValue(value);
+        //volume_ = value;
+        if(volume_slider_dialog_)
+            volume_slider_dialog_->setSliderValue(value);
     }
 signals:
     void sigVolumeValueChanged(int value);

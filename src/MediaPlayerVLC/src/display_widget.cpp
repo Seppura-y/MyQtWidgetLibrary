@@ -45,6 +45,8 @@ DisplayWidget::DisplayWidget(QWidget *parent)
 	QObject::connect(&timer_mouse_detect_, &QTimer::timeout, this, &DisplayWidget::onMouseDetectTimeout);
 	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
 	this->setMouseTracking(true);
+
+	setIgnoreKeyPress();
 }
 
 DisplayWidget::~DisplayWidget()
@@ -498,43 +500,48 @@ void DisplayWidget::onSoundVolumeValueChanged(int value)
 	btn_volume_->setToolTip(str + str2);
 }
 
-//bool DisplayWidget::eventFilter(QObject* watched, QEvent* event)
-//{
-//	// CanvasView* window = qobject_cast<CanvasView*>(watched);
-//	// if (window == nullptr)
-//	// 	return false;
-//	//qDebug() << event->type();
-//	//switch (event->type())
-//	//{
-//	//	case QEvent::Drop:
-//	//	{
-//	//		this->dropEvent((QDropEvent*)event);
-//	//		return true;
-//	//		break;
-//	//	}
-//	//	case QEvent::DragEnter:
-//	//	{
-//	//		this->dragEnterEvent((QDragEnterEvent*)event);
-//	//		return true;
-//	//	}
-//	//	case QEvent::MouseButtonPress:
-//	//	{
-//	//		qDebug() << "mouse button press";
-//	//		return true;
-//	//	}
-//	//	case QEvent::MouseMove:
-//	//	{
-//	//		qDebug() << "mouse move";
-//	//		return true;
-//	//	}
-//	//	default:
-//	//	{
-//	//		return false;
-//	//	}
-//	//}
-//
-//	return QWidget::eventFilter(watched, event);
-//}
+bool DisplayWidget::eventFilter(QObject* watched, QEvent* ev)
+{
+	if (ev->type() == QEvent::KeyPress)
+	{
+		ev->ignore();
+		return true;
+	}
+	// CanvasView* window = qobject_cast<CanvasView*>(watched);
+	// if (window == nullptr)
+	// 	return false;
+	//qDebug() << event->type();
+	//switch (event->type())
+	//{
+	//	case QEvent::Drop:
+	//	{
+	//		this->dropEvent((QDropEvent*)event);
+	//		return true;
+	//		break;
+	//	}
+	//	case QEvent::DragEnter:
+	//	{
+	//		this->dragEnterEvent((QDragEnterEvent*)event);
+	//		return true;
+	//	}
+	//	case QEvent::MouseButtonPress:
+	//	{
+	//		qDebug() << "mouse button press";
+	//		return true;
+	//	}
+	//	case QEvent::MouseMove:
+	//	{
+	//		qDebug() << "mouse move";
+	//		return true;
+	//	}
+	//	default:
+	//	{
+	//		return false;
+	//	}
+	//}
+
+	return QWidget::eventFilter(watched, ev);
+}
 
 void DisplayWidget::dragEnterEvent(QDragEnterEvent* ev)
 {
@@ -732,4 +739,16 @@ void DisplayWidget::fullscreenDisplay(bool status)
 void DisplayWidget::onShowFullScreen(bool status)
 {
 	fullscreenDisplay(status);
+}
+
+void DisplayWidget::setIgnoreKeyPress()
+{
+	ui.wid_title->installEventFilter(this);
+	ui.wid_content->installEventFilter(this);
+	ui.wid_toolbar->installEventFilter(this);
+
+	btn_screen_cap_->installEventFilter(this);
+	btn_cam_cap_->installEventFilter(this);
+	btn_web_cam_->installEventFilter(this);
+	btn_group_title_->installEventFilter(this);
 }

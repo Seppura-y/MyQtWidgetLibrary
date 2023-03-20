@@ -18,7 +18,7 @@ ItemListWidget::ItemListWidget(int item_type,QWidget* parent) : QListWidget(pare
     this->verticalScrollBar()->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
     this->horizontalScrollBar()->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
     this->setSelectionMode(SelectionMode::SingleSelection);
-    this->setDefaultDropAction(Qt::MoveAction);
+    this->setDefaultDropAction(Qt::CopyAction);
     this->setViewMode(QListView::ListMode);
     this->setDragDropMode(QAbstractItemView::InternalMove);
     this->setDragEnabled(true);
@@ -91,7 +91,7 @@ void ItemListWidget::mouseMoveEvent(QMouseEvent* ev)
 
             drag->setMimeData(mimeData);
 
-            QListWidget::mouseMoveEvent(ev);
+            //QListWidget::mouseMoveEvent(ev);
 
             auto action = drag->exec(Qt::CopyAction | Qt::MoveAction);
 
@@ -136,3 +136,9 @@ void ItemListWidget::dragMoveEvent(QDragMoveEvent* ev)
     //ev->acceptProposedAction();
     QListWidget::dragMoveEvent(ev);
 }
+
+//void ItemListWidget::keyPressEvent(QKeyEvent* ev)
+//{
+//    ev->ignore();
+//    return;
+//}

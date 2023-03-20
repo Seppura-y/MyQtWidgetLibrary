@@ -44,6 +44,8 @@ CameraMenu::CameraMenu(QWidget* parent)
 
     //ui.tw_item->setTabText(0, "");
     //ui.tw_item->setStyleSheet("QTabBar::tab{border-top-left-radius: 12px; border-top-right-radius: 12px;}");
+
+    setIgnoreKeyPress();
 }
 
 CameraMenu::~CameraMenu()
@@ -52,6 +54,21 @@ CameraMenu::~CameraMenu()
     //delete lw_camera_;
     delete vb_local_file_;
     //delete vb_camera_;
+}
+
+void CameraMenu::keyPressEvent(QKeyEvent* ev)
+{
+    return QWidget::keyPressEvent(ev);
+}
+
+bool CameraMenu::eventFilter(QObject* watched, QEvent* ev)
+{
+    if (ev->type() == QEvent::KeyPress)
+    {
+        ev->ignore();
+        return true;
+    }
+    return false;
 }
 
 void CameraMenu::initUi()
@@ -142,7 +159,6 @@ void CameraMenu::onCmrMenuDelButtonClicked()
 {
     deleteItem();
 }
-
 
 void CameraMenu::addListItem()
 {
@@ -497,6 +513,20 @@ void CameraMenu::deleteItem(ItemListType itemType, int index)
         config_tools_->saveJson(ITEM_LIST_CONFIG);
         initItemList();
     }
+
+}
+
+void CameraMenu::setIgnoreKeyPress()
+{
+    lw_camera_->installEventFilter(this);
+    lw_local_file_->installEventFilter(this);
+    lw_media_src_->installEventFilter(this);
+
+    ui.pb_add->installEventFilter(this);
+    ui.pb_set->installEventFilter(this);
+    ui.pb_del->installEventFilter(this);
+
+    ui.tw_item->installEventFilter(this);
 
 }
 

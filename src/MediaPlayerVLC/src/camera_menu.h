@@ -33,10 +33,16 @@ signals:
 	void sigProcessScreenCapture();
 	void sigProcessScreenCaptureFinished();
 
+	void sigListItemDoubleClicked(QString);
+
 protected slots:
 	void onCmrMenuAddButtonClicked();
 	void onCmrMenuSetButtonClicked();
 	void onCmrMenuDelButtonClicked();
+
+protected:
+	void keyPressEvent(QKeyEvent* ev) override;
+	bool eventFilter(QObject* watched, QEvent* ev) override;
 protected:
 	void initUi();
 	void initExtendButton();
@@ -49,6 +55,9 @@ protected:
 
 	void deleteItem();
 	void deleteItem(ItemListType item_type, int item_index);
+
+private:
+	void setIgnoreKeyPress();
 
 private:
 	Ui::CameraMenu ui;

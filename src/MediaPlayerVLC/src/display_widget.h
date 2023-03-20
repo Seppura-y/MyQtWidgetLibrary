@@ -32,7 +32,7 @@ protected:
 	void resizeEvent(QResizeEvent* ev) override;
 	void dragEnterEvent(QDragEnterEvent* ev)override;
 	void dropEvent(QDropEvent* ev) override;
-	//bool eventFilter(QObject* watched, QEvent* event) override;
+	bool eventFilter(QObject* watched, QEvent* event) override;
 	void mouseDoubleClickEvent(QMouseEvent* ev) override;
 	void keyPressEvent(QKeyEvent* ev) override;
 private:
@@ -56,15 +56,18 @@ public slots:
 
 private slots:
 	void onMouseDetectTimeout();
+
+private:
+	void setIgnoreKeyPress();
 private:
 	Ui::DisplayWidget ui;
 
 	////////////////////////Title Bar/////////////////////////////
-	QPushButton* btn_screen_cap_ = nullptr;
-	QPushButton* btn_cam_cap_ = nullptr;
-	QPushButton* btn_web_cam_ = nullptr;
-	QButtonGroup* btn_group_title_ = nullptr;
-	QHBoxLayout* layout_title_ = nullptr;
+	QPushButton*	btn_screen_cap_ = nullptr;
+	QPushButton*	btn_cam_cap_ = nullptr;
+	QPushButton*	btn_web_cam_ = nullptr;
+	QButtonGroup*	btn_group_title_ = nullptr;
+	QHBoxLayout*	layout_title_ = nullptr;
 
 	////////////////////////Tool Bar/////////////////////////////
 	QPushButton* btn_split_1_ = nullptr;

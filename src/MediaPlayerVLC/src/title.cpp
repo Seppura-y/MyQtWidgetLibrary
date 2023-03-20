@@ -27,11 +27,18 @@ Title::Title(QWidget* parent) : QWidget(parent)
 	ui->pb_mini->setCursor(QCursor(Qt::PointingHandCursor));
 	ui->pb_title->setCursor(QCursor(Qt::PointingHandCursor));
 
+	// raise to cover the animation button
 	ui->pb_close->raise();
 	ui->pb_max->raise();
 	ui->pb_sep->raise();
 	ui->pb_mini->raise();
 	ui->pb_title->raise();
+
+	ui->pb_close->installEventFilter(this);
+	ui->pb_max->installEventFilter(this);
+	ui->pb_sep->installEventFilter(this);
+	ui->pb_mini->installEventFilter(this);
+	ui->pb_title->installEventFilter(this);
 
 	//MediaGUIClass.setTitle(this);
 	menu_wid_ = ui->wid_menu;
@@ -186,6 +193,12 @@ void Title::setMenu(MenuBar* bar)
 	ui->wid_menu->setVisible(true);
 }
 
+void Title::keyPressEvent(QKeyEvent* ev)
+{
+	ev->ignore();
+	return;
+}
+
 void Title::paintEvent(QPaintEvent* ev)
 {
 	QStyleOption opt;
@@ -240,6 +253,11 @@ bool Title::eventFilter(QObject* watched, QEvent* event)
 	//default:
 	//	break;
 	//}
+	if (event->type() == QEvent::KeyPress)
+	{
+		event->ignore();
+		return true;
+	}
 	return QWidget::eventFilter(watched, event);
 }
 

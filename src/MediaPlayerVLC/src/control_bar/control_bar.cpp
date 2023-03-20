@@ -1,8 +1,12 @@
 #include "control_bar.h"
+
+#include "media_player_gui_class.h"
 #include "custom_slider.h"
 #include "volume_button.h"
 #include "config_helper.h"
 #include "dialog_base.h"
+#include "main_widget.h"
+
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -22,6 +26,10 @@ ControlBar::ControlBar(QWidget* parent) : QWidget(parent)
     setAttribute(Qt::WA_TranslucentBackground);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
     initUI();
+
+    setIgnoreKeyPress();
+
+    MediaPlayerGuiClass::getInstance().setControlBar(this);
 }
 
 ControlBar::~ControlBar()
@@ -104,6 +112,20 @@ void ControlBar::initUI()
         font.setPointSize(16);
 
         play_slider_ = new CustomSlider;
+        volume_button_ = new VolumeButton;
+        btn_next_clip_ = new QPushButton;
+        btn_play_or_pause_ = new QPushButton;
+        btn_stop_ = new QPushButton;
+        btn_previous_clip_ = new QPushButton;
+        btn_fullscreen_ = new QPushButton;
+        btn_open_file_ = new QPushButton;
+        t_edit_current_ = new QTimeEdit();
+        t_edit_total_ = new QTimeEdit();
+        QLabel* lab = new QLabel();
+
+        QHBoxLayout* h_layout = new QHBoxLayout();
+        QVBoxLayout* v_layout = new QVBoxLayout();
+
         play_slider_->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/control_bar.css"));
         play_slider_->setOrientation(Qt::Horizontal);
         play_slider_->setFixedHeight(16);
@@ -119,7 +141,6 @@ void ControlBar::initUI()
         );
 
 
-        volume_button_ = new VolumeButton;
         QObject::connect(volume_button_, &VolumeButton::sigVolumeValueChanged, [=](int value)
             {
                 volume_ = value;
@@ -140,7 +161,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_play_or_pause_ = new QPushButton;
+
         btn_play_or_pause_->setCheckable(true);
         btn_play_or_pause_->setFont(font);
         btn_play_or_pause_->setText(QChar(0x25b6));
@@ -172,7 +193,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_stop_ = new QPushButton;
+
         btn_stop_->setFont(font);
         btn_stop_->setText(QChar(0x23f9));
         btn_stop_->setFixedSize(28, 28);
@@ -187,7 +208,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_next_clip_ = new QPushButton;
+
         btn_next_clip_->setFont(font);
         btn_next_clip_->setText(QChar(0xf051));
         btn_next_clip_->setFixedSize(28, 28);
@@ -200,7 +221,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_previous_clip_ = new QPushButton;
+
         btn_previous_clip_->setFont(font);
         btn_previous_clip_->setText(QChar(0xf048));
         btn_previous_clip_->setFixedSize(28, 28);
@@ -213,7 +234,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_fullscreen_ = new QPushButton;
+
         btn_fullscreen_->setCheckable(true);
         btn_fullscreen_->setFont(font);
         btn_fullscreen_->setText(QChar(0xf065));
@@ -248,7 +269,7 @@ void ControlBar::initUI()
             }
         );
 
-        btn_open_file_ = new QPushButton;
+
         btn_open_file_->setFont(font);
         btn_open_file_->setText(QChar(0xf07c));
         btn_open_file_->setFixedSize(28, 28);
@@ -274,25 +295,21 @@ void ControlBar::initUI()
             }
         );
 
-        t_edit_current_ = new QTimeEdit();
+
         t_edit_current_->setReadOnly(true);
         t_edit_current_->setDisplayFormat("HH:mm:ss");
         t_edit_current_->setEnabled(false); // disable text selection
         t_edit_current_->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
-        t_edit_total_ = new QTimeEdit();
+
         t_edit_total_->setReadOnly(true);
         t_edit_total_->setDisplayFormat("HH:mm:ss");
         t_edit_total_->setEnabled(false);
         t_edit_total_->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
-        QLabel* lab = new QLabel();
+
         lab->setText("/");
         lab->setFixedWidth(8);
-
-        QHBoxLayout* h_layout = new QHBoxLayout();
-        QVBoxLayout* v_layout = new QVBoxLayout();
-
 
         h_layout->addWidget(btn_previous_clip_);
         h_layout->addWidget(btn_play_or_pause_);
@@ -398,4 +415,66 @@ void ControlBar::paintEvent(QPaintEvent* ev)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
     QWidget::paintEvent(ev);
+}
+
+bool ControlBar::eventFilter(QObject* watched, QEvent* ev)
+{
+    if (ev->type() == QEvent::KeyPress)
+    {
+        ev->ignore();
+        return true;
+    }
+    return false;
+}
+
+void ControlBar::setIgnoreKeyPress()
+{
+    play_slider_->installEventFilter(this);
+    volume_button_->installEventFilter(this);
+    btn_play_or_pause_->installEventFilter(this);
+    btn_stop_->installEventFilter(this);
+    btn_next_clip_->installEventFilter(this);
+    btn_previous_clip_->installEventFilter(this);
+    btn_fullscreen_->installEventFilter(this);
+    btn_open_file_->installEventFilter(this);
+    t_edit_total_->installEventFilter(this);
+    t_edit_current_->installEventFilter(this);
+}
+
+void ControlBar::onSeekForwardByKeyboard()
+{
+    int max = play_slider_->maximum();
+    int value = play_slider_->value();
+    int seek = value + max / 100;
+    play_slider_->setValue(seek);
+    emit sigControlSliderChanged(seek);
+}
+
+void ControlBar::onSeekBackwardByKeyboard()
+{
+    //play_slider_->setValue(play_slider_->value() - play_slider_->maximum() / 30);
+    int value = play_slider_->value();
+    int seek = value - 5;
+    play_slider_->setValue(seek);
+    emit sigControlSliderChanged(seek);
+}
+
+void ControlBar::onVolumeAddByKeyboard()
+{
+    volume_button_->setVolume(volume_ + 5);
+}
+
+void ControlBar::onVolumeSubByKeyboard()
+{
+    volume_button_->setVolume(volume_ - 5);
+}
+
+void ControlBar::onPauseByKeyboard()
+{
+    btn_play_or_pause_->click();
+}
+
+void ControlBar::onMuteByKeyboard()
+{
+    volume_button_->click();
 }
