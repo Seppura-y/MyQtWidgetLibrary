@@ -6,6 +6,7 @@ class CustomSlider;
 class VolumeButton;
 class QPushButton;
 class QTimeEdit;
+class QJsonObject;
 
 class ControlBar : public QWidget
 {
@@ -51,7 +52,8 @@ signals:
     void sigFullscreen(bool);
     void sigSoundVolumeChanged(int);
     void sigControlSliderChanged(double);
-    void sigOpenMediaFile(QString);
+    void sigOpenMediaFile(QJsonObject&);
+
     //void sigShowOrHidePlaylist();
     //void sigPlaySeek(double dPercent);
     //void sigPlayVolume(double dPercent);
@@ -67,7 +69,9 @@ private:
     bool is_playing_ = false;
     bool is_fullscreen_ = false;
     bool is_stoped_ = true;
+    bool is_mute_ = false;
     int volume_ = 100;
+
 
     CustomSlider*   play_slider_ = nullptr;
     VolumeButton*   volume_button_ = nullptr;

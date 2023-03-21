@@ -37,8 +37,10 @@ public:
 
 signals:
     void sigAcceptFilePath(QString);
+    void sigAcceptFileName(QString);
 private:
     QLineEdit* le_path_;
+    QLineEdit* le_name_;
     QPushButton* pb_open_;
 };
 

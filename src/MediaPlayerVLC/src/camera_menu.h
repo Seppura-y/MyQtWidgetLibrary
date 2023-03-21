@@ -17,7 +17,7 @@ public:
 	~CameraMenu();
 
 	int getCurrentItemIndex();
-
+	void updateItemList();
 public:
 	enum class ItemListType
 	{
@@ -33,12 +33,16 @@ signals:
 	void sigProcessScreenCapture();
 	void sigProcessScreenCaptureFinished();
 
-	void sigListItemDoubleClicked(QString);
-
+	void sigListItemDoubleClicked(QJsonObject&);
+	void sigItemListUpdate(int, QJsonObject&);
+public slots:
+	void onAddLocalFileItem(QJsonObject& info);
+	void onSetCurrentPlayingFile(int type, QString name);
 protected slots:
 	void onCmrMenuAddButtonClicked();
 	void onCmrMenuSetButtonClicked();
 	void onCmrMenuDelButtonClicked();
+
 
 protected:
 	void keyPressEvent(QKeyEvent* ev) override;

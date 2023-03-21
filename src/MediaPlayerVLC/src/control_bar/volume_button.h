@@ -27,6 +27,8 @@ public:
     void setMute(bool mute)
     {
         is_mute_ = mute;
+        if (volume_slider_dialog_)
+            volume_slider_dialog_->setMute(mute);
     }
 
     int getVolume()

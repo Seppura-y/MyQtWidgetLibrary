@@ -74,8 +74,9 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     this->setFocus();
     ui.statusBar->close();
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
+    //this->setWindowFlag(Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
-    setAttribute(Qt::WA_Hover);
+    //setAttribute(Qt::WA_Hover);
     setStyleSheet(ConfigHelper::getQssString(":resources/res/css/main_widget.css"));
 
     HWND hwnd = reinterpret_cast<HWND>(this->winId());
@@ -92,6 +93,7 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     //    QtWin::extendFrameIntoClientArea(this, -1, -1, -1, -1);
     //}
 
+    normal_rect_ = this->geometry();
     main_wid_layout_ = new QHBoxLayout;
     initTitle();
     initMainWidget();
@@ -135,6 +137,10 @@ void MainWidget::mouseReleaseEvent(QMouseEvent* ev)
     if (left_bt_pressed_)
     {
         left_bt_pressed_ = false;
+        if (!is_maximized_init_)
+        {
+            return;
+        }
         if (this->geometry().topLeft() != maximized_rect_.topLeft() && this->geometry().size() == maximized_rect_.size())
         {
             maximized_flag_ = true;
@@ -416,6 +422,7 @@ void MainWidget::createMenuBar()
 
 void MainWidget::initMainWidget()
 {
+    display_widget_ = new DisplayWidget();
     cam_menu_ = new CameraMenu();
     cam_menu_->setMaximumWidth(230);
     QObject::connect(cam_menu_, &CameraMenu::sigProcessScreenCapture, this, [this] { this->hide(); });
@@ -449,7 +456,7 @@ void MainWidget::initMainWidget()
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(0, 255, 0, 0));
 
-    display_widget_ = new DisplayWidget();
+
     //display_widget_->installEventFilter(this);
 
     QObject::connect(display_widget_, &DisplayWidget::sigDisplayShowFullscreen, [=](bool status)
@@ -518,6 +525,7 @@ void MainWidget::initMainWidget()
 
 void MainWidget::keyPressEvent(QKeyEvent* ev)
 {
+    this->setFocus();
     if (ev->key() == Qt::Key_Space)
     {
         qDebug() << "key space pressed";

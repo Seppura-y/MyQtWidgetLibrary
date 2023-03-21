@@ -5,6 +5,8 @@
 
 class ControlBar;
 class MainWidget;
+class CameraMenu;
+class DisplayWidget;
 
 class MediaPlayerGuiClass : public QObject
 {
@@ -20,12 +22,17 @@ private:
 public:
 	void setMainWidget(MainWidget* wid) { this->main_widget_ = wid; }
 	void setControlBar(ControlBar* ctrl_bar) { this->control_bar_ = ctrl_bar; }
+	void setCameraMenu(CameraMenu* cmr_menu) { this->camera_menu_ = cmr_menu; }
+	void setDisplayWidget(DisplayWidget* display_wid) { this->display_widget_ = display_wid; }
+
 
 	void connectSignalsAndSlots();
 
 private:
 	MainWidget* main_widget_ = nullptr;
 	ControlBar* control_bar_ = nullptr;
+	CameraMenu* camera_menu_ = nullptr;
+	DisplayWidget* display_widget_ = nullptr;
 };
 
 #endif

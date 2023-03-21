@@ -18,6 +18,8 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QLabel>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 #define MAX_SLIDER_VALUE 65536
 
@@ -193,7 +195,6 @@ void ControlBar::initUI()
             }
         );
 
-
         btn_stop_->setFont(font);
         btn_stop_->setText(QChar(0x23f9));
         btn_stop_->setFixedSize(28, 28);
@@ -227,7 +228,7 @@ void ControlBar::initUI()
         btn_previous_clip_->setFixedSize(28, 28);
         btn_previous_clip_->setCursor(QCursor(Qt::PointingHandCursor));
         btn_previous_clip_->setToolTip(QString::fromLocal8Bit("previous"));
-        connect(btn_stop_, &QPushButton::clicked, this,
+        connect(btn_previous_clip_, &QPushButton::clicked, this,
             [=]
             {
                 emit sigPreviousClip();
@@ -283,8 +284,17 @@ void ControlBar::initUI()
                 {
                     if (dialog->exec() == QDialog::Accepted)
                     {
-                        QString file_path = dialog->getFilePath();
-                        emit sigOpenMediaFile(file_path);
+                        QJsonObject info;
+                        auto name = dialog->getFileName();
+                        if (name.isEmpty())
+                        {
+                            QMessageBox::warning(this, "warning", "please set a filename");
+                            continue;
+                        }
+                        info.insert("name", name);
+                        info.insert("url", dialog->getFilePath());
+                        info.insert("item_type",1);
+                        emit sigOpenMediaFile(info);
                         break;
                     }
                     else if (dialog->close())
@@ -368,10 +378,13 @@ void ControlBar::setCurrentDuration(QTime time)
 
 void ControlBar::setPlaying(bool status)
 {
-    is_playing_ = true;
+    if (is_playing_ == status)
+    {
+        return;
+    }
+    is_playing_ = status;
     is_stoped_ = false;
     btn_play_or_pause_->click();
-
 }
 
 void ControlBar::setFullscreen(bool status)
@@ -443,9 +456,8 @@ void ControlBar::setIgnoreKeyPress()
 
 void ControlBar::onSeekForwardByKeyboard()
 {
-    int max = play_slider_->maximum();
     int value = play_slider_->value();
-    int seek = value + max / 100;
+    int seek = value + 5;
     play_slider_->setValue(seek);
     emit sigControlSliderChanged(seek);
 }
@@ -476,5 +488,15 @@ void ControlBar::onPauseByKeyboard()
 
 void ControlBar::onMuteByKeyboard()
 {
-    volume_button_->click();
+    
+    if (is_mute_)
+    {
+        is_mute_ = false;
+        volume_button_->setMute(false);
+    }
+    else
+    {
+        is_mute_ = true;
+        volume_button_->setMute(true);
+    }
 }

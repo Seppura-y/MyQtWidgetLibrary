@@ -42,8 +42,10 @@ public:
     ~MediaFileDialog();
 
     QString getFilePath();
+    QString getFileName();
 protected:
     virtual void initUI() override;
 private:
+    QString file_name_;
     QString file_path_;
 };

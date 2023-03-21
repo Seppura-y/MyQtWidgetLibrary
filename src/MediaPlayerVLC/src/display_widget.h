@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QJsonObject>
 // #include "canvas/canvas_scene.h"
 // #include "canvas/canvas_view.h"
 // #include "canvas/canvas_widget.h"
@@ -12,12 +13,14 @@ class QVBoxLayout;
 class QGridLayout;
 class QToolButton;
 class QPushButton;
+class QLabel;
 class QButtonGroup;
 class QAbstractButton;
 class QPropertyAnimation;
 class VolumeButton;
 class RenderWidget;
 class ControlBar;
+
 
 class DisplayWidget : public QWidget
 {
@@ -45,6 +48,11 @@ private:
 
 signals:
 	void sigDisplayShowFullscreen(bool);
+	void sigAddLocalFileItem(QJsonObject&);
+
+	void sigPlayNextFile();
+	void sigPlayPrevFile();
+	void sigPlayingFile(int,QString);
 
 public slots:
 	void onPanelChanged(bool is_checked);
@@ -53,7 +61,8 @@ public slots:
 	void onSoundVolumeValueChanged(int value);
 	void onShowFullScreen(bool status);
 
-
+	void onListItemDoubleClicked(QJsonObject& url);
+	void onItemListUpdate(int type, QJsonObject& obj);
 private slots:
 	void onMouseDetectTimeout();
 
@@ -67,6 +76,7 @@ private:
 	QPushButton*	btn_cam_cap_ = nullptr;
 	QPushButton*	btn_web_cam_ = nullptr;
 	QButtonGroup*	btn_group_title_ = nullptr;
+	QLabel*			lb_item_name_ = nullptr;
 	QHBoxLayout*	layout_title_ = nullptr;
 
 	////////////////////////Tool Bar/////////////////////////////
@@ -90,9 +100,6 @@ private:
 	int last_split_id_ = 0;
 	//////////////////////Render Widget//////////////////////
 	RenderWidget* render_widget_ = nullptr;
-	bool is_playing_ = false;
-	bool is_open_success_ = false;
-
 
 
 	//////////////////////Control Bar//////////////////////
@@ -107,7 +114,17 @@ private:
 	bool is_control_bar_show_ = true;
 
 	QTimer timer_check_fullscreen_;
-	
+
+
+	//////////////////////Display Info//////////////////////
+	bool is_playing_ = false;
+	bool is_open_success_ = false;
+	QString openning_filename_;
+	QList<QString> file_list_;
+	QList<QString> path_list_;
+	QMap<QString, QString> playlist_;
+	QJsonObject playlist_obj_;
+
 	////////////////////////canvas/////////////////////////////
 	//CanvasWidget* canvas_wid_ = nullptr;
 	// CanvasView* canvas_view_ = nullptr;

@@ -50,15 +50,17 @@ FileTab::FileTab(QWidget* parent) : DialogContentBase(parent)
     QHBoxLayout* hbox = new QHBoxLayout;
 
     vbox->addStretch();
-    vbox->addWidget(new QLabel(tr("File:")));
+    vbox->addWidget(new QLabel("Name:"));
+    le_name_ = new QLineEdit;
+    le_name_->setFixedHeight(20);
+    vbox->addWidget(le_name_);
 
 
+    vbox->addWidget(new QLabel(tr("Path:")));
     le_path_ = new QLineEdit;
     le_path_->setFixedHeight(20);
-
     pb_open_ = new QPushButton("Open");
     pb_open_->setFixedSize(50, 20);
-
     hbox->addWidget(le_path_);
     hbox->addWidget(pb_open_);
 
@@ -68,7 +70,7 @@ FileTab::FileTab(QWidget* parent) : DialogContentBase(parent)
     setLayout(vbox);
 
     connect(pb_open_, &QPushButton::clicked, this,
-        [=]() 
+        [=]
         {
             QString file = QFileDialog::getOpenFileName(
                 this, 
@@ -79,9 +81,16 @@ FileTab::FileTab(QWidget* parent) : DialogContentBase(parent)
 
             if (!file.isEmpty()) 
             {
+                le_name_->setText(file);
                 le_path_->setText(file);
                 emit sigAcceptFilePath(file);
             }
+        }
+    );
+    
+    connect(le_name_, &QLineEdit::textChanged, [=]
+        {
+            emit sigAcceptFileName(le_name_->text());
         }
     );
 }

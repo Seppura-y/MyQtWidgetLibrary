@@ -14,6 +14,8 @@
 #include "media_src_dialog.h"
 #include "dialog_base.h"
 
+#include "media_player_gui_class.h"
+
 #define ITEM_LIST_CONFIG "./config/configuration.json"
 #define ITEM_LIST_COUNT 3
 
@@ -46,6 +48,8 @@ CameraMenu::CameraMenu(QWidget* parent)
     //ui.tw_item->setStyleSheet("QTabBar::tab{border-top-left-radius: 12px; border-top-right-radius: 12px;}");
 
     setIgnoreKeyPress();
+
+    MediaPlayerGuiClass::getInstance().setCameraMenu(this);
 }
 
 CameraMenu::~CameraMenu()
@@ -121,6 +125,20 @@ void CameraMenu::initUi()
     vb_local_file_->setSpacing(0);
     vb_local_file_->addWidget(lw_local_file_);
     ui.tw_item->widget(1)->setLayout(vb_local_file_); 
+    QObject::connect(lw_local_file_, &QListWidget::itemDoubleClicked,
+        [=](QListWidgetItem* item)
+        {
+            auto name = item->text();
+            QJsonObject* obj = config_tools_->getObject(ConfigHelper::JsonObjType::JSONOBJ_TYPE_LOCAL_FILE);
+            if (obj->contains(name))
+            {
+                auto value = obj->value(name);
+                auto info = value.toObject();
+                auto url = info.find("url").value().toString();
+                emit sigListItemDoubleClicked(info);
+            }
+        }
+    );
     
     //auto ev_handle = new EventsListener();
     lw_media_src_ = new ItemListWidget(2);
@@ -145,9 +163,44 @@ int CameraMenu::getCurrentItemIndex()
     return 0;
 }
 
+void CameraMenu::updateItemList()
+{
+    auto src = config_tools_->getObject((ConfigHelper::JsonObjType)0);
+    emit sigItemListUpdate(0, QJsonObject(*src));
+
+    src = config_tools_->getObject((ConfigHelper::JsonObjType)1);
+    emit sigItemListUpdate(1, QJsonObject(*src));
+
+    src = config_tools_->getObject((ConfigHelper::JsonObjType)2);
+    emit sigItemListUpdate(2, QJsonObject(*src));
+}
+
 void CameraMenu::onCmrMenuAddButtonClicked()
 {
     addListItem();
+}
+
+void CameraMenu::onSetCurrentPlayingFile(int index, QString name)
+{
+    auto type = (ItemListType)index;
+    switch (type)
+    {
+        case ItemListType::ITEM_LIST_TYPE_CAMERA:
+        {
+            setListItem(type, -1);
+            break;
+        }
+        case ItemListType::ITEM_LIST_TYPE_LOCAL_FILE:
+        {
+            auto items = lw_local_file_->findItems(name, Qt::MatchExactly);
+            if (items.size())
+            {
+                auto item = items[0];
+                lw_local_file_->setCurrentItem(item);
+            }
+            break;
+        }
+    }
 }
 
 void CameraMenu::onCmrMenuSetButtonClicked()
@@ -158,6 +211,14 @@ void CameraMenu::onCmrMenuSetButtonClicked()
 void CameraMenu::onCmrMenuDelButtonClicked()
 {
     deleteItem();
+}
+
+void CameraMenu::onAddLocalFileItem(QJsonObject& info)
+{
+    QString name = info.find("name").value().toString();
+    config_tools_->writeJson(name, info, ConfigHelper::JsonObjType::JSONOBJ_TYPE_LOCAL_FILE);
+    config_tools_->saveJson(ITEM_LIST_CONFIG);
+    initItemList();
 }
 
 void CameraMenu::addListItem()
@@ -554,6 +615,7 @@ void CameraMenu::initItemList()
             QString key = *it;
             list->addItem(key);
         }
+        emit sigItemListUpdate(i, QJsonObject(*src));
     }
 }
 

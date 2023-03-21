@@ -18,6 +18,7 @@
 #include <QScreen>
 #include <QWindow>
 #include <QGuiApplication>
+#include <QLabel>
 
 
 #include "config_helper.h"
@@ -27,6 +28,8 @@
 
 #include "camera_menu.h"
 #include "item_listwidget.h"
+
+#include "media_player_gui_class.h"
 
 DisplayWidget::DisplayWidget(QWidget *parent)
 	: QWidget(parent)
@@ -47,6 +50,9 @@ DisplayWidget::DisplayWidget(QWidget *parent)
 	this->setMouseTracking(true);
 
 	setIgnoreKeyPress();
+
+	this->setFocusPolicy(Qt::NoFocus);
+	MediaPlayerGuiClass::getInstance().setDisplayWidget(this);
 }
 
 DisplayWidget::~DisplayWidget()
@@ -98,9 +104,13 @@ void DisplayWidget::initTitle()
 	btn_web_cam_ = new QPushButton;
 	btn_group_title_ = new QButtonGroup(this);
 
+	lb_item_name_ = new QLabel;
+	lb_item_name_->setStyleSheet("*{color: white; font-family: Consolas; font-size: 20px;}");
+
 	//std::shared_ptr<QSpacerItem> hor_spacer1 = std::make_shared<QSpacerItem>(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 	QSpacerItem* hor_spacer1 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 	QSpacerItem* hor_spacer2 = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+	QSpacerItem* hor_spacer3 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
 	layout_title_->setMargin(0);
 	layout_title_->setSpacing(5);
@@ -125,10 +135,12 @@ void DisplayWidget::initTitle()
 	btn_web_cam_->setCursor(QCursor(Qt::PointingHandCursor));
 
 	layout_title_->addSpacerItem(hor_spacer1);
+	layout_title_->addWidget(lb_item_name_);
+	layout_title_->addSpacerItem(hor_spacer2);
 	layout_title_->addWidget(btn_screen_cap_);
 	layout_title_->addWidget(btn_cam_cap_);
 	layout_title_->addWidget(btn_web_cam_);
-	layout_title_->addSpacerItem(hor_spacer2);
+	layout_title_->addSpacerItem(hor_spacer3);
 
 	btn_group_title_->addButton(btn_screen_cap_);
 	btn_group_title_->addButton(btn_cam_cap_);
@@ -152,6 +164,9 @@ void DisplayWidget::initContent()
 		[&] {
 			//btn_start_push_->setChecked(true);
 			//btn_start_push_->setText(QChar(0x23f9));
+			lb_item_name_->setText(openning_filename_);
+			emit sigPlayingFile(1,openning_filename_);
+			openning_filename_.clear();
 			control_bar_->setPlaying(true);
 			is_playing_ = true;
 		}
@@ -387,13 +402,18 @@ void DisplayWidget::initControlBar()
 	layout_toolbar_->addWidget(control_bar_, 1);
 	ui.wid_toolbar->setLayout(layout_toolbar_);
 	ui.wid_toolbar->setFixedHeight(60);
+	ui.wid_toolbar->setWindowFlags(Qt::WindowStaysOnTopHint);
 
 	ani_control_bar_show_ = new QPropertyAnimation(ui.wid_toolbar, "geometry");
 	ani_control_bar_hide_ = new QPropertyAnimation(ui.wid_toolbar, "geometry");
 
-	QObject::connect(control_bar_, &ControlBar::sigOpenMediaFile, [=](QString file)
+	QObject::connect(control_bar_, &ControlBar::sigOpenMediaFile, [=](QJsonObject& info)
 		{
-			render_widget_->openMediaFile(file);
+			auto name = info.find("name").value().toString();
+			auto url = info.find("url").value().toString();
+			openning_filename_ = name;
+			render_widget_->openMediaFile(url);
+			emit sigAddLocalFileItem(info);
 		}
 	);
 
@@ -429,6 +449,47 @@ void DisplayWidget::initControlBar()
 			//	return;
 			//}
 			render_widget_->setSoundVolume(value);
+		}
+	);
+
+	QObject::connect(control_bar_, &ControlBar::sigNextClip, [=]()
+		{
+			QString cur_name = lb_item_name_->text();
+			auto it = playlist_.find(cur_name);
+			if (++it == playlist_.end())
+			{
+				it = playlist_.begin();
+			}
+			if ((*it).isEmpty())
+			{
+				return;
+			}
+			auto name = it.key();
+			auto url = it.value();
+			openning_filename_ = name;
+			render_widget_->openMediaFile(url);
+			emit sigPlayNextFile();
+		}
+	);
+
+	QObject::connect(control_bar_, &ControlBar::sigPreviousClip, [=]()
+		{
+			QString cur_name = lb_item_name_->text();
+			auto it = playlist_.find(cur_name);
+			if (it-- == playlist_.begin())
+			{
+				it = playlist_.end();
+				it--;
+			}
+			if ((*it).isEmpty())
+			{
+				return;
+			}
+			auto name = it.key();
+			auto url = it.value();
+			openning_filename_ = name;
+			render_widget_->openMediaFile(url);
+			emit sigPlayPrevFile();
 		}
 	);
 
@@ -574,7 +635,7 @@ void DisplayWidget::dropEvent(QDropEvent* ev)
 	auto sub_url = obj.find("sub_url").value().toString().toStdString();
 	auto server_url = obj.find("server_url").value().toString().toStdString();
 
-
+	openning_filename_ = name;
 	//emit SigConfigAndStartHandler();
 	render_widget_->openMediaFile(url);
 
@@ -646,8 +707,8 @@ void DisplayWidget::onMouseDetectTimeout()
 			if (is_control_bar_show_)
 			{
 				is_control_bar_show_ = false;
-				ani_control_bar_hide_->start();
-				timer_control_bar_.singleShot(1000, this, [=] {});
+				
+				timer_control_bar_.singleShot(2000, this, [=] {ani_control_bar_hide_->start(); });
 
 			}
 		}
@@ -694,7 +755,8 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget | Qt::WindowStaysOnTopHint);
 		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::WindowStaysOnTopHint);
-		ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::SubWindow | Qt::Tool);
+		//ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::Tool);
+		ui.wid_toolbar->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
 		ui.wid_toolbar->raise();
 		//ui.wid_toolbar->setFocus();
 		ui.wid_toolbar->setWindowOpacity(0.5);
@@ -721,7 +783,7 @@ void DisplayWidget::fullscreenDisplay(bool status)
 		ui.wid_toolbar->setWindowOpacity(1);
 		ui.wid_toolbar->setWindowFlag(Qt::Window, false);
 		//render_widget_->setWindowFlag(Qt::Window, false);
-		//ui.wid_toolbar->setWindowFlag(Qt::SubWindow, true);
+		ui.wid_toolbar->setWindowFlag(Qt::SubWindow, true);
 		//render_widget_->setWindowFlag(Qt::SubWindow, true);
 
 		ui.wid_toolbar->showNormal();
@@ -739,6 +801,35 @@ void DisplayWidget::fullscreenDisplay(bool status)
 void DisplayWidget::onShowFullScreen(bool status)
 {
 	fullscreenDisplay(status);
+}
+
+void DisplayWidget::onListItemDoubleClicked(QJsonObject& info)
+{
+	openning_filename_ = info.find("name").value().toString();
+	auto url = info.find("url").value().toString();
+	render_widget_->openMediaFile(url);
+}
+
+void DisplayWidget::onItemListUpdate(int type, QJsonObject& obj)
+{
+	if (type != 1) return;
+	playlist_obj_ = QJsonObject(obj);
+	playlist_.clear();
+	file_list_.clear();
+
+	QStringList filenames = obj.keys();
+	for (int i = 0; i < filenames.size(); i++)
+	{
+		if (obj.contains(filenames[i]))
+		{
+			auto value = obj.value(filenames[i]);
+			auto info = value.toObject();
+			auto url = info.find("url").value().toString();
+			file_list_.push_back(filenames[i]);
+			playlist_.insert(filenames[i], url);
+		}
+
+	}
 }
 
 void DisplayWidget::setIgnoreKeyPress()
