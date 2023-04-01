@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Manager">
+        <file>res/icons/image/cam.png</file>
+        <file>res/icons/image/close.png</file>
+        <file>res/icons/image/max.png</file>
+        <file>res/icons/image/min.png</file>
+        <file>res/icons/image/normal.png</file>
+    </qresource>
+</RCC>

@@ -20,6 +20,8 @@ set(PROJECT_PLAYER_BASE             FALSE CACHE BOOL "add project player base ?"
 set(PROJECT_DIALOG_BASE             FALSE CACHE BOOL "add project dialog base ?")
 set(PROJECT_MEDIA_PLAYER_VLC        FALSE CACHE BOOL "add project media player vlc ?")
 set(PROJECT_CONTROL_BAR             FALSE CACHE BOOL "add project contron bar ?")
+set(PROJECT_MULTIDISPLAY_PLAYER     FALSE CACHE BOOL "add project multidisplay player ?")
+set(PROJECT_SCREEN_SPLITTER         FALSE CACHE BOOL "add project screen splitter ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -75,6 +77,14 @@ endif()
 
 if(PROJECT_CONTROL_BAR)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ControlBar)
+endif()
+
+if(PROJECT_MULTIDISPLAY_PLAYER)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/MultiDisplayPlayer)
+endif()
+
+if(PROJECT_SCREEN_SPLITTER)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ScreenSplitter)
 endif()
 
 if(STARTUP_PROJ)
