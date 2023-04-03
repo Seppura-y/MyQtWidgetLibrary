@@ -1,0 +1,128 @@
+*{
+    font-family: Consolas;
+    font-size: 16px;
+}
+
+QDialog 
+{
+    color: white;
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 8px;
+}
+
+
+DialogTitle {
+    color: white;
+    background-color: #2e3137;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+QPushButton {
+    color: darkorange;
+    background-color: #1e1e1e;
+    border-style: outset;
+    border-width: 1px;
+/*    border-color: #FF8033;*/
+    border-radius: 8px;
+    font-family: Consolas;
+    font-size: 16px;
+}
+
+QPushButton:hover {
+    color: orange;
+    background-color: #3a3a3a;
+    border-style: outset;
+    border-width: 1px;
+    border-color: orange;
+}
+
+QPushButton:pressed {
+    color: darkorange;
+    background-color: #1e1e1e;
+    border-style: outset;
+    border-width: 1px;
+    border-color: darkorange;
+}
+
+
+DialogContentTabBase {
+    background-color: #1c1c1c;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0px;
+}
+
+QLabel{
+    color: darkgray;
+}
+
+QCheckBox{
+    color: darkgray;
+    word-spacing: 5px;
+}
+
+QCheckBox:checked {
+    color: darkorange;
+    word-spacing: 5px;
+}
+
+
+QCheckBox::indicator {
+    width: 12px;
+    height: 12px;
+    border:2px solid darkgray;
+    border-radius:7px;
+    background-color: #1e1e1e;
+}
+
+QCheckBox::indicator:checked {
+    background-color: darkorange;
+    color: orange;
+}
+
+
+
+QWidget {
+    color: white;
+    background-color: #2e3137;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+QPushButton {
+    color: silver;
+    font-size: 18px;
+}
+
+QPushButton:hover {
+    color: orange;
+}
+
+QPushButton:pressed {
+    color: #FF8033;
+}
+
+QPushButton#pb_close {
+    border-top-right-radius: 10px;
+}
+
+QPushButton#pb_close:hover {
+    color: orange;
+}
+
+QPushButton#pb_close:pressed {
+    color: tomato;
+}
+
+QLineEdit {
+    border: 1px solid darkorange;
+    border-radius: 4px;
+    background-color: #1f1f1f;
+    color: darkgray;
+}

@@ -1,0 +1,59 @@
+CameraMenu {
+    border: none;
+    background-color: orange;
+}
+
+QWidget {
+    border: none;
+}
+
+QPushButton {
+    background-color: #2e3137;
+    border: none;
+    color: white;
+}
+
+QPushButton:hover {
+    color: orange;
+}
+
+QPushButton:pressed {
+    color: tomato;
+}
+
+QPushButton#pb_add {
+    border-bottom-left-radius: 12px;
+}
+
+QPushButton#pb_del {
+    border-bottom-right-radius: 12px;
+}
+
+/*QTabWidget {
+    border: none;
+}*/
+
+QTabBar {
+    qproperty-drawBase: 0;
+}
+
+
+QTabBar::tab {
+    color: silver;
+    background: #2e3137;
+    border: none;
+    font-family: Ubuntu;
+    font-size: 14px;
+}
+
+QTabBar::tab:first {
+    border-top-left-radius: 12px;
+}
+
+QTabBar::tab:last {
+    border-top-right-radius: 12px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    color: orange;
+}
