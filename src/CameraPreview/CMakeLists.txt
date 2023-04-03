@@ -54,6 +54,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src/tabs
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs
     ${CMAKE_CURRENT_LIST_DIR}/src/control_bar
+    ${CMAKE_CURRENT_LIST_DIR}/src/splitter_widget
 )
 
 include_directories(${FORMS_DIR})
@@ -99,6 +100,14 @@ FILE(GLOB ${PROJECT_NAME}_CONTROLBAR_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/control_bar/*.h
 )
 
+FILE(GLOB ${PROJECT_NAME}_SPLITTER_WIDGET_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/splitter_widget/*.cpp
+)
+
+FILE(GLOB ${PROJECT_NAME}_SPLITTER_WIDGET_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/splitter_widget/*.h
+)
+
 FILE(GLOB ${PROJECT_NAME}_CSS_FILES
     ${CMAKE_CURRENT_LIST_DIR}/forms/res/css/*.css
 )
@@ -133,6 +142,10 @@ source_group("Source Files//dialogs" FILES ${${PROJECT_NAME}_DIALOG_SOURCES})
 source_group("Header Files//control_bar" FILES ${${PROJECT_NAME}_CONTROLBAR_HEADERS})
 source_group("Source Files//control_bar" FILES ${${PROJECT_NAME}_CONTROLBAR_SOURCES})
 
+source_group("Header Files//splitter_widget" FILES ${${PROJECT_NAME}_SPLITTER_WIDGET_HEADERS})
+source_group("Source Files//splitter_widget" FILES ${${PROJECT_NAME}_SPLITTER_WIDGET_SOURCES})
+
+
 
 #========================================= SETUP EXECTUABLE =========================================#
 # Enable debug logging on RELWITHDEBINFO configuration
@@ -163,6 +176,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_CONTROLBAR_HEADERS}
         ${${PROJECT_NAME}_CONTROLBAR_SOURCES}
+
+        ${${PROJECT_NAME}_SPLITTER_WIDGET_HEADERS}
+        ${${PROJECT_NAME}_SPLITTER_WIDGET_SOURCES}
 
         ${${PROJECT_NAME}_CSS_FILES}
 

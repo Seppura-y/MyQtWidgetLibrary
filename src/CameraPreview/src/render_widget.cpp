@@ -64,6 +64,26 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 	this->setMouseTracking(true);
 	QObject::connect(&timer_mouse_hide_, &QTimer::timeout, this, &RenderWidget::onMouseHideTimeout);
 	timer_mouse_hide_.start(1000);
+}
+
+RenderWidget::RenderWidget(int row, int colum, int width, int height, QWidget* parent)
+{
+	this->setWindowTitle("RenderWidget");
+	setAttribute(Qt::WA_TranslucentBackground);
+	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+	this->setStyleSheet("RenderWdiget{background-color: rgb(60,60,60);}");
+	this->setAcceptDrops(true);
+
+	colum_ = colum_;
+	row_ = row_;
+	width_ = width;
+	height_ = height;
+	is_selected_ = false;
+	is_covered_ = false;
+	is_first_point_ = false;
+
+	block_row_ = -1;
+	block_colum_ = -1;
 
 }
 
@@ -122,6 +142,27 @@ void RenderWidget::setMediaStop()
 	}
 }
 
+void RenderWidget::onRefreshUi()
+{
+	if (is_selected_)
+	{
+		if (is_first_point_)
+		{
+			this->setStyleSheet("background-color:rgb(255,255,127)");
+		}
+		else
+		{
+			this->setStyleSheet("background-color:rgb(255,255,255)");
+		}
+
+	}
+	else
+	{
+		this->setStyleSheet("background-color:rgb(60,60,60)");
+		this->setStyleSheet("background-color:green");
+	}
+}
+
 void RenderWidget::paintEvent(QPaintEvent* ev)
 {
 
@@ -137,6 +178,25 @@ void RenderWidget::mouseMoveEvent(QMouseEvent* ev)
 {
 	//this->setCursor(QCursor(Qt::ArrowCursor));
 	QWidget::mouseMoveEvent(ev);
+}
+
+void RenderWidget::mousePressEvent(QMouseEvent* ev)
+{
+	if (ev->button() == Qt::LeftButton)
+	{
+		qDebug() << "left button clicked";
+		if (is_selected_)
+		{
+			is_selected_ = false;
+			emit sigSelected(row_, colum_);
+		}
+		else
+		{
+			is_selected_ = true;
+			//this->refresh();
+			emit sigSelected(row_, colum_);
+		}
+	}
 }
 
 void RenderWidget::initVlcManager()

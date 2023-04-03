@@ -27,6 +27,7 @@
 #include "control_bar.h"
 
 #include "camera_menu.h"
+#include "splitter_widget.h"
 //#include "item_listwidget.h"
 
 #include "media_player_gui_class.h"
@@ -46,7 +47,7 @@ CameraPreviewWidget::CameraPreviewWidget(QWidget *parent)
 	timer_mouse_detect_.setInterval(300);
 	//QObject::connect(&timer_control_bar_, &QTimer::timeout, [=] {QApplication::setOverrideCursor(Qt::BlankCursor); });
 	QObject::connect(&timer_mouse_detect_, &QTimer::timeout, this, &CameraPreviewWidget::onMouseDetectTimeout);
-	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
+	//this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
 	this->setMouseTracking(true);
 
 	setIgnoreKeyPress();
@@ -157,65 +158,11 @@ void CameraPreviewWidget::initContent()
 {
 	QHBoxLayout* layout = new QHBoxLayout;
 	layout->setContentsMargins(0, 0, 0, 0);
-	render_widget_ = new RenderWidget(this);
-	render_widget_->setStyleSheet("RenderWidget{background-color: black;}");
-	layout->addWidget(render_widget_);
-	QObject::connect(render_widget_, &RenderWidget::sigOpenMediaFileSuccess,
-		[&] {
-			//btn_start_push_->setChecked(true);
-			//btn_start_push_->setText(QChar(0x23f9));
-			lb_item_name_->setText(openning_filename_);
-			emit sigPlayingFile(1,openning_filename_);
-			openning_filename_.clear();
-			control_bar_->setPlaying(true);
-			is_playing_ = true;
-		}
-	);
-
-	QObject::connect(render_widget_, &RenderWidget::sigUpdateTotalDuration, [&](QTime value)
-		{
-			control_bar_->setTotalDuration(value);
-		}
-	);
-
-	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentSoundVolume, [&](int value)
-		{
-			control_bar_->setSoundSliderValue(value);
-		}
-	);
-
-	QObject::connect(render_widget_, &RenderWidget::sigUpdateCurrentTimePos, [&](QTime value)
-		{
-			control_bar_->setCurrentDuration(value);
-		}
-	);
-
-	QObject::connect(render_widget_, &RenderWidget::sigRenderMediaEndReached, [&]()
-		{
-			control_bar_->setStop();
-		}
-	);
+	splitter_widget_ = new SplitterWidget(this);
+	//splitter_widget_->setStyleSheet("RenderWidget{background-color: black;}");
+	layout->addWidget(splitter_widget_);
 
 
-	//QWidget* widget = new QWidget;
-	////widget->setStyleSheet("background-color: green");
-	//layout->setContentsMargins(0, 0, 0, 0);
-	//layout->addWidget(widget);
-	//ui.wid_content->setLayout(layout);
-
-	//canvas_wid_ = new CanvasWidget();
-	//layout->setContentsMargins(0, 0, 0, 0);
-	//layout->addWidget(canvas_wid_);
-	//ui.wid_content->setLayout(layout);
-
-	// canvas_scene_ = new CanvasScene(ui.wid_content, 0);
-	// canvas_view_ = new CanvasView(canvas_scene_, ui.wid_content);
-
-	// canvas_view_->viewport()->installEventFilter(this);
-	// //canvas_view_->installEventFilter(this);
-
-	// layout->setContentsMargins(0, 0, 0, 0);
-	// layout->addWidget(canvas_view_);
 	ui.wid_content->setLayout(layout);
 }
 

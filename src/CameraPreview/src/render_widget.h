@@ -5,6 +5,7 @@
 #include <QTime>
 #include <memory>
 #include <QTimer>
+#include <QMenu>
 #include <QAbstractNativeEventFilter>
 
 
@@ -15,7 +16,8 @@ class RenderWidget : public QWidget/*, public QAbstractNativeEventFilter*/
     Q_OBJECT
 
 public:
-    RenderWidget(QWidget *parent = nullptr);
+    RenderWidget(QWidget* parent = nullptr);
+    RenderWidget(int row, int colum, int width = 1, int height = 1, QWidget *parent = nullptr);
     ~RenderWidget();
 
     void openMediaFile(QString file_path);
@@ -25,6 +27,30 @@ public:
     void setMediaStop();
 
     bool getFullscreen();
+
+public:
+    ////////////////////////////////////////////////////////////////////////
+    // For split
+    bool isCovered() { return is_covered_; }
+    bool isSelected() { return is_selected_; }
+    bool isFirstPoint() { return is_first_point_; }
+
+    void setCovered(bool status) { is_covered_ = status; }
+    void setSelected(bool status) { is_selected_ = status; }
+    void setFirstPoint(bool status) { is_first_point_ = status; }
+
+    int getWidth() { return width_; }
+    int getHeight() { return height_; }
+
+    int getRow() { return row_; }
+    int getColum() { return colum_; }
+
+    int getBlockRow() { return block_row_; }
+    int getBlockColum() { return block_colum_; }
+
+    void setBlockRow(int row) { block_row_ = row; }
+    void setBlockColum(int col) { block_colum_ = col; }
+
 signals:
     void sigOpenMediaFileSuccess();
     void sigUpdateTotalDuration(QTime time);
@@ -33,9 +59,15 @@ signals:
     void sigRenderMediaEndReached();
 
     void sigShowFullscreen(bool);
+    
+    //////////////////////////////////////////////////////////////
+    // For split
+    void sigSelected(int, int);
 public slots:
     //void onOpenMediaFile(QString file_path);
     
+
+    void onRefreshUi();
 private slots:
     void onMouseHideTimeout();
 
@@ -44,6 +76,10 @@ protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     //void mouseDoubleClickEvent(QMouseEvent* ev) override;
     //bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+
+    //////////////////////////////////////////////////////////////
+    // For split
+    void mousePressEvent(QMouseEvent* ev) override;
 
 private:
     void initVlcManager();
@@ -58,6 +94,29 @@ private:
     QTimer timer_fullscreen_;
     bool is_mouse_hide_ = false;
     bool is_fullscreen_ = false;
+
+    ///////////////////////////////////////////////////////////////////
+    // For Split
+    bool is_covered_ = false;
+    bool is_selected_ = false;
+    bool is_first_point_ = false;
+
+
+
+    int width_ = -1;
+    int height_ = -1;
+    int colum_ = -1;
+    int row_ = -1;
+
+    int block_row_ = -1;
+    int block_colum_ = -1;
+
+    int item_type_ = -1;
+    int item_index_ = -1;
+    QString name_;
+    QString url_;
+    QString sub_url_;
+    QMenu menu_;
 };
 
 #endif

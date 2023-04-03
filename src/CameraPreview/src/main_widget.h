@@ -18,6 +18,7 @@ class QPushButton;
 class ControlBar;
 class DisplayWidget;
 class CameraPreviewWidget;
+class SplitterWidget;
 
 class MainWidget : public QMainWindow
 {
@@ -104,5 +105,9 @@ private:
     ////////////////////////////////////////////////////////////////////
     // Control bar
     CameraPreviewWidget* camera_preview_widget_ = nullptr;
+
+    ////////////////////////////////////////////////////////////////////
+    // Splitter widget
+    SplitterWidget* splitter_widget_ = nullptr;
 };
 

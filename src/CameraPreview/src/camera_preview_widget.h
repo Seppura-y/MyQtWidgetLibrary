@@ -21,7 +21,7 @@ class QPropertyAnimation;
 class VolumeButton;
 class RenderWidget;
 class ControlBar;
-
+class SplitterWidget;
 
 class CameraPreviewWidget : public QWidget
 {
@@ -102,6 +102,8 @@ private:
 	//////////////////////Render Widget//////////////////////
 	RenderWidget* render_widget_ = nullptr;
 
+	/////////////////////Splitter Widget////////////////////
+	SplitterWidget* splitter_widget_ = nullptr;
 
 	//////////////////////Control Bar//////////////////////
 	ControlBar* control_bar_ = nullptr;
