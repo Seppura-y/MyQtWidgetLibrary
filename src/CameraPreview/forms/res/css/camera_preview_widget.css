@@ -9,7 +9,7 @@ QWidget {
 }*/
 
 QToolTip {
-    background-color: #FF8033;
+    background-color: #2e3137;
     color: silver;
 }
 
@@ -57,3 +57,5 @@ QPushButton:disabled, checked {
     border: none;
     background-color: #2e3137;
 }
+
+

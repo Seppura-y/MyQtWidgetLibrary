@@ -20,6 +20,8 @@ public:
     void resetSplitterContent();
 
     void getRange();
+
+    void setWidgetsLayout(int count);
 signals:
     
 
@@ -31,6 +33,8 @@ protected slots:
     void onLoad();
     void onSelectedUpdate();
     void onRefreshUi(int row, int colum);
+
+    void onSetControlerMode(bool status);
 protected:
 
     void resizeEvent(QResizeEvent* ev) override;
@@ -71,6 +75,10 @@ private:
     int controler_height_ = 1080;
     int controler_width_prev_ = -1;
     int controler_height_prev_ = -1;
+
+    int current_widgets_count_ = 1;
+    bool is_controler_mode_ = false;
+    bool is_content_init_ = false;
 };
 
 #endif

@@ -33,6 +33,8 @@ public slots:
 	void onRstsvr();
 	void onSendfile();
 	void onSetaddr();
+
+	void onSetControlerMode(bool status);
 private:
 	QMenu menu_;
 };

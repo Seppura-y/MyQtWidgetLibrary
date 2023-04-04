@@ -2,6 +2,8 @@
 #include <QAction>
 #include <QDebug>
 #include <QScrollBar>
+
+#include "config_helper.h"
 SplitterScrollArea::SplitterScrollArea(QWidget* parent) : QScrollArea(parent)
 {
     QAction* act = this->menu_.addAction(QString::fromLocal8Bit("merge"));
@@ -13,22 +15,22 @@ SplitterScrollArea::SplitterScrollArea(QWidget* parent) : QScrollArea(parent)
     act = this->menu_.addAction(QString::fromLocal8Bit("clear"));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(onClear()));
 
-    act = this->menu_.addAction(QString::fromLocal8Bit("save"));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSave()));
+    //act = this->menu_.addAction(QString::fromLocal8Bit("save"));
+    //QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSave()));
 
-    act = this->menu_.addAction(QString::fromLocal8Bit("load"));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(onLoad()));
+    //act = this->menu_.addAction(QString::fromLocal8Bit("load"));
+    //QObject::connect(act, SIGNAL(triggered()), this, SLOT(onLoad()));
 
-    act = this->menu_.addAction(QString::fromLocal8Bit("send"));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSendfile()));
+    //act = this->menu_.addAction(QString::fromLocal8Bit("send"));
+    //QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSendfile()));
 
-    act = this->menu_.addAction(QString::fromLocal8Bit("set ip"));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSetaddr()));
+    //act = this->menu_.addAction(QString::fromLocal8Bit("set ip"));
+    //QObject::connect(act, SIGNAL(triggered()), this, SLOT(onSetaddr()));
 
-    act = this->menu_.addAction(QString::fromLocal8Bit("reset svr"));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(onRstsvr()));
+    //act = this->menu_.addAction(QString::fromLocal8Bit("reset svr"));
+    //QObject::connect(act, SIGNAL(triggered()), this, SLOT(onRstsvr()));
 
-    this->setStyleSheet("background-color: gray;");
+    this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/my_scrollbar.css"));
 }
 
 void SplitterScrollArea::contextMenuEvent(QContextMenuEvent* ev)
@@ -73,6 +75,18 @@ void SplitterScrollArea::onSendfile()
 void SplitterScrollArea::onSetaddr()
 {
     emit sigSetaddr();
+}
+
+void SplitterScrollArea::onSetControlerMode(bool status)
+{
+    if (status)
+    {
+        menu_.setEnabled(true);
+    }
+    else
+    {
+        menu_.setEnabled(false);
+    }
 }
 
 void SplitterScrollArea::setMergeEnable(bool en)

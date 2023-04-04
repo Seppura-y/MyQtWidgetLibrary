@@ -94,7 +94,7 @@ MainWidget::MainWidget(QWidget *parent) : QMainWindow(parent)
     //    SetWindowLong(hwnd, GWL_STYLE, style | WS_THICKFRAME);
     //    QtWin::extendFrameIntoClientArea(this, -1, -1, -1, -1);
     //}
-
+    this->resize(1280, 720);
     normal_rect_ = this->geometry();
     main_wid_layout_ = new QHBoxLayout;
     initTitle();

@@ -19,7 +19,8 @@ SplitterWidget::SplitterWidget(QWidget* parent) : QWidget(parent)
 	initUi();
 	show();
 	startTimer(10);
-	this->setStyleSheet("background-color: orange;");
+	is_controler_mode_ = false;
+	//this->setStyleSheet("background-color: orange;");
 }
 
 SplitterWidget::~SplitterWidget()
@@ -29,7 +30,7 @@ SplitterWidget::~SplitterWidget()
 void SplitterWidget::initUi()
 {
 	initSplitterContent();
-	resetSplitterContent();
+	//resetSplitterContent();
 }
 
 void SplitterWidget::initSplitterContent()
@@ -50,8 +51,8 @@ void SplitterWidget::initSplitterContent()
 
 	content_widget_ = new QWidget();
 
-	QGridLayout* l = new QGridLayout();
-	scroll_area_->setLayout(l);
+	QGridLayout* scroll_layout = new QGridLayout();
+	scroll_area_->setLayout(scroll_layout);
 	scroll_area_->setWidget(content_widget_);
 
 	content_widget_->setLayout(grid_layout_);
@@ -91,22 +92,30 @@ void SplitterWidget::resetSplitterContent()
 			}
 		}
 
-		//scroll_area_->resize(this->width(), this->height());
-
 		int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
 		double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
-		//delete content_widget_;
-		//content_widget_ = new QWidget();
-		//content_widget_->resize(controler_width_ * scale, this->height());
-		//content_widget_->setFixedHeight(this->height());
-		//content_widget_->setFixedWidth(controler_width_ * scale);
-		//content_widget_->setFixedWidth(this->width());
-		//content_widget_->resize(controler_width_, controler_height_);
+
 		scroll_area_->setWidget(content_widget_);
 		content_widget_->show();
 
-		grid_row_ = controler_height_ / 100;
-		grid_colum_ = controler_width_ / (controler_height_ / grid_row_);
+		if (is_controler_mode_)
+		{
+			grid_row_ = controler_height_ / 100;
+			grid_colum_ = controler_width_ / (controler_height_ / grid_row_);
+		}
+		else
+		{
+			controler_width_ = this->width();
+			controler_height_ = this->height() - scrollbar_height;
+
+			//grid_row_ = controler_height_ / 10;
+			grid_row_ = 10;
+			//grid_colum_ = scroll_area_->width() / ((scroll_area_->height() - scrollbar_height) / grid_row_);
+			grid_colum_ = controler_width_ / ( (controler_height_ - scrollbar_height) / grid_row_);
+		}
+		auto s_width = scroll_area_->width();
+		auto s_height = scroll_area_->height();
+		auto a = (scroll_area_->height() - scrollbar_height / grid_row_);
 
 		for (int i = 0; i < grid_row_; i++)
 		{
@@ -118,8 +127,8 @@ void SplitterWidget::resetSplitterContent()
 			}
 		}
 
-		controler_width_prev_ = controler_width_;
-		controler_height_prev_ = controler_height_;
+		//controler_width_prev_ = controler_width_;
+		//controler_height_prev_ = controler_height_;
 		is_need_init_ = false;
 	}
 }
@@ -131,33 +140,31 @@ void SplitterWidget::onSelectedUpdate()
 
 void SplitterWidget::resizeEvent(QResizeEvent* ev)
 {
-	//scroll_area_->resize(this->width(), this->height());
-	//content_widget_->resize(this->width(), this->height());
-
 	int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
-	double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
-	//content_widget_->setFixedHeight(this->height() - scrollbar_height);
-	//content_widget_->setFixedWidth(controler_width_ * scale);
-
-	//scroll_area_->widget()->setGeometry(0, 0, controler_width_ * scale, this->height() - scrollbar_height);
-	//scroll_area_->takeWidget();
+	double scale = 1.0;
+	if (is_controler_mode_)
+	{
+		scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
+	}
+	else
+	{
+		controler_width_ = this->width();
+		controler_height_ = this->height();
+	}
 
 	int hvalue = scroll_area_->horizontalScrollBar()->value();
 	int vvalue = scroll_area_->verticalScrollBar()->value();
 	QPoint topLeft = scroll_area_->viewport()->rect().topLeft();
 
-	scroll_area_->widget()->resize(controler_width_ * scale, this->height() - scrollbar_height);
+	scroll_area_->widget()->resize(controler_width_ * scale, controler_height_);
 	scroll_area_->widget()->move(topLeft.x() - hvalue, topLeft.y() - vvalue);
 
-	//content_widget_->resize(controler_width_ * scale, this->height() - scrollbar_height);
-	//scroll_area_->setWidget(content_widget_);
-	//content_widget_->show();
-	auto port = scroll_area_->viewport();
-	port->update();
-	resetSplitterContent();
+	if (!is_content_init_)
+	{
+		is_content_init_ = true;
+		resetSplitterContent();
+	}
 
-	scroll_area_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	//content_widget_->setMaximumHeight(this->height());
 	return QWidget::resizeEvent(ev);
 }
 
@@ -397,7 +404,7 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 	if (!second_point_selected_)
 	{
 		second_point_selected_ = true;
-		scroll_area_->setMergeEnable();
+		scroll_area_->setMergeEnable(true);
 		scroll_area_->setSplitEnable(false);
 	}
 	else
@@ -421,6 +428,7 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 	second_colum_ = colum;
 	second_row_ = row;
 
+	// Unselect
 	if (second_colum_ == first_colum_ && second_row_ == first_row_)
 	{
 		first_point_selected_ = false;
@@ -433,6 +441,8 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 		first_row_ = -1;
 		second_colum_ = -1;
 		second_row_ = -1;
+		scroll_area_->setMergeEnable(false);
+		scroll_area_->setSplitEnable(false);
 		return;
 	}
 	item_widget = (RenderWidget*)grid_layout_->itemAtPosition(first_row_, first_colum_)->widget();
@@ -481,6 +491,16 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 			}
 			item_widget->onRefreshUi();
 		}
+	}
+}
+
+void SplitterWidget::onSetControlerMode(bool status)
+{
+	is_controler_mode_ = status;
+	if (!is_controler_mode_)
+	{
+		scroll_area_->setMergeEnable(false);
+		scroll_area_->setSplitEnable(false);
 	}
 }
 
@@ -638,4 +658,11 @@ void SplitterWidget::getRange()
 		selected_width_ = end_colum_ - start_colum_;
 		selected_height_ = end_row_ - start_row_;
 	}
+}
+
+void SplitterWidget::setWidgetsLayout(int count)
+{
+	current_widgets_count_ = count;
+	grid_row_ = sqrt(count);
+
 }

@@ -56,10 +56,10 @@ void CALLBACK TimeProc(HWND hwnd, UINT msg, UINT_PTR id, DWORD time)
 RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 {
 	this->setWindowTitle("RenderWidget");
-	setAttribute(Qt::WA_TranslucentBackground);
-	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
-	this->setStyleSheet("RenderWdiget{background-color: black;}");
-
+	//setAttribute(Qt::WA_TranslucentBackground);
+	//setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+	//this->setStyleSheet("RenderWdiget{background-color: black;}");
+	this->setStyleSheet("RenderWidget{background-color: rgb(60,60,60); border-style: outset; border-width: 1px; border-color: rgb(60,60,60);}");
 
 	this->setMouseTracking(true);
 	QObject::connect(&timer_mouse_hide_, &QTimer::timeout, this, &RenderWidget::onMouseHideTimeout);
@@ -71,7 +71,9 @@ RenderWidget::RenderWidget(int row, int colum, int width, int height, QWidget* p
 	this->setWindowTitle("RenderWidget");
 	//setAttribute(Qt::WA_TranslucentBackground);
 	//setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
-	this->setStyleSheet("RenderWdiget{background-color: rgb(60,60,60);}");
+	//this->setStyleSheet("RenderWdiget{background-color: rgb(60,60,60);}");
+	//this->setStyleSheet("RenderWdiget{border: 12px;border-color: green;}");
+	this->setStyleSheet("RenderWidget{background-color: rgb(60,60,60); border-style: outset; border-width: 1px; border-color: rgb(60,60,60);}");
 	this->setAcceptDrops(true);
 
 	colum_ = colum;
@@ -148,18 +150,16 @@ void RenderWidget::onRefreshUi()
 	{
 		if (is_first_point_)
 		{
-			this->setStyleSheet("background-color:rgb(255,255,127)");
+			this->setStyleSheet("RenderWidget{background-color:rgb(60,60,60); border-style: outset; border-width: 1px; border-color: white;}");
 		}
 		else
 		{
-			this->setStyleSheet("background-color:rgb(255,255,255)");
+			this->setStyleSheet("RenderWidget{background-color:rgb(60,60,60); border-style: outset; border-width: 1px; border-color: orange;}");
 		}
-
 	}
 	else
 	{
-		this->setStyleSheet("background-color:rgb(60,60,60)");
-		this->setStyleSheet("background-color:green");
+		this->setStyleSheet("RenderWidget{background-color:rgb(60,60,60); border-style: outset; border-width: 1px; border-color: rgb(60,60,60);}");
 	}
 }
 

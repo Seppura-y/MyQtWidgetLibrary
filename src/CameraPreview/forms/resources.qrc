@@ -12,5 +12,6 @@
         <file>res/css/volume_button.css</file>
         <file>res/css/control_bar.css</file>
         <file>res/css/dialog_base.css</file>
+        <file>res/css/camera_preview_widget.css</file>
     </qresource>
 </RCC>

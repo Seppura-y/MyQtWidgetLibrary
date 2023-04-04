@@ -40,15 +40,15 @@ CameraPreviewWidget::CameraPreviewWidget(QWidget *parent)
 	this->setAcceptDrops(true);
 
 	initTitle();
-	initContent();
 	initToolBar();
+	initContent();
 	//initControlBar();
 
 	timer_control_bar_.setInterval(1500);
 	timer_mouse_detect_.setInterval(300);
 	//QObject::connect(&timer_control_bar_, &QTimer::timeout, [=] {QApplication::setOverrideCursor(Qt::BlankCursor); });
 	QObject::connect(&timer_mouse_detect_, &QTimer::timeout, this, &CameraPreviewWidget::onMouseDetectTimeout);
-	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
+	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/camera_preview_widget.css"));
 	this->setMouseTracking(true);
 
 	setIgnoreKeyPress();
@@ -83,9 +83,11 @@ void CameraPreviewWidget::resizeEvent(QResizeEvent* ev)
 {
 	if (splitter_widget_)
 	{
-		splitter_widget_->resize(this->width(), this->height());
+		splitter_widget_->resize(ui.wid_content->width(), ui.wid_content->height());
 	}
-	ui.wid_content->setGeometry(0, 0, this->width(), this->height());
+	auto width = this->width();
+	auto height = this->height();
+	//ui.wid_content->setGeometry(0, 0, this->width(), this->height());
 	QWidget::resizeEvent(ev);
 	//canvas_view_->setGeometry(0, 0, this->width(), this->height());
 }
@@ -163,12 +165,12 @@ void CameraPreviewWidget::initContent()
 {
 	QGridLayout* layout = new QGridLayout;
 	layout->setContentsMargins(0, 0, 0, 0);
-	splitter_widget_ = new SplitterWidget();
-	splitter_widget_->setStyleSheet("SplitterWidget{background-color: black;}");
-	//splitter_widget_->resize(ui.wid_content->width(), ui.wid_content->height());
+	//QWidget* wid = new QWidget();
+	//layout->addWidget(wid);
+	//wid->setStyleSheet("background-color: black;");
+	splitter_widget_ = new SplitterWidget(ui.wid_content);
+
 	layout->addWidget(splitter_widget_);
-	//auto size = splitter_widget_->size();
-	//auto ui_size = ui.wid_content->size();
 
 	ui.wid_content->setLayout(layout);
 }
@@ -271,6 +273,7 @@ void CameraPreviewWidget::initToolBar()
 	btn_group_toolbar_->addButton(btn_split_custom_);
 
 	ui.wid_toolbar->setLayout(layout_toolbar_);
+	ui.wid_toolbar->setFixedHeight(35);
 
 	QObject::connect(btn_group_toolbar_, SIGNAL(buttonToggled(QAbstractButton*, bool)), this, SLOT(onToolBarButtonToggled(QAbstractButton*, bool)));
 
