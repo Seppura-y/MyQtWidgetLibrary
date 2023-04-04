@@ -44,6 +44,7 @@ QString ConfigHelper::getQssString(QString path)
 	{
 		qDebug() << "open qss file : " << path << "failed";
 	}
+	//return QString();
 	return QssString;
 }
 

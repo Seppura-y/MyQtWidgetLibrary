@@ -69,13 +69,13 @@ RenderWidget::RenderWidget(QWidget* parent) : QWidget(parent)
 RenderWidget::RenderWidget(int row, int colum, int width, int height, QWidget* parent)
 {
 	this->setWindowTitle("RenderWidget");
-	setAttribute(Qt::WA_TranslucentBackground);
-	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+	//setAttribute(Qt::WA_TranslucentBackground);
+	//setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 	this->setStyleSheet("RenderWdiget{background-color: rgb(60,60,60);}");
 	this->setAcceptDrops(true);
 
-	colum_ = colum_;
-	row_ = row_;
+	colum_ = colum;
+	row_ = row;
 	width_ = width;
 	height_ = height;
 	is_selected_ = false;

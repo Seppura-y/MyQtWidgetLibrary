@@ -19,6 +19,7 @@
 #include <QWindow>
 #include <QGuiApplication>
 #include <QLabel>
+#include <QGridLayout>
 
 
 #include "config_helper.h"
@@ -47,7 +48,7 @@ CameraPreviewWidget::CameraPreviewWidget(QWidget *parent)
 	timer_mouse_detect_.setInterval(300);
 	//QObject::connect(&timer_control_bar_, &QTimer::timeout, [=] {QApplication::setOverrideCursor(Qt::BlankCursor); });
 	QObject::connect(&timer_mouse_detect_, &QTimer::timeout, this, &CameraPreviewWidget::onMouseDetectTimeout);
-	//this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
+	this->setStyleSheet(ConfigHelper::getQssString(":/resources/res/css/display_widget.css"));
 	this->setMouseTracking(true);
 
 	setIgnoreKeyPress();
@@ -80,9 +81,13 @@ CameraPreviewWidget::~CameraPreviewWidget()
 
 void CameraPreviewWidget::resizeEvent(QResizeEvent* ev)
 {
+	if (splitter_widget_)
+	{
+		splitter_widget_->resize(this->width(), this->height());
+	}
+	ui.wid_content->setGeometry(0, 0, this->width(), this->height());
 	QWidget::resizeEvent(ev);
 	//canvas_view_->setGeometry(0, 0, this->width(), this->height());
-	//ui.wid_content->setGeometry(0, 0, this->width(), this->height());
 }
 
 
@@ -156,12 +161,14 @@ void CameraPreviewWidget::initTitle()
 
 void CameraPreviewWidget::initContent()
 {
-	QHBoxLayout* layout = new QHBoxLayout;
+	QGridLayout* layout = new QGridLayout;
 	layout->setContentsMargins(0, 0, 0, 0);
-	splitter_widget_ = new SplitterWidget(this);
-	//splitter_widget_->setStyleSheet("RenderWidget{background-color: black;}");
+	splitter_widget_ = new SplitterWidget();
+	splitter_widget_->setStyleSheet("SplitterWidget{background-color: black;}");
+	//splitter_widget_->resize(ui.wid_content->width(), ui.wid_content->height());
 	layout->addWidget(splitter_widget_);
-
+	//auto size = splitter_widget_->size();
+	//auto ui_size = ui.wid_content->size();
 
 	ui.wid_content->setLayout(layout);
 }

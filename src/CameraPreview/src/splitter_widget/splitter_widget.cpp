@@ -4,11 +4,13 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QScrollBar>
 
 #include "splitter_scroll_area.h"
 #include "render_widget.h"
 
 static QPoint evpoint;
+static double scale;
 
 SplitterWidget::SplitterWidget(QWidget* parent) : QWidget(parent)
 {
@@ -32,23 +34,29 @@ void SplitterWidget::initUi()
 
 void SplitterWidget::initSplitterContent()
 {
-	QGridLayout* lay = new QGridLayout();
-	content_widget_ = new QWidget();
-	content_widget_->setStyleSheet("background-color: blue;");
-	grid_layout_ = new QGridLayout();
-	grid_layout_->setSpacing(2);
-	grid_layout_->setContentsMargins(2, 2, 2, 2);
-	content_widget_->setLayout(grid_layout_);
-
 	scroll_area_ = new SplitterScrollArea();
-	lay->addWidget(content_widget_);
-	scroll_area_->setLayout(lay);
-	//scroll_area_->setWidget(content_widget_);
-	//scroll_area_->setWidgetResizable(false);
+	scroll_area_->setMergeEnable(false);
+	scroll_area_->setSplitEnable(false);
 
-	QGridLayout* main_layout = new QGridLayout();
-	main_layout->addWidget(scroll_area_);
+	QVBoxLayout* main_layout = new QVBoxLayout();
 	this->setLayout(main_layout);
+	main_layout->setSpacing(1);
+	main_layout->setContentsMargins(0, 0, 0, 0);
+	main_layout->addWidget(scroll_area_);
+
+	grid_layout_ = new QGridLayout(content_widget_);
+	grid_layout_->setSpacing(1);
+	grid_layout_->setContentsMargins(0, 0, 0, 0);
+
+	content_widget_ = new QWidget();
+
+	QGridLayout* l = new QGridLayout();
+	scroll_area_->setLayout(l);
+	scroll_area_->setWidget(content_widget_);
+
+	content_widget_->setLayout(grid_layout_);
+	scroll_area_->setWidgetResizable(false);
+	content_widget_->show();
 
 	first_point_selected_ = false;
 	second_point_selected_ = false;
@@ -83,9 +91,19 @@ void SplitterWidget::resetSplitterContent()
 			}
 		}
 
+		//scroll_area_->resize(this->width(), this->height());
+
 		int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
-		double scale = (double)(this->height() - scrollbar_height) / controler_height_;
-		content_widget_->resize(controler_width_ * scale, controler_height_ * scale);
+		double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
+		//delete content_widget_;
+		//content_widget_ = new QWidget();
+		//content_widget_->resize(controler_width_ * scale, this->height());
+		//content_widget_->setFixedHeight(this->height());
+		//content_widget_->setFixedWidth(controler_width_ * scale);
+		//content_widget_->setFixedWidth(this->width());
+		//content_widget_->resize(controler_width_, controler_height_);
+		scroll_area_->setWidget(content_widget_);
+		content_widget_->show();
 
 		grid_row_ = controler_height_ / 100;
 		grid_colum_ = controler_width_ / (controler_height_ / grid_row_);
@@ -113,12 +131,39 @@ void SplitterWidget::onSelectedUpdate()
 
 void SplitterWidget::resizeEvent(QResizeEvent* ev)
 {
+	//scroll_area_->resize(this->width(), this->height());
+	//content_widget_->resize(this->width(), this->height());
+
+	int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
+	double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
+	//content_widget_->setFixedHeight(this->height() - scrollbar_height);
+	//content_widget_->setFixedWidth(controler_width_ * scale);
+
+	//scroll_area_->widget()->setGeometry(0, 0, controler_width_ * scale, this->height() - scrollbar_height);
+	//scroll_area_->takeWidget();
+
+	int hvalue = scroll_area_->horizontalScrollBar()->value();
+	int vvalue = scroll_area_->verticalScrollBar()->value();
+	QPoint topLeft = scroll_area_->viewport()->rect().topLeft();
+
+	scroll_area_->widget()->resize(controler_width_ * scale, this->height() - scrollbar_height);
+	scroll_area_->widget()->move(topLeft.x() - hvalue, topLeft.y() - vvalue);
+
+	//content_widget_->resize(controler_width_ * scale, this->height() - scrollbar_height);
+	//scroll_area_->setWidget(content_widget_);
+	//content_widget_->show();
+	auto port = scroll_area_->viewport();
+	port->update();
+	resetSplitterContent();
+
+	scroll_area_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	//content_widget_->setMaximumHeight(this->height());
 	return QWidget::resizeEvent(ev);
 }
 
 void SplitterWidget::timerEvent(QTimerEvent* ev)
 {
-	//if (is_need_init_)
+	if (is_need_init_)
 	{
 		resetSplitterContent();
 	}
@@ -135,7 +180,7 @@ void SplitterWidget::mousePressEvent(QMouseEvent* ev)
 
 void SplitterWidget::mouseMoveEvent(QMouseEvent* ev)
 {
-	if (!is_leftbutton_pressed_)
+	//if (!is_leftbutton_pressed_)
 	{
 		return QWidget::mouseMoveEvent(ev);
 	}
@@ -143,7 +188,7 @@ void SplitterWidget::mouseMoveEvent(QMouseEvent* ev)
 	//{
 	//	return QWidget::mouseMoveEvent(ev);
 	//}
-	this->move(ev->globalPos() - evpoint);
+	//this->move(ev->globalPos() - evpoint);
 }
 
 void SplitterWidget::mouseReleaseEvent(QMouseEvent* ev)

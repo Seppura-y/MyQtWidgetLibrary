@@ -28,7 +28,7 @@ SplitterScrollArea::SplitterScrollArea(QWidget* parent) : QScrollArea(parent)
     act = this->menu_.addAction(QString::fromLocal8Bit("reset svr"));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(onRstsvr()));
 
-    this->setStyleSheet("background-color: green;");
+    this->setStyleSheet("background-color: gray;");
 }
 
 void SplitterScrollArea::contextMenuEvent(QContextMenuEvent* ev)
