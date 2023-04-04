@@ -79,9 +79,9 @@ void SplitterWidget::resetSplitterContent()
 		(controler_height_ != -1) &&
 		((controler_width_ != controler_width_prev_) || (controler_height_ != controler_height_prev_)))
 	{
-		for (int i = 0; i < grid_row_; i++)
+		for (int i = 0; i < grid_rows_; i++)
 		{
-			for (int j = 0; j < grid_colum_; j++)
+			for (int j = 0; j < grid_colums_; j++)
 			{
 				QLayoutItem* item = grid_layout_->itemAtPosition(i, j);
 				if (!item)continue;
@@ -91,39 +91,43 @@ void SplitterWidget::resetSplitterContent()
 				delete item_widget;
 			}
 		}
+		render_widgets_.clear();
 
 		int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
 		double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
 
-		scroll_area_->setWidget(content_widget_);
-		content_widget_->show();
+		//scroll_area_->setWidget(content_widget_);
+		//content_widget_->show();
 
 		if (is_controler_mode_)
 		{
-			grid_row_ = controler_height_ / 100;
-			grid_colum_ = controler_width_ / (controler_height_ / grid_row_);
+			grid_rows_ = controler_height_ / 100;
+			grid_colums_ = controler_width_ / (controler_height_ / grid_rows_);
 		}
 		else
 		{
-			controler_width_ = this->width();
-			controler_height_ = this->height() - scrollbar_height;
+			//if (is_customlayout_mode_)
+			{
+				controler_width_ = this->width();
+				controler_height_ = this->height() - scrollbar_height;
 
-			//grid_row_ = controler_height_ / 10;
-			grid_row_ = 10;
-			//grid_colum_ = scroll_area_->width() / ((scroll_area_->height() - scrollbar_height) / grid_row_);
-			grid_colum_ = controler_width_ / ( (controler_height_ - scrollbar_height) / grid_row_);
+				grid_rows_ = 12;
+				grid_colums_ = controler_width_ / ((controler_height_ - scrollbar_height) / grid_rows_);
+			}
+			//else
+			{
+
+			}
 		}
-		auto s_width = scroll_area_->width();
-		auto s_height = scroll_area_->height();
-		auto a = (scroll_area_->height() - scrollbar_height / grid_row_);
 
-		for (int i = 0; i < grid_row_; i++)
+		for (int i = 0; i < grid_rows_; i++)
 		{
-			for (int j = 0; j < grid_colum_; j++)
+			for (int j = 0; j < grid_colums_; j++)
 			{
 				RenderWidget* wid = new RenderWidget(i, j);
 				QObject::connect(wid, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
 				grid_layout_->addWidget(wid, i, j);
+				render_widgets_.insert({ std::make_pair(i, j), wid});
 			}
 		}
 
@@ -141,22 +145,21 @@ void SplitterWidget::onSelectedUpdate()
 void SplitterWidget::resizeEvent(QResizeEvent* ev)
 {
 	int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
-	double scale = 1.0;
-	if (is_controler_mode_)
-	{
-		scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
-	}
-	else
-	{
-		controler_width_ = this->width();
-		controler_height_ = this->height();
-	}
-
 	int hvalue = scroll_area_->horizontalScrollBar()->value();
 	int vvalue = scroll_area_->verticalScrollBar()->value();
 	QPoint topLeft = scroll_area_->viewport()->rect().topLeft();
 
-	scroll_area_->widget()->resize(controler_width_ * scale, controler_height_);
+	double scale = 1.0;
+	if (is_controler_mode_)
+	{
+		scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
+		scroll_area_->widget()->resize(controler_width_ * scale, controler_height_);
+	}
+	else
+	{
+		scroll_area_->widget()->resize(this->width() * scale, this->height());
+	}
+
 	scroll_area_->widget()->move(topLeft.x() - hvalue, topLeft.y() - vvalue);
 
 	if (!is_content_init_)
@@ -213,9 +216,9 @@ void SplitterWidget::onMerge()
 	second_colum_ = -1;
 	second_row_ = -1;
 
-	for (int i = 0; i < grid_row_; i++)
+	for (int i = 0; i < grid_rows_; i++)
 	{
-		for (int j = 0; j < grid_colum_; j++)
+		for (int j = 0; j < grid_colums_; j++)
 		{
 			RenderWidget* render_widget = (RenderWidget*)grid_layout_->itemAtPosition(i, j)->widget();
 			if (render_widget == nullptr)continue;
@@ -232,6 +235,7 @@ void SplitterWidget::onMerge()
 	QLayoutItem* item = grid_layout_->itemAtPosition(start_row_, start_colum_);
 	int index = grid_layout_->indexOf(item);
 	RenderWidget* render_widget = (RenderWidget*)grid_layout_->takeAt(index)->widget();
+	render_widgets_.erase(std::make_pair(start_row_,start_colum_));
 	if (render_widget)
 	{
 		delete render_widget;
@@ -252,20 +256,24 @@ void SplitterWidget::onMerge()
 			{
 				int index = grid_layout_->indexOf(item);
 				grid_layout_->takeAt(index);
+				render_widgets_.erase(std::make_pair(i, j));
 				delete render_widget;
 				render_widget = new RenderWidget(i, j);
 				grid_layout_->addWidget(render_widget, i, j);
+				render_widgets_.insert({ std::make_pair(i, j),render_widget });
 			}
 
 			render_widget->setCovered(true);
+			render_widgets_.erase(std::make_pair(i, j));
 			render_widget->setBlockRow(start_row_);
 			render_widget->setBlockColum(start_colum_);
 		}
 	}
 
-	RenderWidget* elwidget = new RenderWidget(start_row_, start_colum_, selected_width_, selected_height_);
-	QObject::connect(elwidget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
-	grid_layout_->addWidget(elwidget, start_row_, start_colum_, selected_height_, selected_width_);
+	render_widget = new RenderWidget(start_row_, start_colum_, selected_width_, selected_height_);
+	QObject::connect(render_widget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
+	grid_layout_->addWidget(render_widget, start_row_, start_colum_, selected_height_, selected_width_);
+	render_widgets_.insert({ std::make_pair(start_row_, start_colum_),render_widget });
 
 	scroll_area_->setMergeEnable(false);
 	scroll_area_->setSplitEnable(false);
@@ -289,10 +297,12 @@ void SplitterWidget::onSplit()
 	width = item_widget->getWidth();
 	height = item_widget->getHeight();
 	delete item_widget;
+	render_widgets_.erase(std::make_pair(row, colum));
 
 	item_widget = new RenderWidget(row, colum);
 	QObject::connect(item_widget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
 	grid_layout_->addWidget(item_widget, row, colum);
+	render_widgets_.insert({ std::make_pair(row, colum), item_widget });
 	scroll_area_->setMergeEnable(false);
 	scroll_area_->setSplitEnable(false);
 
@@ -308,6 +318,7 @@ void SplitterWidget::onSplit()
 			if (item_widget->isCovered())
 			{
 				item_widget->setCovered(false);
+				render_widgets_.insert({ std::make_pair(i, j), item_widget });
 				item_widget->setBlockRow(-1);
 				item_widget->setBlockColum(-1);
 			}
@@ -347,9 +358,9 @@ void SplitterWidget::onReset()
 	int index = -1;
 	QLayoutItem* item;
 	RenderWidget* render_widget;
-	for (int i = 0; i < grid_row_; i++)
+	for (int i = 0; i < grid_rows_; i++)
 	{
-		for (int j = 0; j < grid_colum_; j++)
+		for (int j = 0; j < grid_colums_; j++)
 		{
 			item = grid_layout_->itemAtPosition(i, j);
 			if (item == nullptr)
@@ -409,9 +420,9 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 	}
 	else
 	{
-		for (int i = 0; i < grid_row_; i++)
+		for (int i = 0; i < grid_rows_; i++)
 		{
-			for (int j = 0; j < grid_colum_; j++)
+			for (int j = 0; j < grid_colums_; j++)
 			{
 				item_widget = (RenderWidget*)grid_layout_->itemAtPosition(i, j)->widget();
 				if (item_widget == nullptr)continue;
@@ -497,10 +508,92 @@ void SplitterWidget::onRefreshUi(int row, int colum)
 void SplitterWidget::onSetControlerMode(bool status)
 {
 	is_controler_mode_ = status;
+	is_customlayout_mode_ = true;
 	if (!is_controler_mode_)
 	{
 		scroll_area_->setMergeEnable(false);
 		scroll_area_->setSplitEnable(false);
+	}
+}
+
+void SplitterWidget::onResetContent(int count)
+{
+	if(count > 0 && count >25)
+	{
+		is_customlayout_mode_ = true;
+
+	}
+	else
+	{
+		current_widgets_count_ = count;
+		grid_rows_ = sqrt(count);
+		grid_colums_ = grid_rows_;
+		is_customlayout_mode_ = false;
+	}
+	resetSplitterContent();
+}
+
+void SplitterWidget::onResetSplitterContent(int count)
+{
+	if (count < 0 || count > 25)
+	{
+		is_customlayout_mode_ = true;
+		current_widgets_count_ = -1;
+	}
+	else
+	{
+		current_widgets_count_ = count;
+		grid_rows_ = sqrt(count);
+		grid_colums_ = grid_rows_;
+		is_customlayout_mode_ = false;
+	}
+
+	if (is_need_init_)
+	{
+		for (int i = 0; i < grid_rows_; i++)
+		{
+			for (int j = 0; j < grid_colums_; j++)
+			{
+				QLayoutItem* item = grid_layout_->itemAtPosition(i, j);
+				if (!item)continue;
+				int index = grid_layout_->indexOf(item);
+				RenderWidget* item_widget = (RenderWidget*)grid_layout_->takeAt(index)->widget();
+				if (!item_widget)continue;
+				delete item_widget;
+			}
+		}
+
+		int scrollbar_height = scroll_area_->getHorizontalScrollbarHeight();
+		double scale = (double)(scroll_area_->height() - scrollbar_height) / controler_height_;
+
+		if (is_controler_mode_)
+		{
+			grid_rows_ = controler_height_ / 100;
+			grid_colums_ = controler_width_ / (controler_height_ / grid_rows_);
+		}
+		else
+		{
+			//controler_width_ = this->width();
+			//controler_height_ = this->height() - scrollbar_height;
+
+			if (is_customlayout_mode_)
+			{
+				grid_rows_ = 12;
+				grid_colums_ = this->width() / ((this->height() - scrollbar_height) / grid_rows_);
+			}
+		}
+
+		for (int i = 0; i < grid_rows_; i++)
+		{
+			for (int j = 0; j < grid_colums_; j++)
+			{
+				RenderWidget* wid = new RenderWidget(i, j);
+				QObject::connect(wid, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
+				grid_layout_->addWidget(wid, i, j);
+			}
+		}
+
+		is_need_init_ = false;
 	}
 }
 
@@ -663,6 +756,6 @@ void SplitterWidget::getRange()
 void SplitterWidget::setWidgetsLayout(int count)
 {
 	current_widgets_count_ = count;
-	grid_row_ = sqrt(count);
-
+	grid_rows_ = sqrt(count);
+	is_customlayout_mode_ = false;
 }

@@ -2,9 +2,11 @@
 #define SPLITTER_WIDGET_H
 
 #include <QWidget>
+#include <map>
 
 class QGridLayout;
 class SplitterScrollArea;
+class RenderWidget;
 
 class SplitterWidget : public QWidget
 {
@@ -35,6 +37,8 @@ protected slots:
     void onRefreshUi(int row, int colum);
 
     void onSetControlerMode(bool status);
+    void onResetContent(int count);
+    void onResetSplitterContent(int count);
 protected:
 
     void resizeEvent(QResizeEvent* ev) override;
@@ -68,8 +72,8 @@ private:
     bool is_need_init_ = true;
     int grid_width_ = -1;
     int grid_height_ = -1;
-    int grid_colum_ = -1;
-    int grid_row_ = -1;
+    int grid_rows_ = -1;
+    int grid_colums_ = -1;
 
     int controler_width_ = 5760;
     int controler_height_ = 1080;
@@ -78,7 +82,10 @@ private:
 
     int current_widgets_count_ = 1;
     bool is_controler_mode_ = false;
+    bool is_customlayout_mode_ = false;
     bool is_content_init_ = false;
+
+    std::map<std::pair<int, int>, RenderWidget*> render_widgets_;
 };
 
 #endif
