@@ -47,6 +47,9 @@ protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     void mouseReleaseEvent(QMouseEvent* ev) override;
 
+
+private:
+    void clearSelection();
 private:
     QWidget* content_widget_ = nullptr;
     SplitterScrollArea* scroll_area_ = nullptr;

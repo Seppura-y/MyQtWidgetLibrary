@@ -59,7 +59,7 @@ signals:
 public slots:
 	void onPanelChanged(bool is_checked);
 	void onTitleButtonToggled(QAbstractButton* bt, bool checked);
-	void onToolBarButtonToggled(QAbstractButton* bt, bool checked);
+	void onToolBarButtonToggled(QAbstractButton* bt);
 	void onSoundVolumeValueChanged(int value);
 	void onShowFullScreen(bool status);
 

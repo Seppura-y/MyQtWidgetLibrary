@@ -174,6 +174,8 @@ void CameraPreviewWidget::initContent()
 	layout->addWidget(splitter_widget_);
 
 	ui.wid_content->setLayout(layout);
+
+	btn_group_toolbar_->idToggled(1,true);
 }
 
 void CameraPreviewWidget::initToolBar()
@@ -283,7 +285,7 @@ void CameraPreviewWidget::initToolBar()
 	ui.wid_toolbar->setLayout(layout_toolbar_);
 	ui.wid_toolbar->setFixedHeight(35);
 
-	QObject::connect(btn_group_toolbar_, SIGNAL(buttonToggled(QAbstractButton*, bool)), this, SLOT(onToolBarButtonToggled(QAbstractButton*, bool)));
+	QObject::connect(btn_group_toolbar_, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(onToolBarButtonToggled(QAbstractButton*)));
 
 	btn_split_1_->setChecked(true);
 	//last_split_id_ = btn_group_toolbar_->checkedId();
@@ -445,7 +447,7 @@ void CameraPreviewWidget::onTitleButtonToggled(QAbstractButton* bt, bool checked
 	}
 }
 
-void CameraPreviewWidget::onToolBarButtonToggled(QAbstractButton* bt, bool checked)
+void CameraPreviewWidget::onToolBarButtonToggled(QAbstractButton* bt)
 {
 	bool reset = false;
 	int cur_id = btn_group_toolbar_->checkedId();
@@ -481,7 +483,7 @@ void CameraPreviewWidget::onToolBarButtonToggled(QAbstractButton* bt, bool check
 	}
 	else if (!is_custom_layout_)
 	{
-		//emit sigResetSplitterContent(cur_id);
+		emit sigResetSplitterContent(cur_id);
 	}
 
 	last_split_id_ = cur_id;
