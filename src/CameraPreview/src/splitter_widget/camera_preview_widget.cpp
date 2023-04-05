@@ -20,6 +20,7 @@
 #include <QGuiApplication>
 #include <QLabel>
 #include <QGridLayout>
+#include <QMessageBox>
 
 
 #include "config_helper.h"
@@ -169,7 +170,7 @@ void CameraPreviewWidget::initContent()
 	//layout->addWidget(wid);
 	//wid->setStyleSheet("background-color: black;");
 	splitter_widget_ = new SplitterWidget(ui.wid_content);
-
+	QObject::connect(this, &CameraPreviewWidget::sigResetSplitterContent, splitter_widget_, &SplitterWidget::onResetSplitterContent);
 	layout->addWidget(splitter_widget_);
 
 	ui.wid_content->setLayout(layout);
@@ -271,6 +272,13 @@ void CameraPreviewWidget::initToolBar()
 	btn_group_toolbar_->addButton(btn_split_16_);
 	btn_group_toolbar_->addButton(btn_split_25_);
 	btn_group_toolbar_->addButton(btn_split_custom_);
+	
+	btn_group_toolbar_->setId(btn_split_1_, 1);
+	btn_group_toolbar_->setId(btn_split_4_, 4);
+	btn_group_toolbar_->setId(btn_split_9_, 9);
+	btn_group_toolbar_->setId(btn_split_16_, 16);
+	btn_group_toolbar_->setId(btn_split_25_, 25);
+	btn_group_toolbar_->setId(btn_split_custom_, 0);
 
 	ui.wid_toolbar->setLayout(layout_toolbar_);
 	ui.wid_toolbar->setFixedHeight(35);
@@ -439,7 +447,44 @@ void CameraPreviewWidget::onTitleButtonToggled(QAbstractButton* bt, bool checked
 
 void CameraPreviewWidget::onToolBarButtonToggled(QAbstractButton* bt, bool checked)
 {
-	last_split_id_ = btn_group_toolbar_->checkedId();
+	bool reset = false;
+	int cur_id = btn_group_toolbar_->checkedId();
+
+	int id1 = btn_group_toolbar_->id(btn_split_1_);
+	int id4 = btn_group_toolbar_->id(btn_split_4_);
+	int id9 = btn_group_toolbar_->id(btn_split_9_);
+	int id16 = btn_group_toolbar_->id(btn_split_16_);
+	int id25 = btn_group_toolbar_->id(btn_split_25_);
+	int cus_id = btn_group_toolbar_->id(btn_split_custom_);
+	if (is_custom_layout_ && cur_id != btn_group_toolbar_->id(btn_split_custom_))
+	{
+		is_custom_layout_ = false;
+		reset = true;
+	}
+	else if (!is_custom_layout_ && cur_id == btn_group_toolbar_->id(btn_split_custom_))
+	{
+		is_custom_layout_ = true;
+		reset = true;
+	}
+
+	if (reset)
+	{
+		auto reply = QMessageBox::warning(this, "warning", QString::fromLocal8Bit("需要重置视图"), QMessageBox::Cancel | QMessageBox::Ok);
+		if (reply == QMessageBox::Ok)
+		{
+			emit sigResetSplitterContent(cur_id);
+		}
+		else
+		{
+			is_custom_layout_ = !is_custom_layout_;
+		}
+	}
+	else if (!is_custom_layout_)
+	{
+		//emit sigResetSplitterContent(cur_id);
+	}
+
+	last_split_id_ = cur_id;
 }
 
 void CameraPreviewWidget::onSoundVolumeValueChanged(int value)

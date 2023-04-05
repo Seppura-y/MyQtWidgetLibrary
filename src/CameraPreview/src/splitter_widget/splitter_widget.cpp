@@ -65,7 +65,7 @@ void SplitterWidget::initSplitterContent()
 	QObject::connect(scroll_area_, SIGNAL(sigMerge()), this, SLOT(onMerge()));
 	QObject::connect(scroll_area_, SIGNAL(sigSplit()), this, SLOT(onSplit()));
 	QObject::connect(scroll_area_, SIGNAL(sigSave()), this, SLOT(onSave()));
-	QObject::connect(scroll_area_, SIGNAL(sigClear()), this, SLOT(onReset()));
+	QObject::connect(scroll_area_, SIGNAL(sigClear()), this, SLOT(onClear()));
 	QObject::connect(scroll_area_, SIGNAL(sigLoad()), this, SLOT(onLoad()));
 	//QObject::connect(scroll_area_, SIGNAL(sigRstsvr()), this, SLOT(onResetSvr()));
 	//QObject::connect(scroll_area_, SIGNAL(sigSetaddr()), this, SLOT(onSetAddress()));
@@ -345,7 +345,7 @@ void SplitterWidget::onSplit()
 	second_colum_ = -1;
 }
 
-void SplitterWidget::onReset()
+void SplitterWidget::onClear()
 {
 	first_point_selected_ = false;
 	first_row_ = -1;
@@ -368,6 +368,7 @@ void SplitterWidget::onReset()
 				render_widget = new RenderWidget(i, j);
 				QObject::connect(render_widget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
 				grid_layout_->addWidget(render_widget, i, j);
+				render_widgets_.insert({ std::make_pair(i, j), render_widget });
 			}
 			index = grid_layout_->indexOf(item);
 			render_widget = (RenderWidget*)grid_layout_->takeAt(index)->widget();
@@ -376,6 +377,7 @@ void SplitterWidget::onReset()
 			render_widget = new RenderWidget(i, j);
 			QObject::connect(render_widget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
 			grid_layout_->addWidget(render_widget, i, j);
+			render_widgets_.insert({ std::make_pair(i, j), render_widget });
 		}
 	}
 }
@@ -535,17 +537,49 @@ void SplitterWidget::onResetContent(int count)
 
 void SplitterWidget::onResetSplitterContent(int count)
 {
-	if (count < 0 || count > 25)
+	if (count <= 0 || count > 25)
 	{
-		is_customlayout_mode_ = true;
-		current_widgets_count_ = -1;
+		if (!is_customlayout_mode_)
+		{
+			is_need_init_ = true;
+			is_customlayout_mode_ = true;
+			current_widgets_count_ = -1;
+			for (int i = 0; i < grid_rows_; i++)
+			{
+				for (int j = 0; j < grid_colums_; j++)
+				{
+					QLayoutItem* item = grid_layout_->itemAtPosition(i, j);
+					if (!item)continue;
+					int index = grid_layout_->indexOf(item);
+					RenderWidget* item_widget = (RenderWidget*)grid_layout_->takeAt(index)->widget();
+					if (!item_widget)continue;
+					delete item_widget;
+				}
+			}
+		}
 	}
 	else
 	{
+		if (is_customlayout_mode_)
+		{
+			is_need_init_ = true;
+			is_customlayout_mode_ = false;
+			for (int i = 0; i < grid_rows_; i++)
+			{
+				for (int j = 0; j < grid_colums_; j++)
+				{
+					QLayoutItem* item = grid_layout_->itemAtPosition(i, j);
+					if (!item)continue;
+					int index = grid_layout_->indexOf(item);
+					RenderWidget* item_widget = (RenderWidget*)grid_layout_->takeAt(index)->widget();
+					if (!item_widget)continue;
+					delete item_widget;
+				}
+			}
+		}
 		current_widgets_count_ = count;
 		grid_rows_ = sqrt(count);
 		grid_colums_ = grid_rows_;
-		is_customlayout_mode_ = false;
 	}
 
 	if (is_need_init_)
@@ -573,9 +607,6 @@ void SplitterWidget::onResetSplitterContent(int count)
 		}
 		else
 		{
-			//controler_width_ = this->width();
-			//controler_height_ = this->height() - scrollbar_height;
-
 			if (is_customlayout_mode_)
 			{
 				grid_rows_ = 12;
@@ -594,6 +625,23 @@ void SplitterWidget::onResetSplitterContent(int count)
 		}
 
 		is_need_init_ = false;
+	}
+	else
+	{
+		for (int i = 0; i < grid_rows_; i++)
+		{
+			for (int j = 0; j < grid_colums_; j++)
+			{
+				auto wid = render_widgets_.find(std::make_pair(i, j));
+				if (wid == render_widgets_.end())
+				{
+					RenderWidget* render_widget = new RenderWidget(i, j);
+					QObject::connect(render_widget, SIGNAL(sigSelected(int, int)), this, SLOT(onRefreshUi(int, int)));
+					grid_layout_->addWidget(render_widget, i, j);
+					render_widgets_.insert({ std::make_pair(i, j), render_widget });
+				}
+			}
+		}
 	}
 }
 

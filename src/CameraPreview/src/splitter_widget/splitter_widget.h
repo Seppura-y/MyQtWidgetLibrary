@@ -30,12 +30,12 @@ signals:
 protected slots:
     void onMerge();
     void onSplit();
-    void onReset();
+    void onClear();
     void onSave();
     void onLoad();
     void onSelectedUpdate();
     void onRefreshUi(int row, int colum);
-
+public slots:
     void onSetControlerMode(bool status);
     void onResetContent(int count);
     void onResetSplitterContent(int count);

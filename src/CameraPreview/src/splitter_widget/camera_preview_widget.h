@@ -55,6 +55,7 @@ signals:
 	void sigPlayPrevFile();
 	void sigPlayingFile(int,QString);
 
+	void sigResetSplitterContent(int);
 public slots:
 	void onPanelChanged(bool is_checked);
 	void onTitleButtonToggled(QAbstractButton* bt, bool checked);
@@ -99,6 +100,7 @@ private:
 	VolumeButton* btn_volume_ = nullptr;
 
 	int last_split_id_ = 0;
+	bool is_custom_layout_ = false;
 	//////////////////////Render Widget//////////////////////
 	RenderWidget* render_widget_ = nullptr;
 

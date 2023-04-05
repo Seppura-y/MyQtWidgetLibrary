@@ -26,6 +26,7 @@ public:
     void setSoundVolume(int value);
     void setMediaStop();
 
+    void setLayoutInfo(int row, int colum, int width, int height) { row_ = row; colum_ = colum; width_ = width; height_ = height; };
     bool getFullscreen();
 
 public:
