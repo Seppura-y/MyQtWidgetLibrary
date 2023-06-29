@@ -23,6 +23,7 @@ set(PROJECT_CONTROL_BAR             FALSE CACHE BOOL "add project contron bar ?"
 set(PROJECT_MULTIDISPLAY_PLAYER     FALSE CACHE BOOL "add project multidisplay player ?")
 set(PROJECT_SCREEN_SPLITTER         FALSE CACHE BOOL "add project screen splitter ?")
 set(PROJECT_CAMERA_PREVIEW          FALSE CACHE BOOL "add project camera preview ?")
+set(PROJECT_DOUBLE_SLIDER           FALSE CACHE BOOL "add project double slider ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -90,6 +91,10 @@ endif()
 
 if(PROJECT_CAMERA_PREVIEW)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CameraPreview)
+endif()
+
+if(PROJECT_DOUBLE_SLIDER)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DoubleSlider)
 endif()
 
 if(STARTUP_PROJ)

@@ -36,6 +36,8 @@
 **.vcxproj.user
 
 # Directories
+assets
+forms
 bin
 build
 lib
