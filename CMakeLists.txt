@@ -24,6 +24,7 @@ set(PROJECT_MULTIDISPLAY_PLAYER     FALSE CACHE BOOL "add project multidisplay p
 set(PROJECT_SCREEN_SPLITTER         FALSE CACHE BOOL "add project screen splitter ?")
 set(PROJECT_CAMERA_PREVIEW          FALSE CACHE BOOL "add project camera preview ?")
 set(PROJECT_DOUBLE_SLIDER           FALSE CACHE BOOL "add project double slider ?")
+set(PROJECT_DONUT_QGL_ENGINE        FALSE CACHE BOOL "add project donut qgl engine ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -95,6 +96,10 @@ endif()
 
 if(PROJECT_DOUBLE_SLIDER)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DoubleSlider)
+endif()
+
+if(PROJECT_DONUT_QGL_ENGINE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DonutQGLEngine)
 endif()
 
 if(STARTUP_PROJ)
