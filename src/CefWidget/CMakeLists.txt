@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(RoundWidget LANGUAGES CXX)
+project(CefWidget LANGUAGES CXX)
 
 set(RUNTIME_DIR ${CMAKE_CURRENT_LIST_DIR}/../../bin)
 set(LIBRARY_DIR ${CMAKE_CURRENT_LIST_DIR}/../../lib)
@@ -90,6 +90,8 @@ source_group("qrc" FILES ${${PROJECT_NAME}_QRC_FILES} ${${PROJECT_NAME}_QRC})
 source_group("qrc//css" FILES ${${PROJECT_NAME}_CSS_FILES} )
 
 source_group("src//ui_gens" FILES ${${PROJECT_NAME}_UI_HEADERS})
+
+source_group("src//" FILES ${PROJECT_NAME}_HEADERS ${PROJECT_NAME}_SOURCES)
 
 source_group("src//config" FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
 
