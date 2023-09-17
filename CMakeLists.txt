@@ -28,6 +28,7 @@ set(PROJECT_DONUT_QGL_ENGINE        FALSE CACHE BOOL "add project donut qgl engi
 set(PROJECT_OFFSCREEN_RENDERER      FALSE CACHE BOOL "add project offscreen renderer ?")
 set(PROJECT_CEF_WIDGET              FALSE CACHE BOOL "add project CEF Widget ?")
 set(PROJECT_THREAD_TEST             FALSE CACHE BOOL "add project ThreadTest ?")
+set(PROJECT_PAINTING                FALSE CACHE BOOL "add project Painting ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -116,6 +117,11 @@ endif()
 if(PROJECT_THREAD_TEST)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ThreadTest)
 endif()
+
+if(PROJECT_PAINTING)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/Painting)
+endif()
+
 
 if(STARTUP_PROJ)
     set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUP_PROJ})

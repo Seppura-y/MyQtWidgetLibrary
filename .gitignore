@@ -37,7 +37,7 @@
 
 # Directories
 assets
-forms
+res
 bin
 build
 lib
