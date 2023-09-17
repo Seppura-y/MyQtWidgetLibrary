@@ -2,8 +2,10 @@
 #include "round_widget.h"
 
 #include "thread1.h"
+#include "thread2.h"
 #include "move_to_thread_widget.h"
 
+#include <QThreadPool>
 #include <QDebug>
 
 void test()
@@ -21,14 +23,15 @@ int main(int argc, char* argv[])
 
     qDebug() << "Main thread id : " << QThread::currentThreadId();
 
+    Thread1 thread1;
+    thread1.start();
+
+    Thread2* thread2 = new Thread2();
+    QThreadPool::globalInstance()->start(thread2);
+
     //RoundWidget w;
     MoveToThreadWidget w;
     w.show();
-
-    Thread1 thread;
-    thread.start();
-
-    //test();
 
     return a.exec();
 }
