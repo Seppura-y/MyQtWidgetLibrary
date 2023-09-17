@@ -29,6 +29,7 @@ set(PROJECT_OFFSCREEN_RENDERER      FALSE CACHE BOOL "add project offscreen rend
 set(PROJECT_CEF_WIDGET              FALSE CACHE BOOL "add project CEF Widget ?")
 set(PROJECT_THREAD_TEST             FALSE CACHE BOOL "add project ThreadTest ?")
 set(PROJECT_PAINTING                FALSE CACHE BOOL "add project Painting ?")
+set(PROJECT_GRAPHICS_VIEW_BASE      FALSE CACHE BOOL "add project GraphicsViewBase ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -122,6 +123,9 @@ if(PROJECT_PAINTING)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/Painting)
 endif()
 
+if(PROJECT_GRAPHICS_VIEW_BASE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/GraphicsViewBase)
+endif()
 
 if(STARTUP_PROJ)
     set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUP_PROJ})
