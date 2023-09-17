@@ -39,7 +39,7 @@ MainWid::~MainWid()
 
 void MainWid::initGraphicsView()
 {
-    QRectF rect(-300, -100, 400, 200);
+    QRectF rect(-200, -100, 400, 200);
     scene_ = new QGraphicsScene(rect);
 
     //给视图设置场景

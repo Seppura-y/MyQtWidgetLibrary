@@ -49,6 +49,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${CMAKE_CURRENT_LIST_DIR}/src/config
     ${CMAKE_CURRENT_LIST_DIR}/src/graphics_view_basic
+    ${CMAKE_CURRENT_LIST_DIR}/src/custom_graphics_item
 )
 
 include_directories(${FORMS_DIR})
@@ -80,6 +81,16 @@ FILE(GLOB ${PROJECT_NAME}_GRAPHICS_VIEW_BASIC_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/graphics_view_basic/main_wid.h
 )
 
+FILE(GLOB ${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/custom_graphics_item/custom_item_widget.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/custom_graphics_item/custom_rect_item.cpp
+)
+
+FILE(GLOB ${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/custom_graphics_item/custom_item_widget.h
+    ${CMAKE_CURRENT_LIST_DIR}/src/custom_graphics_item/custom_rect_item.h
+)
+
 FILE(GLOB ${PROJECT_NAME}_CSS_FILES
     ${CMAKE_CURRENT_LIST_DIR}/forms/res/css/*.css
 )
@@ -106,6 +117,7 @@ source_group("src//" FILES ${PROJECT_NAME}_HEADERS ${PROJECT_NAME}_SOURCES)
 
 source_group("src//config"                  FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
 source_group("src//graphics_view_basic"     FILES ${${PROJECT_NAME}_GRAPHICS_VIEW_BASIC_HEADERS} ${${PROJECT_NAME}_GRAPHICS_VIEW_BASIC_SOURCES})
+source_group("src//custom_graphics_item"    FILES ${${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_HEADERS} ${${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_SOURCES})
 
 
 #========================================= SETUP EXECTUABLE =========================================#
@@ -131,6 +143,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_GRAPHICS_VIEW_BASIC_HEADERS}
         ${${PROJECT_NAME}_GRAPHICS_VIEW_BASIC_SOURCES}
+
+        ${${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_HEADERS}
+        ${${PROJECT_NAME}_CUSTOM_GRAPHICS_ITEM_SOURCES}
         
         ${${PROJECT_NAME}_CSS_FILES}
 
