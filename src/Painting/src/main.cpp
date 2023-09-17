@@ -5,6 +5,8 @@
 #include "mouse_move_painter_widget.h"
 #include "main_win.h"
 
+#include "main_wid.h"
+
 #include <QDebug>
 
 int main(int argc, char* argv[])
@@ -13,7 +15,7 @@ int main(int argc, char* argv[])
     QApplication a(argc, argv);
 
     //RoundWidget w;
-    MainWin w;
+    MainWid w;
     w.show();
 
     return a.exec();
