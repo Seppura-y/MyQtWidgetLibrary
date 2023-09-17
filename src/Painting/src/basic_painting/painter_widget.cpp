@@ -133,8 +133,8 @@ void PainterWidget::drawLine()
 {
 	QPainter painter(this);
 
-	//QLine Line(W / 4, H / 4, W / 2, H / 2);
-	QLine Line(width_ / 4, height_ / 4, width_ / 2, height_ / 4);
+	QLine Line(width_ / 4, height_ / 4, width_ / 2, height_ / 2);
+	//QLine Line(width_ / 4, height_ / 4, width_ / 2, height_ / 4);
 	painter.drawLine(Line);
 }
 
@@ -268,7 +268,7 @@ void PainterWidget::drawImage()
 	QPainter painter(this);
 
 	QRect rect(width_ / 4, height_ / 4, width_ / 2, height_ / 2);
-	QImage image(":/res/res/icons/cat2.jpg");
+	QImage image(":/res/icons/cat2.jpg");
 	painter.drawImage(rect, image);
 }
 
@@ -277,7 +277,7 @@ void PainterWidget::drawPixmap()
 	QPainter painter(this);
 
 	QRect    rect(width_ / 4, height_ / 4, width_ / 2, height_ / 2);
-	QPixmap    pixmap(":/res/res/icons/cat2.jpg");
+	QPixmap    pixmap(":/res/icons/cat2.jpg");
 	painter.drawPixmap(rect, pixmap);
 }
 

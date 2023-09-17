@@ -49,6 +49,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${CMAKE_CURRENT_LIST_DIR}/src/config
     ${CMAKE_CURRENT_LIST_DIR}/src/basic_painting
+    ${CMAKE_CURRENT_LIST_DIR}/src/mouse_move_painting
 )
 
 include_directories(${FORMS_DIR})
@@ -81,6 +82,17 @@ FILE(GLOB ${PROJECT_NAME}_BASIC_PAINTING_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/basic_painting/draw_type.h
 )
 
+
+FILE(GLOB ${PROJECT_NAME}_MOUSE_MOVE_PAINTING_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/mouse_move_painting/mouse_move_painter_widget.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/mouse_move_painting/main_win.cpp
+)
+
+FILE(GLOB ${PROJECT_NAME}_MOUSE_MOVE_PAINTING_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/mouse_move_painting/mouse_move_painter_widget.h
+    ${CMAKE_CURRENT_LIST_DIR}/src/mouse_move_painting/main_win.h
+)
+
 FILE(GLOB ${PROJECT_NAME}_CSS_FILES
     ${CMAKE_CURRENT_LIST_DIR}/forms/res/css/*.css
 )
@@ -105,8 +117,9 @@ source_group("src//ui_gens" FILES ${${PROJECT_NAME}_UI_HEADERS})
 
 source_group("src//" FILES ${PROJECT_NAME}_HEADERS ${PROJECT_NAME}_SOURCES)
 
-source_group("src//config"          FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
-source_group("src//basic_painting"  FILES ${${PROJECT_NAME}_BASIC_PAINTING_HEADERS} ${${PROJECT_NAME}_BASIC_PAINTING_SOURCES})
+source_group("src//config"                  FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
+source_group("src//basic_painting"          FILES ${${PROJECT_NAME}_BASIC_PAINTING_HEADERS} ${${PROJECT_NAME}_BASIC_PAINTING_SOURCES})
+source_group("src//mouse_move_painting"     FILES ${${PROJECT_NAME}_MOUSE_MOVE_PAINTING_HEADERS} ${${PROJECT_NAME}_MOUSE_MOVE_PAINTING_SOURCES})
 
 
 #========================================= SETUP EXECTUABLE =========================================#
@@ -132,6 +145,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_BASIC_PAINTING_HEADERS}
         ${${PROJECT_NAME}_BASIC_PAINTING_SOURCES}
+
+        ${${PROJECT_NAME}_MOUSE_MOVE_PAINTING_HEADERS}
+        ${${PROJECT_NAME}_MOUSE_MOVE_PAINTING_SOURCES}
         
         ${${PROJECT_NAME}_CSS_FILES}
 

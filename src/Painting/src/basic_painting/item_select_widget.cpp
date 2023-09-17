@@ -39,87 +39,87 @@ void ItemSelectWidget::treeView()
     QStandardItem* child_item = NULL;
 
     // 点
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/point.png"), "draw ponit");
+    parent_item = new QStandardItem(QIcon(":/res/icons/point.png"), "draw ponit");
     model->appendRow(parent_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/point.png"), "point");
+    child_item = new QStandardItem(QIcon(":/res/icons/point.png"), "point");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/multipoints.png"), "multipoints");
+    child_item = new QStandardItem(QIcon(":/res/icons/multipoints.png"), "multipoints");
     parent_item->appendRow(child_item);
 
     // 线
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/line.png"), "draw line");
+    parent_item = new QStandardItem(QIcon(":/res/icons/line.png"), "draw line");
     model->appendRow(parent_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/line.png"), "line");
+    child_item = new QStandardItem(QIcon(":/res/icons/line.png"), "line");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/arc.png"), "arc");
+    child_item = new QStandardItem(QIcon(":/res/icons/arc.png"), "arc");
     parent_item->appendRow(child_item);
 
     // 封闭的图形
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/rect.png"), "draw rect");
+    parent_item = new QStandardItem(QIcon(":/res/icons/rect.png"), "draw rect");
     model->appendRow(parent_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/rect.png"), "rect");
+    child_item = new QStandardItem(QIcon(":/res/icons/rect.png"), "rect");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/roundrect.png"), "roundrect");
+    child_item = new QStandardItem(QIcon(":/res/icons/roundrect.png"), "roundrect");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/chord.png"), "chord");
+    child_item = new QStandardItem(QIcon(":/res/icons/chord.png"), "chord");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/ellipse.png"), "ellipse");
+    child_item = new QStandardItem(QIcon(":/res/icons/ellipse.png"), "ellipse");
     parent_item->appendRow(child_item);
 
     // 任意路径绘制
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/polygon.png"), "draw polygon");
+    parent_item = new QStandardItem(QIcon(":/res/icons/polygon.png"), "draw polygon");
     model->appendRow(parent_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/polygon.png"), "polygon");
+    child_item = new QStandardItem(QIcon(":/res/icons/polygon.png"), "polygon");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/polyline.png"), "polyline");
+    child_item = new QStandardItem(QIcon(":/res/icons/polyline.png"), "polyline");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/ConvexPloygon.png"), "ConvexPloygon");
+    child_item = new QStandardItem(QIcon(":/res/icons/ConvexPloygon.png"), "ConvexPloygon");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/lines.png"), "lines");
+    child_item = new QStandardItem(QIcon(":/res/icons/lines.png"), "lines");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/path.png"), "path");
+    child_item = new QStandardItem(QIcon(":/res/icons/path.png"), "path");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/pie.png"), "pie");
+    child_item = new QStandardItem(QIcon(":/res/icons/pie.png"), "pie");
     parent_item->appendRow(child_item);
 
     // 图片绘制
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/image.png"), "draw image");
+    parent_item = new QStandardItem(QIcon(":/res/icons/image.png"), "draw image");
     model->appendRow(parent_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/image.png"), "image");
+    child_item = new QStandardItem(QIcon(":/res/icons/image.png"), "image");
     parent_item->appendRow(child_item);
 
-    child_item = new QStandardItem(QIcon(":/res/res/icons/pixmap.png"), "pixmap");
+    child_item = new QStandardItem(QIcon(":/res/icons/pixmap.png"), "pixmap");
     parent_item->appendRow(child_item);
 
     // 文本绘制
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/text.png"), "draw text");
+    parent_item = new QStandardItem(QIcon(":/res/icons/text.png"), "draw text");
     model->appendRow(parent_item);
 
     // 擦除
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/erase.png"), "draw erase");
+    parent_item = new QStandardItem(QIcon(":/res/icons/erase.png"), "draw erase");
     model->appendRow(parent_item);
 
     // 路径填充
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/fillpath.png"), "draw fillpath");
+    parent_item = new QStandardItem(QIcon(":/res/icons/fillpath.png"), "draw fillpath");
     model->appendRow(parent_item);
 
     // 矩形填充
-    parent_item = new QStandardItem(QIcon(":/res/res/icons/fillrect.png"), "draw fillrect");
+    parent_item = new QStandardItem(QIcon(":/res/icons/fillrect.png"), "draw fillrect");
     model->appendRow(parent_item);
 
     item_tree_->setModel(model);
