@@ -27,6 +27,7 @@ set(PROJECT_DOUBLE_SLIDER           FALSE CACHE BOOL "add project double slider 
 set(PROJECT_DONUT_QGL_ENGINE        FALSE CACHE BOOL "add project donut qgl engine ?")
 set(PROJECT_OFFSCREEN_RENDERER      FALSE CACHE BOOL "add project offscreen renderer ?")
 set(PROJECT_CEF_WIDGET              FALSE CACHE BOOL "add project CEF Widget ?")
+set(PROJECT_THREAD_TEST             FALSE CACHE BOOL "add project ThreadTest ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -110,6 +111,10 @@ endif()
 
 if(PROJECT_CEF_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CefWidget)
+endif()
+
+if(PROJECT_THREAD_TEST)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ThreadTest)
 endif()
 
 if(STARTUP_PROJ)
