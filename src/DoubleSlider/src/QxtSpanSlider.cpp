@@ -37,6 +37,8 @@
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 
+#include "round_widget.h"
+
 QxtSpanSliderPrivate::QxtSpanSliderPrivate() :
         lower(0),
         upper(0),
@@ -392,6 +394,9 @@ QxtSpanSlider::QxtSpanSlider(QWidget* parent) : QSlider(parent), d_ptr(new QxtSp
     d_ptr->q_ptr = this;
     connect(this, SIGNAL(rangeChanged(int, int)), d_ptr, SLOT(updateRange(int, int)));
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
+
+    DonutSliderStyle* style = new DonutSliderStyle();
+    this->setStyle(style);
 }
 
 /*!

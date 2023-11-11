@@ -1,12 +1,14 @@
 #include "double_slider.h"
 #include "ui_double_slider.h"
+#include "config_helper.h"
 
 DoubleSlider::DoubleSlider(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DoubleSlider)
 {
     ui->setupUi(this);
-
+    QString s = ConfigHelper::GetQssString(":/resources/res/css/slider.css");
+    //ui->db_slider->setStyleSheet(s);
     ui->db_slider->setHandleMovementMode(QxtSpanSlider::NoOverlapping);
 
     ui->db_slider->setRange(0, 100);

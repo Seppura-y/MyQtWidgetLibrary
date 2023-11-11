@@ -109,6 +109,7 @@ void PainterWidget::drawPoint()
 	pen.setWidth(10);
 	pen.setColor(Qt::red);
 	pen.setStyle(Qt::SolidLine);
+	pen.setCapStyle(Qt::RoundCap);
 	painter.setPen(pen);
 	painter.drawPoint(QPoint(width_ / 2, height_ / 2));
 }
