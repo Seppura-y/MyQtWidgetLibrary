@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(DoubleSlider LANGUAGES CXX)
+project(CustomStyle LANGUAGES CXX)
 
 set(RUNTIME_DIR ${CMAKE_CURRENT_LIST_DIR}/../../bin)
 set(LIBRARY_DIR ${CMAKE_CURRENT_LIST_DIR}/../../lib)
@@ -38,6 +38,7 @@ set(CMAKE_PREFIX_PATH $ENV{Qt515_64})
 # set(AUTOGEN_BUILD_DIR ${CMAKE_CURRENT_LIST_DIR}/gens)
 
 find_package(Qt5 COMPONENTS 
+    Core
     Widgets 
     REQUIRED
 )
@@ -65,6 +66,15 @@ FILE(GLOB ${PROJECT_NAME}_CONFIG_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/config/*.cpp
 )
 
+FILE(GLOB ${PROJECT_NAME}_SWITCH_BUTTON_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/switch_button/*.h
+)
+
+FILE(GLOB ${PROJECT_NAME}_SWITCH_BUTTON_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/src/switch_button/*.cpp
+)
+
+
 FILE(GLOB ${PROJECT_NAME}_CONFIG_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/config/*.h
 )
@@ -89,11 +99,11 @@ source_group("qrc" FILES ${${PROJECT_NAME}_QRC_FILES} ${${PROJECT_NAME}_QRC})
 
 source_group("qrc//css" FILES ${${PROJECT_NAME}_CSS_FILES} )
 
-source_group("Header Files//" FILES ${${PROJECT_NAME}_HEADERS} ${${PROJECT_NAME}_SOURCES})
-source_group("Header Files//ui_gens" FILES ${${PROJECT_NAME}_UI_HEADERS})
+source_group("src//ui_gens"         FILES ${${PROJECT_NAME}_UI_HEADERS})
+source_group("src//"                FILES ${${PROJECT_NAME}_HEADERS} ${${PROJECT_NAME}_SOURCES})
+source_group("src//switch_button"   FILES ${${PROJECT_NAME}_SWITCH_BUTTON_HEADERS} ${${PROJECT_NAME}_SWITCH_BUTTON_SOURCES})
 
-source_group("Header Files//config" FILES ${${PROJECT_NAME}_CONFIG_HEADERS})
-source_group("Source Files//config" FILES ${${PROJECT_NAME}_CONFIG_SOURCES})
+source_group("src//config" FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
 
 
 #========================================= SETUP EXECTUABLE =========================================#
@@ -116,6 +126,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_CONFIG_HEADERS}
         ${${PROJECT_NAME}_CONFIG_SOURCES}
+
+        ${${PROJECT_NAME}_SWITCH_BUTTON_HEADERS}
+        ${${PROJECT_NAME}_SWITCH_BUTTON_SOURCES}
 
         ${${PROJECT_NAME}_CSS_FILES}
 
@@ -152,6 +165,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} 
+    Qt5::Core
     Qt5::Widgets
     user32.lib
     dwmapi.lib

@@ -5,6 +5,9 @@
 #include <QSlider>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QSpinBox>
+
+#include "donut_slider_custom_style.h"
 
 RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
 {
@@ -19,13 +22,18 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
 
 
 
-    QSlider* slider = new QSlider(Qt::Horizontal, this);
-    auto style = new DonutSliderStyle();
-    slider->setStyle(style);
-    slider->setGeometry(50, 50, 200, 50);
+    //QSlider* slider = new QSlider(Qt::Horizontal, this);
+    //auto style = new DonutSliderStyle();
+    //slider->setStyle(style);
+    //slider->setGeometry(50, 50, 200, 50);
 
-    slider->installEventFilter(style);
+    //slider->installEventFilter(style);
     //slider->show();
+
+    QSpinBox box;
+    box.setGeometry(100, 250, 150, 50);
+    box.setStyle(new CustomStyle);
+    box.show();
 }
 
 RoundWidget::~RoundWidget()
@@ -69,21 +77,21 @@ DonutSliderStyle::DonutSliderStyle(QStyle* style)
 
 bool DonutSliderStyle::eventFilter(QObject* watched, QEvent* event)
 {
-    //if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
-    //    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-    //    QSlider* slider = qobject_cast<QSlider*>(watched);
+    if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        QSlider* slider = qobject_cast<QSlider*>(watched);
 
-    //    if (slider) {
-    //        QRect handleRect = subControlRect(CC_Slider, nullptr, SC_SliderHandle, slider);
-    //        bool isMouseOverHandle = handleRect.contains(mouseEvent->pos());
+        if (slider) {
+            QRect handleRect = subControlRect(CC_Slider, nullptr, SC_SliderHandle, slider);
+            bool isMouseOverHandle = handleRect.contains(mouseEvent->pos());
 
-    //        if (isMouseOverHandle && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)) {
-    //            // 处理鼠标按下和移动事件
-    //            int value = slider->minimum() + (slider->maximum() - slider->minimum()) * (mouseEvent->pos().x() - handleRect.left()) / handleRect.width();
-    //            slider->setValue(value);
-    //        }
-    //    }
-    //}
+            if (isMouseOverHandle && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)) {
+                // 处理鼠标按下和移动事件
+                int value = slider->minimum() + (slider->maximum() - slider->minimum()) * (mouseEvent->pos().x() - handleRect.left()) / handleRect.width();
+                slider->setValue(value);
+            }
+        }
+    }
 
     // 继续传递事件
     return QProxyStyle::eventFilter(watched, event);
@@ -93,7 +101,7 @@ QRect DonutSliderStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
 {
     // 返回子控件所占的矩形区域
     //if (cc != QStyle::CC_Slider || opt->direction != Qt::LeftToRight || sc == QStyle::SC_SliderTickmarks)
-    if (cc != QStyle::CC_Slider || sc != QStyle::SC_SliderGroove || sc != QStyle::SC_SliderHandle)
+    if (cc != QStyle::CC_Slider || (sc != QStyle::SC_SliderGroove && sc != QStyle::SC_SliderHandle))
     {
         return QProxyStyle::subControlRect(cc, opt, sc, widget);
     }
@@ -162,7 +170,7 @@ void DonutSliderStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
 
     QPainterPath path = QPainterPath();
     path.moveTo(0, 0);
-    QPoint center = handleRect.center() + QPoint(1, 1);
+    QPoint center = handleRect.center() + QPoint(10, 10);
     path.addEllipse(center, radius, radius);
     path.addEllipse(center, hollowRadius, hollowRadius);
 
@@ -180,9 +188,67 @@ void DonutSliderStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
     bool isSliderDown = sliderOpt->state & QStyle::State_Sunken;
     if (isSliderDown)
     {
+        handleColor = QColor(0, 255, 0);
         handleColor.setAlpha(255);
         painter->setBrush(handleColor);
         painter->drawEllipse(handleRect);
     }
 
+}
+
+DonutStylePainter::DonutStylePainter(QWidget* widget)
+    : QStylePainter(widget)
+{
+
+}
+
+void DonutStylePainter::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex& opt)
+{
+    
+    if (opt.state & QStyle::State_Sunken)
+    {
+        int x;
+    }
+    if (cc != QStyle::CC_Slider /*|| (opt.activeSubControls) != QStyle::SC_SliderHandle*/)
+    {
+        //return QStylePainter::drawComplexControl(cc, opt);
+        return;
+    }
+
+    // 绘制滑块
+    auto handleRect = opt.rect;
+    int radius = 8;
+
+    QPainterPath path = QPainterPath();
+    path.moveTo(0, 0);
+    QPoint center = handleRect.center() + QPoint(1, 1);
+    path.addEllipse(center, radius, radius);
+
+
+    QColor handleColor = QColor(200, 0, 255); // self.config["handle.color"]  # type:QColor;
+    handleColor.setAlpha(opt.activeSubControls != QStyle::SC_SliderHandle ? 255 : 153);
+    this->setBrush(handleColor);
+    this->drawPath(path);
+
+    // 滑块按下
+    if (opt.state & QStyle::State_Sunken)
+    {
+        handleColor = QColor(0, 255, 0);
+        handleColor.setAlpha(255);
+        this->setBrush(handleColor);
+        this->drawEllipse(handleRect);
+    }
+    //const QStyleOptionSlider* sliderOpt = qstyleoption_cast<const QStyleOptionSlider*>(opt);
+    //if (!sliderOpt) {
+    //    // 处理类型转换失败的情况
+    //    return;
+    //}
+    //bool isSliderDown = sliderOpt->state & QStyle::State_Sunken;
+    //if (isSliderDown)
+    //{
+    //    handleColor = QColor(0, 255, 0);
+    //    handleColor.setAlpha(255);
+    //    painter->setBrush(handleColor);
+    //    painter->drawEllipse(handleRect);
+    //}
 }

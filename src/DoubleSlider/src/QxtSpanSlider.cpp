@@ -38,6 +38,7 @@
 #include <QStylePainter>
 
 #include "round_widget.h"
+#include "donut_slider_custom_style.h"
 
 QxtSpanSliderPrivate::QxtSpanSliderPrivate() :
         lower(0),
@@ -395,8 +396,8 @@ QxtSpanSlider::QxtSpanSlider(QWidget* parent) : QSlider(parent), d_ptr(new QxtSp
     connect(this, SIGNAL(rangeChanged(int, int)), d_ptr, SLOT(updateRange(int, int)));
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
 
-    DonutSliderStyle* style = new DonutSliderStyle();
-    this->setStyle(style);
+    //DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
+    //this->setStyle(style);
 }
 
 /*!
@@ -404,9 +405,13 @@ QxtSpanSlider::QxtSpanSlider(QWidget* parent) : QSlider(parent), d_ptr(new QxtSp
  */
 QxtSpanSlider::QxtSpanSlider(Qt::Orientation orientation, QWidget* parent) : QSlider(orientation, parent), d_ptr(new QxtSpanSliderPrivate())
 {
-  d_ptr->q_ptr = this;
+    d_ptr->q_ptr = this;
     connect(this, SIGNAL(rangeChanged(int, int)), d_ptr, SLOT(updateRange(int, int)));
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
+
+    //DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
+    //this->setStyle(style);
+    //this->installEventFilter(style);
 }
 
 /*!
@@ -695,6 +700,7 @@ void QxtSpanSlider::mouseReleaseEvent(QMouseEvent* event)
 void QxtSpanSlider::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
+    //DonutStylePainter painter(this);
     QStylePainter painter(this);
 
     // groove & ticks
@@ -719,7 +725,7 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
     const QPoint c = QRect(lr.center(), ur.center()).center();
     QRect spanRect;
     if (orientation() == Qt::Horizontal)
-        spanRect = QRect(QPoint(minv, c.y() - 2), QPoint(maxv, c.y() + 1));
+        spanRect = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
     else
         spanRect = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
     d_ptr->drawSpan(&painter, spanRect);

@@ -10,6 +10,20 @@
 
 #include <QRect>
 
+#include <QStylePainter>
+
+class DonutStylePainter : public QStylePainter
+{
+public:
+    DonutStylePainter(QWidget* widget);
+    void drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex& opt);
+
+protected:
+
+private:
+
+};
+
 class DonutSliderStyle : public QProxyStyle
 {
 public:
