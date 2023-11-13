@@ -67,7 +67,7 @@ public:
     virtual QRect subElementRect(QStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const override;
     virtual QRect subControlRect(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, SubControl sc, const QWidget* widget = nullptr) const override;
     virtual QSize sizeFromContents(QStyle::ContentsType ct, const QStyleOption* opt, const QSize& contentsSize, const QWidget* w) const override;
-
+    virtual QStyle::SubControl hitTestComplexControl(ComplexControl cc,const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget = nullptr) const override;
     virtual void polish(QWidget* widget) override;
     virtual void unpolish(QWidget* widget) override;
 

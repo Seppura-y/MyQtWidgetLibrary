@@ -77,21 +77,21 @@ DonutSliderStyle::DonutSliderStyle(QStyle* style)
 
 bool DonutSliderStyle::eventFilter(QObject* watched, QEvent* event)
 {
-    if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        QSlider* slider = qobject_cast<QSlider*>(watched);
+    //if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
+    //    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    //    QSlider* slider = qobject_cast<QSlider*>(watched);
 
-        if (slider) {
-            QRect handleRect = subControlRect(CC_Slider, nullptr, SC_SliderHandle, slider);
-            bool isMouseOverHandle = handleRect.contains(mouseEvent->pos());
+    //    if (slider) {
+    //        QRect handleRect = subControlRect(CC_Slider, nullptr, SC_SliderHandle, slider);
+    //        bool isMouseOverHandle = handleRect.contains(mouseEvent->pos());
 
-            if (isMouseOverHandle && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)) {
-                // 处理鼠标按下和移动事件
-                int value = slider->minimum() + (slider->maximum() - slider->minimum()) * (mouseEvent->pos().x() - handleRect.left()) / handleRect.width();
-                slider->setValue(value);
-            }
-        }
-    }
+    //        if (isMouseOverHandle && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)) {
+    //            // 处理鼠标按下和移动事件
+    //            int value = slider->minimum() + (slider->maximum() - slider->minimum()) * (mouseEvent->pos().x() - handleRect.left()) / handleRect.width();
+    //            slider->setValue(value);
+    //        }
+    //    }
+    //}
 
     // 继续传递事件
     return QProxyStyle::eventFilter(watched, event);

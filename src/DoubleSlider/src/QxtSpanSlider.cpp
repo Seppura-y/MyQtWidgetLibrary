@@ -396,8 +396,8 @@ QxtSpanSlider::QxtSpanSlider(QWidget* parent) : QSlider(parent), d_ptr(new QxtSp
     connect(this, SIGNAL(rangeChanged(int, int)), d_ptr, SLOT(updateRange(int, int)));
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
 
-    //DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
-    //this->setStyle(style);
+    DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
+    this->setStyle(style);
 }
 
 /*!
@@ -409,8 +409,8 @@ QxtSpanSlider::QxtSpanSlider(Qt::Orientation orientation, QWidget* parent) : QSl
     connect(this, SIGNAL(rangeChanged(int, int)), d_ptr, SLOT(updateRange(int, int)));
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
 
-    //DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
-    //this->setStyle(style);
+    DonutSliderCustomStyle* style = new DonutSliderCustomStyle();
+    this->setStyle(style);
     //this->installEventFilter(style);
 }
 

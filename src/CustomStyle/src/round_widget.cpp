@@ -15,6 +15,7 @@
 
 #include "switch_button/donut_switchbutton.h"
 #include "donut_style.h"
+#include "donut_custom_slider.h"
 
 RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
 {
@@ -71,6 +72,12 @@ void RoundWidget::init()
     slider->resize(300, 50);
     slider->setOrientation(Qt::Horizontal);
     slider->show();
+
+    DonutCustomSlider* dn_slider = new DonutCustomSlider(this);
+    dn_slider->move(600, 300);
+    dn_slider->resize(300, 50);
+    dn_slider->setOrientation(Qt::Horizontal);
+    dn_slider->show();
 
     //自定义的控件
     //DonutSwitchButton* switchBtn = new DonutSwitchButton(this);
