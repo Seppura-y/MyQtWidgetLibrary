@@ -13,9 +13,16 @@ public:
 	~DonutCustomSlider();
 
 protected:
+	void mousePressEvent(QMouseEvent* ev) override;
+	void mouseReleaseEvent(QMouseEvent* ev) override;
 	void mouseMoveEvent(QMouseEvent* ev) override;
 	void paintEvent(QPaintEvent* ev) override;
+
+signals:
+	void sigCustomSliderValueChanged(int value);
+
 private:
+	bool is_pressed_ = false;
 	QPoint cur_mouse_pos_;
 };
 
