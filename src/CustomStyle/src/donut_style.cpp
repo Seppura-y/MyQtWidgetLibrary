@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QStyleOption>
+#include <QPainterPath>
 
 DonutStyle::DonutStyle()
 {
@@ -198,6 +199,14 @@ QRect DonutStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
         }
         break;
     }
+    case SE_SliderFocusRect:
+    {
+        if (const QStyleOptionSlider* slider_opt = qstyleoption_cast<const QStyleOptionSlider*>(option))
+        {
+            return slider_opt->rect;
+            break;
+        }
+    }
     default:
         break;
     }
@@ -207,11 +216,82 @@ QRect DonutStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
 
 void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* widget) const
 {
+    if (cc == CC_Slider) {
+        const QStyleOptionSlider* cOptionSlider = qstyleoption_cast<const QStyleOptionSlider*>(opt);
+
+        if (cOptionSlider)
+        {
+            p->save();
+            p->setRenderHint(QPainter::Antialiasing);
+            p->setPen(Qt::NoPen);
+            p->setBrush(QColor("lightgray"));
+            //p->drawEllipse(subControlRect(cc, opt, SC_SliderHandle));
+            p->drawRoundedRect(subControlRect(cc, opt, SC_SliderGroove, nullptr).adjusted(1, 1, -1, -1),
+                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0,
+                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0
+            );
+
+            //p->fillRect(subControlRect(cc, opt, SC_SliderGroove, nullptr), QColor(255, 128, 64, 255));
+            //p->fillRect(subControlRect(cc, opt, SC_SliderHandle, nullptr), QColor(128, 255, 64, 255));
+
+            //p->restore();
+
+            //p->save();
+            QPainterPath path = QPainterPath();
+            QPoint center = QPoint(
+                subControlRect(cc, opt, SC_SliderHandle).x() + subControlRect(cc, opt, SC_SliderHandle).width() / 2,
+                subControlRect(cc, opt, SC_SliderHandle).y() + subControlRect(cc, opt, SC_SliderHandle).height() / 2
+            );
+            //QPoint center = subControlRect(cctrl, copt, SC_SliderHandle).center() + QPoint(1, 1);
+            path.addEllipse(center,
+                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0 - 1,
+                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0 - 1);
+
+            QColor handleColor = QColor("orange"); // self.config["handle.color"]  # type:QColor;
+            handleColor.setAlpha(opt->activeSubControls != QStyle::SC_SliderHandle ? 255 : 100);
+
+            p->setRenderHint(QPainter::Antialiasing);
+            p->setBrush(handleColor);
+            p->drawPath(path);
+            p->restore();
+        }
+    }
     QCommonStyle::drawComplexControl(cc, opt, p, widget);
 }
 
 QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QStyle::SubControl sc, const QWidget* widget) const
 {
+    if (cc == CC_Slider) {
+        const QStyleOptionSlider* cOptionSlider = qstyleoption_cast<const QStyleOptionSlider*>(opt);
+
+        QRect rectCctrl = cOptionSlider->rect; // Slider widget rectangle
+
+        int iGrooveSize = 30;                    // Size of slider groove
+        int iHandleSize = 30;                    // Size of slider groove
+
+        switch (sc) {
+        case SC_SliderHandle:
+        {
+            int _iTempX = QStyle::sliderPositionFromValue(cOptionSlider->minimum, cOptionSlider->maximum, cOptionSlider->sliderPosition, cOptionSlider->rect.width() - iHandleSize, cOptionSlider->upsideDown);
+
+            rectCctrl.setX(_iTempX);
+            rectCctrl.setY(0);
+            rectCctrl.setWidth(30);
+            rectCctrl.setHeight(30);
+
+            return rectCctrl;
+        }
+        case SC_SliderGroove:
+        {
+            rectCctrl.setWidth(rectCctrl.width());
+            rectCctrl.setHeight(iGrooveSize);
+            rectCctrl.setX(0);
+            rectCctrl.setY(0);
+
+            return rectCctrl;
+        }
+        }
+    }
     return QCommonStyle::subControlRect(cc, opt, sc, widget);
 }
 

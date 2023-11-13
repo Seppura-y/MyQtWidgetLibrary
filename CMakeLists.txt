@@ -30,6 +30,7 @@ set(PROJECT_CEF_WIDGET              FALSE CACHE BOOL "add project CEF Widget ?")
 set(PROJECT_THREAD_TEST             FALSE CACHE BOOL "add project ThreadTest ?")
 set(PROJECT_PAINTING                FALSE CACHE BOOL "add project Painting ?")
 set(PROJECT_GRAPHICS_VIEW_BASE      FALSE CACHE BOOL "add project GraphicsViewBase ?")
+set(PROJECT_CUSTOM_STYLE            FALSE CACHE BOOL "add project CustomStyle ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -125,6 +126,10 @@ endif()
 
 if(PROJECT_GRAPHICS_VIEW_BASE)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/GraphicsViewBase)
+endif()
+
+if(PROJECT_CUSTOM_STYLE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/CustomStyle)
 endif()
 
 if(STARTUP_PROJ)

@@ -11,6 +11,8 @@
 #include <QScrollBar>
 #include <QStyleFactory>
 
+#include <QSlider>
+
 #include "switch_button/donut_switchbutton.h"
 #include "donut_style.h"
 
@@ -35,39 +37,45 @@ void RoundWidget::init()
 {
     resize(1000, 600);
 
-    QTableWidget* table = new QTableWidget(10, 10, this);
-    table->move(10, 10);
+    //QTableWidget* table = new QTableWidget(10, 10, this);
+    //table->move(10, 10);
 
-    QScrollBar* scrollBarH = new QScrollBar(this);
-    scrollBarH->move(300, 50);
-    scrollBarH->setRange(0, 100);
-    scrollBarH->setValue(34);
-    scrollBarH->resize(380, 20);
-    scrollBarH->setOrientation(Qt::Horizontal);
+    //QScrollBar* scrollBarH = new QScrollBar(this);
+    //scrollBarH->move(300, 50);
+    //scrollBarH->setRange(0, 100);
+    //scrollBarH->setValue(34);
+    //scrollBarH->resize(380, 20);
+    //scrollBarH->setOrientation(Qt::Horizontal);
 
-    QScrollBar* scrollBarV = new QScrollBar(this);
-    scrollBarV->move(50, 250);
-    scrollBarV->setRange(0, 100);
-    scrollBarV->setValue(67);
-    scrollBarV->resize(20, 380);
-    scrollBarV->setOrientation(Qt::Vertical);
+    //QScrollBar* scrollBarV = new QScrollBar(this);
+    //scrollBarV->move(50, 250);
+    //scrollBarV->setRange(0, 100);
+    //scrollBarV->setValue(67);
+    //scrollBarV->resize(20, 380);
+    //scrollBarV->setOrientation(Qt::Vertical);
 
-    QProgressBar* progreH = new QProgressBar(this);
-    progreH->move(300, 100);
-    progreH->resize(250, 40);
-    progreH->setValue(37);
-    progreH->setOrientation(Qt::Horizontal);
+    //QProgressBar* progreH = new QProgressBar(this);
+    //progreH->move(300, 100);
+    //progreH->resize(250, 40);
+    //progreH->setValue(37);
+    //progreH->setOrientation(Qt::Horizontal);
 
-    QProgressBar* progreV = new QProgressBar(this);
-    progreV->move(100, 300);
-    progreV->resize(40, 250);
-    progreV->setValue(67);
-    progreV->setOrientation(Qt::Vertical);
+    //QProgressBar* progreV = new QProgressBar(this);
+    //progreV->move(100, 300);
+    //progreV->resize(40, 250);
+    //progreV->setValue(67);
+    //progreV->setOrientation(Qt::Vertical);
+
+    QSlider* slider = new QSlider(this);
+    slider->move(600, 500);
+    slider->resize(300, 50);
+    slider->setOrientation(Qt::Horizontal);
+    slider->show();
 
     //自定义的控件
-    DonutSwitchButton* switchBtn = new DonutSwitchButton(this);
-    switchBtn->resize(80, 40);
-    switchBtn->move(200, 300);
+    //DonutSwitchButton* switchBtn = new DonutSwitchButton(this);
+    //switchBtn->resize(80, 40);
+    //switchBtn->move(200, 300);
 
     int i = 0;
     QStringList listStyle = QStyleFactory::keys();

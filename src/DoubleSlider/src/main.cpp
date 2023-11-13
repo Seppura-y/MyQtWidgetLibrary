@@ -7,11 +7,11 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
     //
-    //RoundWidget w;
-    //w.show();
+    RoundWidget w;
+    w.show();
 
-    DoubleSlider slider;
-    slider.show();
+    //DoubleSlider slider;
+    //slider.show();
 
     return a.exec();
 }

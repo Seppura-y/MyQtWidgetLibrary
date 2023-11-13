@@ -22,13 +22,13 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
 
 
 
-    //QSlider* slider = new QSlider(Qt::Horizontal, this);
-    //auto style = new DonutSliderStyle();
-    //slider->setStyle(style);
-    //slider->setGeometry(50, 50, 200, 50);
+    QSlider* slider = new QSlider(Qt::Horizontal, this);
+    auto style = new DonutSliderStyle();
+    slider->setStyle(style);
+    slider->setGeometry(50, 50, 200, 50);
 
-    //slider->installEventFilter(style);
-    //slider->show();
+    slider->installEventFilter(style);
+    slider->show();
 
     QSpinBox box;
     box.setGeometry(100, 250, 150, 50);
