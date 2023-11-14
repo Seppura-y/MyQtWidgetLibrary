@@ -45,4 +45,10 @@ int DonutStyleHelper::pixelMetric(DonutStyle::PixelMetric metric, const QStyleOp
         : DonutStyle::pixelMetric(q_style_, metric, option, widget);
 }
 
+void DonutStyleHelper::drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const
+{
+    return donut_style_ ? donut_style_->drawComplexControl(cc, opt, p, w)
+        : DonutStyle::drawComplexControl(q_style_, cc, opt, p, w);
+}
+
 

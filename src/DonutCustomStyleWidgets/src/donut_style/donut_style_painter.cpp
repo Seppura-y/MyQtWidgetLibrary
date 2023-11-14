@@ -2,7 +2,7 @@
 
 #include "donut_style_helper.h"
 #include <QWidget>
-
+#include <QStyleOption>
 void DonutStylePainter::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt)
 {
     q_style_->drawPrimitive(pe, opt, this, widget_);
@@ -36,4 +36,16 @@ void DonutStylePainter::drawControl(QStyle::ControlElement element, const QStyle
 void DonutStylePainter::drawControl(DonutStyle::ControlElement element, const QStyleOption* opt)
 {
     style_helper_.drawControl(element, opt, this, widget_);
+}
+
+void DonutStylePainter::drawComplexControl(QStyle::ComplexControl cc, const QStyleOption* opt)
+{
+    const QStyleOptionComplex* option = qstyleoption_cast<const QStyleOptionComplex*>(opt);
+    q_style_->drawComplexControl(cc, option, this, widget_);
+}
+
+void DonutStylePainter::drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOption* opt)
+{
+    const QStyleOptionComplex* option = qstyleoption_cast<const QStyleOptionComplex*>(opt);
+    style_helper_.drawComplexControl(cc, option, this, widget_);
 }

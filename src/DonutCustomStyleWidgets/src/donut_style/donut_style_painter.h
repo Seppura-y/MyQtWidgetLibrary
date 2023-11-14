@@ -19,6 +19,9 @@ public:
     void drawControl(DonutStyle::ControlElement element, const QStyleOption* opt);
     void drawControl(QStyle::ControlElement element, const QStyleOption* opt);
 
+    void drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOption* opt);
+    void drawComplexControl(QStyle::ComplexControl cc, const QStyleOption* opt);
+
 private:
     QWidget* widget_;
     QStyle* q_style_;

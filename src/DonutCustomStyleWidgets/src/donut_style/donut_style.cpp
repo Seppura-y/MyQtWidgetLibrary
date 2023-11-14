@@ -19,6 +19,10 @@ void DonutStyle::drawControl(const QStyle* style, DonutStyle::ControlElement ele
 {
 }
 
+void DonutStyle::drawComplexControl(const QStyle* style, DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w)
+{
+}
+
 QRect DonutStyle::subElementRect(const QStyle* style, DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget)
 {
     return QRect();
@@ -38,6 +42,13 @@ void DonutStyle::drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOpti
 void DonutStyle::drawControl(DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const
 {
     proxy()->drawControl(static_cast<QStyle::ControlElement>(element), opt, p, w);
+}
+
+void DonutStyle::drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const
+{
+    const QStyleOptionComplex* option = qstyleoption_cast<const QStyleOptionComplex*>(opt);
+
+    proxy()->drawComplexControl(static_cast<QStyle::ComplexControl>(cc), option, p, w);
 }
 
 QRect DonutStyle::subElementRect(DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const
@@ -220,22 +231,17 @@ QRect DonutStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
 
 void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* widget) const
 {
-    if (cc == CC_Slider) {
-        const QStyleOptionSlider* cOptionSlider = qstyleoption_cast<const QStyleOptionSlider*>(opt);
-
-        if (cOptionSlider)
+    if (cc == CC_Slider)
+    {
+        const QStyleOptionSlider* opt_slider = qstyleoption_cast<const QStyleOptionSlider*>(opt);
+        if (opt_slider)
         {
-            QRect groove_rect = subControlRect(cc, opt, SC_SliderGroove);
-            QRect handle_rect = subControlRect(cc, opt, SC_SliderHandle);
+            QRect groove_rect = subControlRect(cc, opt_slider, SC_SliderGroove);
+            QRect handle_rect = subControlRect(cc, opt_slider, SC_SliderHandle);
             p->save();
             p->setRenderHint(QPainter::Antialiasing);
             p->setPen(Qt::NoPen);
             p->setBrush(QColor("lightgray"));
-            //p->drawEllipse(subControlRect(cc, opt, SC_SliderHandle));
-            //p->drawRoundedRect(subControlRect(cc, opt, SC_SliderGroove, nullptr).adjusted(1, 1, -1, -1),
-            //    subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0,
-            //    subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0
-            //);
 
             p->drawRoundedRect(
                 groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
@@ -255,30 +261,17 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 subpage_rect.height() / 4.0,
                 subpage_rect.height() / 4.0
             );
-            //p->setBrush(QColor("lightorange"));
 
-            //p->drawRoundedRect(groove_rect.adjusted(1, 1, -1, -1), groove_rect.height() / 2.0, groove_rect.height() / 2.0);
-
-            //p->fillRect(subControlRect(cc, opt, SC_SliderGroove, nullptr), QColor(255, 128, 64, 255));
-            //p->fillRect(subControlRect(cc, opt, SC_SliderHandle, nullptr), QColor(128, 255, 64, 255));
-
-            //p->restore();
-
-            //p->save();
             QPainterPath path = QPainterPath();
             QPoint center = QPoint(
-                subControlRect(cc, opt, SC_SliderHandle).x() + subControlRect(cc, opt, SC_SliderHandle).width() / 2,
-                subControlRect(cc, opt, SC_SliderHandle).y() + subControlRect(cc, opt, SC_SliderHandle).height() / 2
+                subControlRect(cc, opt_slider, SC_SliderHandle).x() + subControlRect(cc, opt_slider, SC_SliderHandle).width() / 2,
+                subControlRect(cc, opt_slider, SC_SliderHandle).y() + subControlRect(cc, opt_slider, SC_SliderHandle).height() / 2
             );
-            //QPoint center = subControlRect(cctrl, copt, SC_SliderHandle).center() + QPoint(1, 1);
-            path.addEllipse(center,
-                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0 - 1,
-                subControlRect(cc, opt, SC_SliderGroove, nullptr).height() / 2.0 - 1);
 
-            //QColor handleColor = QColor("gray"); // self.config["handle.color"]  # type:QColor;
-            ////handleColor.setAlpha(opt->activeSubControls != QStyle::SC_SliderHandle ? 255 : 100);
-            //handleColor.setAlpha(opt->state & QStyle::State_Raised ? 255 : 100);
-            //handleColor.setAlpha(opt->state & QStyle::State_MouseOver ? 255 : 100);
+            path.addEllipse(center,
+                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1,
+                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1);
+
 
             QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
             p->setRenderHint(QPainter::Antialiasing);
@@ -292,7 +285,8 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
 
 QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QStyle::SubControl sc, const QWidget* widget) const
 {
-    if (cc == CC_Slider) {
+    if (cc == CC_Slider)
+    {
         const QStyleOptionSlider* option_slider = qstyleoption_cast<const QStyleOptionSlider*>(opt);
 
         QRect slider_rect = option_slider->rect; // Slider widget rectangle
@@ -353,7 +347,7 @@ QSize DonutStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption* 
     return QCommonStyle::sizeFromContents(ct, opt, contentsSize, w);
 }
 
-QStyle::SubControl DonutStyle::hitTestComplexControl(ComplexControl cc, const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget) const
+QStyle::SubControl DonutStyle::hitTestComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget) const
 {
     if (cc == CC_Slider && opt)
     {

@@ -33,6 +33,12 @@ public:
         PE_CustomBase = QStyle::PE_CustomBase + 0xf00000
     };
 
+    enum ComplexControl {
+        CC_SliderLeft = QStyle::CC_CustomBase + 1,
+        CC_SliderRight = QStyle::CC_CustomBase,
+        CC_CustomBase = QStyle::CC_CustomBase + 0xf00000
+    };
+
 public:
     DonutStyle();
 
@@ -42,6 +48,9 @@ public:
     //static 函数，供 StyleHelper 调用 [用来绘画自增加的控件枚举]
     static void drawPrimitive(const QStyle* style, DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w = nullptr);
     static void drawControl(const QStyle* style, DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w);
+    
+    // static版本
+    static void drawComplexControl(const QStyle* style, const DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w);
 
     static QRect subElementRect(const QStyle* style, DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget);
     static int pixelMetric(const QStyle* style, DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget);
@@ -50,6 +59,9 @@ public:
     //[主要用来绘画 自定义新增 的控件枚举 --> 实际调用在 下面的 virtual 里面绘画]
     inline void drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w = nullptr) const;
     void drawControl(DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const;
+    
+    // 转发，实际调用重载QStyle的版本
+    void drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const;
 
     inline QRect subElementRect(DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const;
     inline int pixelMetric(DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget) const;
@@ -67,7 +79,7 @@ public:
     virtual QRect subElementRect(QStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const override;
     virtual QRect subControlRect(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, SubControl sc, const QWidget* widget = nullptr) const override;
     virtual QSize sizeFromContents(QStyle::ContentsType ct, const QStyleOption* opt, const QSize& contentsSize, const QWidget* w) const override;
-    virtual QStyle::SubControl hitTestComplexControl(ComplexControl cc,const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget = nullptr) const override;
+    virtual QStyle::SubControl hitTestComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget = nullptr) const override;
     virtual void polish(QWidget* widget) override;
     virtual void unpolish(QWidget* widget) override;
 

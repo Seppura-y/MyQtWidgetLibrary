@@ -51,7 +51,11 @@ public:
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, QxtSpanSlider::SpanHandle handle);
     void drawHandle(QStylePainter* painter, QxtSpanSlider::SpanHandle handle) const;
     void setupPainter(QPainter* painter, Qt::Orientation orientation, qreal x1, qreal y1, qreal x2, qreal y2) const;
+
     void drawSpan(QStylePainter* painter, const QRect& rect) const;
+    void drawSpan(QPainter* painter, const QRect& rect) const;
+
+
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
     void swapControls();
 
