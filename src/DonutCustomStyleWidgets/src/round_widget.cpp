@@ -13,7 +13,7 @@
 
 #include <QSlider>
 
-#include "switch_button/donut_switchbutton.h"
+#include "donut_switch_button.h"
 #include "donut_style.h"
 #include "donut_custom_slider.h"
 
@@ -25,7 +25,7 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
     //setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 
     //// method 2
-    this->setStyleSheet("QWidget{background-color:gray;border-radius:30px;}");
+    //this->setStyleSheet("QWidget{background-color:gray;border-radius:30px;}");
 
     init();
 }

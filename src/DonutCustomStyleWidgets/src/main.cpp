@@ -1,0 +1,27 @@
+#include <QtWidgets/QApplication>
+#include "round_widget.h"
+#include "donut_custom_slider.h"
+#include "donut_switch_button.h"
+
+int main(int argc, char* argv[])
+{
+
+    QApplication a(argc, argv);
+    
+    //RoundWidget w;
+    //w.show();
+
+    QWidget w;
+    w.show();
+
+    DonutCustomSlider slider(&w);
+    slider.setOrientation(Qt::Horizontal);
+    slider.setGeometry(20, 20, 300, 50);
+    slider.show();
+
+    DonutSwitchButton switch_btn(&w);
+    switch_btn.setGeometry(20, 100, 50, 30);
+    switch_btn.show();
+
+    return a.exec();
+}
