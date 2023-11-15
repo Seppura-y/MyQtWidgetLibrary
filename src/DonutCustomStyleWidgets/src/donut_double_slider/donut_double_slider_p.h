@@ -57,5 +57,8 @@ public:
 
 	QStyle::SubControls lower_handle_;
 	QStyle::SubControls upper_handle_;
+
+	bool lower_hovered_ = false;
+	bool upper_hovered_ = false;
 };
 #endif

@@ -273,26 +273,23 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                     opt_slider->lower_rect_.y() + opt_slider->lower_rect_.height() / 2
                 );
 
-                //QPoint lower_center = QPoint(
-                //    subControlRect(CC_Slider, opt_slider, SC_SliderHandle).x() + subControlRect(CC_Slider, opt_slider, SC_SliderHandle).width() / 2,
-                //    subControlRect(CC_Slider, opt_slider, SC_SliderHandle).y() + subControlRect(CC_Slider, opt_slider, SC_SliderHandle).height() / 2
-                //);
+                if (opt->state & QStyle::State_MouseOver)
+                {
+                    QColor handleColor = QColor("darkorange");
+                }
 
-                //p->drawEllipse(lower_center, groove_rect.height() / 2, groove_rect.height() / 2);
+                QColor handleColor = opt_slider->lower_hovered_ ? QColor("darkorange") : QColor("white");
+                if (opt_slider->lower_hovered_)
+                {
+                    handleColor = QColor("darkorange");
+                }
+                //QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
+                p->setBrush(handleColor);
+                p->setRenderHint(QPainter::Antialiasing);
                 p->drawEllipse(lower_center,
                     groove_rect.height() / 2 - 1,
                     groove_rect.height() / 2 - 1);
 
-                //path.addEllipse(lower_center,
-                //    groove_rect.height() / 2.0 - 1,
-                //    groove_rect.height() / 2.0 - 1);
-
-
-                QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("white") : QColor("darkorange");
-                //p->setRenderHint(QPainter::Antialiasing);
-                //p->setBrush(handleColor);
-                //p->drawPath(path);
-                //path.clear();
 
                 QPoint upper_center = QPoint(
                     opt_slider->upper_rect_.x() + opt_slider->upper_rect_.width() / 2,
@@ -303,35 +300,20 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                     groove_rect.height() / 2.0 - 1,
                     groove_rect.height() / 2.0 - 1);
 
+                if (opt_slider->upper_hovered_)
+                {
+                    handleColor = QColor("darkorange");
+                }
 
-                handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
+                handleColor = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
+                //handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
                 p->setRenderHint(QPainter::Antialiasing);
                 p->setBrush(handleColor);
                 p->drawPath(path);
 
             }
-            //else
-            //{
-            //    QPainterPath path = QPainterPath();
-            //    QPoint center = QPoint(
-            //        subControlRect(CC_Slider, opt_slider, SC_SliderHandle).x() + subControlRect(CC_Slider, opt_slider, SC_SliderHandle).width() / 2,
-            //        subControlRect(CC_Slider, opt_slider, SC_SliderHandle).y() + subControlRect(CC_Slider, opt_slider, SC_SliderHandle).height() / 2
-            //    );
 
-            //    path.addEllipse(center,
-            //        subControlRect(CC_Slider, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1,
-            //        subControlRect(CC_Slider, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1);
-
-
-            //    QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
-            //    p->setRenderHint(QPainter::Antialiasing);
-            //    p->setBrush(handleColor);
-            //    p->drawPath(path);
-            //    //p->restore();
-            //}
-
-
-                p->restore();
+            p->restore();
         }
         return;
     }

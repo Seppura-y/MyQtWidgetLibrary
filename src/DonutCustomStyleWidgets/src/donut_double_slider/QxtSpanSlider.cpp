@@ -453,6 +453,7 @@ QxtSpanSlider::QxtSpanSlider(QWidget* parent) : QSlider(parent), d_ptr(new QxtSp
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
 
     this->setStyle(new DonutStyle);
+    setMouseTracking(true);
 }
 
 /*!
@@ -465,6 +466,7 @@ QxtSpanSlider::QxtSpanSlider(Qt::Orientation orientation, QWidget* parent) : QSl
     connect(this, SIGNAL(sliderReleased()), d_ptr, SLOT(movePressedHandle()));
 
     this->setStyle(new DonutStyle);
+    setMouseTracking(true);
     //this->installEventFilter(style);
 }
 
@@ -663,6 +665,23 @@ void QxtSpanSlider::mousePressEvent(QMouseEvent* event)
  */
 void QxtSpanSlider::mouseMoveEvent(QMouseEvent* event)
 {
+    d_ptr->lower_hovered_ = false;
+    d_ptr->upper_hovered_ = false;
+    d_ptr->hovered_handle_ = QxtSpanSlider::NoHandle;
+
+    if (d_ptr->lower_rect_.contains(event->pos()))
+    {
+        d_ptr->lower_hovered_ = true;
+        d_ptr->hovered_handle_ = QxtSpanSlider::LowerHandle;
+    }
+
+    if (d_ptr->upper_rect_.contains(event->pos()))
+    {
+        d_ptr->upper_hovered_ = true;
+        d_ptr->hovered_handle_ = QxtSpanSlider::UpperHandle;
+    }
+    this->update();
+
     if (d_ptr->lowerPressed != QStyle::SC_SliderHandle && d_ptr->upperPressed != QStyle::SC_SliderHandle)
     {
         event->ignore();
@@ -745,6 +764,9 @@ void QxtSpanSlider::mouseReleaseEvent(QMouseEvent* event)
     setSliderDown(false);
     d_ptr->lowerPressed = QStyle::SC_None;
     d_ptr->upperPressed = QStyle::SC_None;
+    d_ptr->hovered_handle_ = QxtSpanSlider::NoHandle;
+    d_ptr->lower_hovered_ = false;
+    d_ptr->upper_hovered_ = false;
     update();
 }
 
@@ -820,7 +842,6 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
     opt.sliderPosition = 0;
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
 
-    painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
 
     // handle rects
     opt.sliderPosition = d_ptr->lowerPos;
@@ -832,6 +853,8 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
 
     opt.lower_rect_ = lr;
     opt.upper_rect_ = ur;
+    d_ptr->lower_rect_ = lr;
+    d_ptr->upper_rect_ = ur;
     // span
     const int minv = qMin(lrv, urv);
     const int maxv = qMax(lrv, urv);
@@ -851,7 +874,6 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
     }
 
 
-
     opt.lower_handle_ = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
     switch (d_ptr->lastPressed)
     {
@@ -861,6 +883,25 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
     case QxtSpanSlider::UpperHandle:
         opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
         opt.state |= QStyle::State_Sunken;
+    }
+
+    switch (d_ptr->hovered_handle_)
+    {
+    case QxtSpanSlider::LowerHandle:
+        //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
+        //opt.state |= QStyle::State_MouseOver;
+        opt.lower_hovered_ = true;
+        break;
+    case QxtSpanSlider::UpperHandle:
+        //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
+        //opt.state |= QStyle::State_MouseOver;
+        opt.upper_hovered_ = true;
+        break;
+    default:
+        //opt.state &= (~(QStyle::State_MouseOver));
+        opt.lower_hovered_ = false;
+        opt.upper_hovered_ = false;
+        break;
     }
     //painter->drawComplexControl(QStyle::CC_Slider, opt);
 

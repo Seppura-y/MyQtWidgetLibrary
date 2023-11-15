@@ -73,6 +73,11 @@ public:
     bool firstMovement;
     bool blockTracking;
 
+    QRect lower_rect_;
+    QRect upper_rect_;
+    bool lower_hovered_;
+    bool upper_hovered_;
+    QxtSpanSlider::SpanHandle hovered_handle_;
 
 public Q_SLOTS:
     void updateRange(int min, int max);
