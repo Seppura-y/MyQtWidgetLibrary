@@ -283,7 +283,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 {
                     handleColor = QColor("darkorange");
                 }
-                //QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
+
                 p->setBrush(handleColor);
                 p->setRenderHint(QPainter::Antialiasing);
                 p->drawEllipse(lower_center,
@@ -298,15 +298,10 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
 
                 path.addEllipse(upper_center,
                     groove_rect.height() / 2.0 - 1,
-                    groove_rect.height() / 2.0 - 1);
-
-                if (opt_slider->upper_hovered_)
-                {
-                    handleColor = QColor("darkorange");
-                }
+                    groove_rect.height() / 2.0 - 1
+                );
 
                 handleColor = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
-                //handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
                 p->setRenderHint(QPainter::Antialiasing);
                 p->setBrush(handleColor);
                 p->drawPath(path);

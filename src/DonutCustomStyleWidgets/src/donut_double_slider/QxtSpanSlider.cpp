@@ -835,13 +835,10 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
 
     DonutDoubleSliderStyleOption opt;
     d_ptr->initStyleOption(&opt);
-    //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
-    //opt.activeSubControls = QStyle::SC_None;
 
     opt.sliderValue = 0;
     opt.sliderPosition = 0;
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
-
 
     // handle rects
     opt.sliderPosition = d_ptr->lowerPos;
@@ -888,57 +885,16 @@ void QxtSpanSlider::paintEvent(QPaintEvent* event)
     switch (d_ptr->hovered_handle_)
     {
     case QxtSpanSlider::LowerHandle:
-        //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
-        //opt.state |= QStyle::State_MouseOver;
         opt.lower_hovered_ = true;
         break;
     case QxtSpanSlider::UpperHandle:
-        //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
-        //opt.state |= QStyle::State_MouseOver;
         opt.upper_hovered_ = true;
         break;
     default:
-        //opt.state &= (~(QStyle::State_MouseOver));
         opt.lower_hovered_ = false;
         opt.upper_hovered_ = false;
         break;
     }
-    //painter->drawComplexControl(QStyle::CC_Slider, opt);
-
-
-    //d_ptr->drawSpan(&painter, spanRect);
-
-    //switch (d_ptr->lastPressed)
-    //{
-    //case QxtSpanSlider::LowerHandle:
-    //    //d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-    //    d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-    //    break;
-    //case QxtSpanSlider::UpperHandle:
-    //default:
-    //    d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-    //    d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-    //    break;
-    //}
 
     painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
-
-    //{
-    //    QStylePainter painter(this);
-
-
-    //    // handles
-    //    switch (d_ptr->lastPressed)
-    //    {
-    //    case QxtSpanSlider::LowerHandle:
-    //        //d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-    //        d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-    //        break;
-    //    case QxtSpanSlider::UpperHandle:
-    //    default:
-    //        d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-    //        d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-    //        break;
-    //    }
-    //}
 }
