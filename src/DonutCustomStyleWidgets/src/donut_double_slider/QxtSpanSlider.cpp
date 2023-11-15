@@ -40,6 +40,7 @@
 #include "round_widget.h"
 #include "donut_style.h"
 #include "donut_style_painter.h"
+#include "donut_double_slider_p.h"
 //#include "donut_slider_custom_style.h"
 
 QxtSpanSliderPrivate::QxtSpanSliderPrivate() :
@@ -158,6 +159,8 @@ void QxtSpanSliderPrivate::drawSpan(QStylePainter* painter, const QRect& rect) c
 
 void QxtSpanSliderPrivate::drawSpan(QPainter* painter, const QRect& rect) const
 {
+    DonutDoubleSliderStyleOption options;
+    initStyleOption(&options);
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     const QSlider* p = q_ptr;
@@ -176,8 +179,31 @@ void QxtSpanSliderPrivate::drawSpan(QPainter* painter, const QRect& rect) const
     else
         setupPainter(painter, opt.orientation, groove.left(), groove.center().y(), groove.right(), groove.center().y());
 
+    QRect span_rect = rect.intersected(groove);
+    options.span_rect_ = span_rect;
+
     // draw groove
     painter->drawRect(rect.intersected(groove));
+}
+
+QRect QxtSpanSliderPrivate::getSpan(QPainter* painter, const QRect& rect) const
+{
+    DonutDoubleSliderStyleOption options;
+    initStyleOption(&options);
+
+    const QSlider* p = q_ptr;
+
+    // area
+    QRect groove = p->style()->subControlRect(QStyle::CC_Slider, &options, QStyle::SC_SliderGroove, p);
+    if (options.orientation == Qt::Horizontal)
+        groove.adjust(0, 0, -1, 0);
+    else
+        groove.adjust(0, 0, 0, -1);
+
+
+    QRect span_rect = rect.intersected(groove);
+    options.span_rect_ = span_rect;
+    return span_rect;
 }
 
 void QxtSpanSliderPrivate::drawHandle(QStylePainter* painter, QxtSpanSlider::SpanHandle handle) const
@@ -725,57 +751,153 @@ void QxtSpanSlider::mouseReleaseEvent(QMouseEvent* event)
 /*!
     \reimp
  */
+//void QxtSpanSlider::paintEvent(QPaintEvent* event)
+//{
+//    Q_UNUSED(event);
+//    DonutStylePainter painter(this);
+//    //QStylePainter painter(this);
+//    //auto paintr = &painter;
+//    //paintr->setPen(QPen(QColor(QPalette::Dark).light(110), 0));
+//    // groove & ticks
+//    QStyleOptionSlider opt;
+//    d_ptr->initStyleOption(&opt);
+//    opt.sliderValue = 0;
+//    opt.sliderPosition = 0;
+//    opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
+//    painter.drawComplexControl(QStyle::CC_Slider, &opt);
+//    //paintr->setPen(QPen(QColor(QPalette::Dark).light(110), 0));
+//
+//    // handle rects
+//    opt.sliderPosition = d_ptr->lowerPos;
+//    const QRect lr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+//    const int lrv  = d_ptr->pick(lr.center());
+//    opt.sliderPosition = d_ptr->upperPos;
+//    const QRect ur = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+//    const int urv  = d_ptr->pick(ur.center());
+//
+//    // span
+//    const int minv = qMin(lrv, urv);
+//    const int maxv = qMax(lrv, urv);
+//    const QPoint c = QRect(lr.center(), ur.center()).center();
+//    QRect spanRect;
+//    if (orientation() == Qt::Horizontal)
+//        spanRect = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
+//    else
+//        spanRect = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
+//
+//    d_ptr->drawSpan(&painter, spanRect);
+//    {
+//        QStylePainter painter(this);
+//
+//
+//        // handles
+//        switch (d_ptr->lastPressed)
+//        {
+//        case QxtSpanSlider::LowerHandle:
+//            d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+//            d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+//            break;
+//        case QxtSpanSlider::UpperHandle:
+//        default:
+//            d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+//            d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+//            break;
+//        }
+//    }
+//}
+
 void QxtSpanSlider::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
     DonutStylePainter painter(this);
-    //QStylePainter painter(this);
-    //auto paintr = &painter;
-    //paintr->setPen(QPen(QColor(QPalette::Dark).light(110), 0));
-    // groove & ticks
-    QStyleOptionSlider opt;
+
+    DonutDoubleSliderStyleOption opt;
     d_ptr->initStyleOption(&opt);
+    //opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
+    //opt.activeSubControls = QStyle::SC_None;
+
     opt.sliderValue = 0;
     opt.sliderPosition = 0;
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
-    painter.drawComplexControl(QStyle::CC_Slider, &opt);
-    //paintr->setPen(QPen(QColor(QPalette::Dark).light(110), 0));
+
+    painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
 
     // handle rects
     opt.sliderPosition = d_ptr->lowerPos;
     const QRect lr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    const int lrv  = d_ptr->pick(lr.center());
+    const int lrv = d_ptr->pick(lr.center());
     opt.sliderPosition = d_ptr->upperPos;
     const QRect ur = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    const int urv  = d_ptr->pick(ur.center());
+    const int urv = d_ptr->pick(ur.center());
 
+    opt.lower_rect_ = lr;
+    opt.upper_rect_ = ur;
     // span
     const int minv = qMin(lrv, urv);
     const int maxv = qMax(lrv, urv);
     const QPoint c = QRect(lr.center(), ur.center()).center();
     QRect spanRect;
     if (orientation() == Qt::Horizontal)
-        spanRect = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
-    else
-        spanRect = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
-
-    d_ptr->drawSpan(&painter, spanRect);
     {
-        QStylePainter painter(this);
-
-
-        // handles
-        switch (d_ptr->lastPressed)
-        {
-        case QxtSpanSlider::LowerHandle:
-            d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-            d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-            break;
-        case QxtSpanSlider::UpperHandle:
-        default:
-            d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
-            d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
-            break;
-        }
+        opt.span_rect_ = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
+        opt.span_start_ = QPoint(minv, c.y());
+        opt.span_end_ = QPoint(maxv, c.y());
     }
+    else
+    {
+        opt.span_rect_ = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
+        opt.span_start_ = QPoint(c.x(), minv);
+        opt.span_end_ = QPoint(c.x(), maxv);
+    }
+
+
+
+    opt.lower_handle_ = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
+    switch (d_ptr->lastPressed)
+    {
+    case QxtSpanSlider::LowerHandle:
+        opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
+        opt.state |= QStyle::State_Sunken;
+    case QxtSpanSlider::UpperHandle:
+        opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
+        opt.state |= QStyle::State_Sunken;
+    }
+    //painter->drawComplexControl(QStyle::CC_Slider, opt);
+
+
+    //d_ptr->drawSpan(&painter, spanRect);
+
+    //switch (d_ptr->lastPressed)
+    //{
+    //case QxtSpanSlider::LowerHandle:
+    //    //d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+    //    d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+    //    break;
+    //case QxtSpanSlider::UpperHandle:
+    //default:
+    //    d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+    //    d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+    //    break;
+    //}
+
+    painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
+
+    //{
+    //    QStylePainter painter(this);
+
+
+    //    // handles
+    //    switch (d_ptr->lastPressed)
+    //    {
+    //    case QxtSpanSlider::LowerHandle:
+    //        //d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+    //        d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+    //        break;
+    //    case QxtSpanSlider::UpperHandle:
+    //    default:
+    //        d_ptr->drawHandle(&painter, QxtSpanSlider::LowerHandle);
+    //        d_ptr->drawHandle(&painter, QxtSpanSlider::UpperHandle);
+    //        break;
+    //    }
+    //}
 }

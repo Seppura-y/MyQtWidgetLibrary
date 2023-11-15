@@ -54,7 +54,7 @@ public:
 
     void drawSpan(QStylePainter* painter, const QRect& rect) const;
     void drawSpan(QPainter* painter, const QRect& rect) const;
-
+    QRect getSpan(QPainter* painter, const QRect& rect) const;
 
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
     void swapControls();

@@ -34,11 +34,10 @@ public:
     };
 
     enum ComplexControl {
-        CC_SliderLeft = QStyle::CC_CustomBase + 1,
-        CC_SliderRight = QStyle::CC_CustomBase,
+        CC_DoubleSlider = QStyle::CC_CustomBase + 1,
         CC_CustomBase = QStyle::CC_CustomBase + 0xf00000
     };
-
+    enum SubControls { SC_LowerHandle = SC_CustomBase + 1, SC_UpperHandle = SC_CustomBase + 2 };
 public:
     DonutStyle();
 

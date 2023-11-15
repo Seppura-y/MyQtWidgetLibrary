@@ -41,7 +41,6 @@ private:
 class DonutDoubleSliderStyleOption : public QStyleOptionSlider
 {
 public:
-	enum StyleOptionType { SO_DoubleSlider = SO_ComplexCustomBase + 1};
 	DonutDoubleSliderStyleOption();
 	DonutDoubleSliderStyleOption(const DonutDoubleSliderStyleOption& other) : QStyleOptionSlider() { *this = other; }
 	DonutDoubleSliderStyleOption& operator=(const DonutDoubleSliderStyleOption&) = default;
@@ -49,5 +48,14 @@ public:
 	QRect upper_rect_;
 	QRect lower_rect_;
 	QRect span_rect_;
+
+	QPoint span_start_;
+	QPoint span_end_;
+
+	int upper_position_;
+	int lower_position_;
+
+	QStyle::SubControls lower_handle_;
+	QStyle::SubControls upper_handle_;
 };
 #endif
