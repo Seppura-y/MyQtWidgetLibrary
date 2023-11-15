@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     switch_btn.show();
 
     QxtSpanSlider span_slider(Qt::Horizontal, &w);
-    span_slider.setGeometry(20, 200, 200, 50);
+    span_slider.setGeometry(20, 200, 500, 20);
     span_slider.setHandleMovementMode(QxtSpanSlider::NoOverlapping);
     span_slider.show();
 

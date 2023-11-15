@@ -3,7 +3,6 @@
 
 
 #include "donut_style.h"
-#include "donut_style_helper.h"
 
 #include <QPainter>
 
@@ -15,18 +14,13 @@ public:
     ~DonutStylePainter();
 
     void drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt);
-    void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt);
     void drawControl(DonutStyle::ControlElement element, const QStyleOption* opt);
-    void drawControl(QStyle::ControlElement element, const QStyleOption* opt);
-
     void drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOption* opt);
-    void drawComplexControl(QStyle::ComplexControl cc, const QStyleOption* opt);
+
 
 private:
     QWidget* widget_;
-    QStyle* q_style_;
     DonutStyle* donut_style_;
-    DonutStyleHelper style_helper_;
 };
 
 

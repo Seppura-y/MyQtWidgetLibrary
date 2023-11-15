@@ -2,7 +2,6 @@
 #include "donut_switch_button_p.h"
 
 #include "donut_style.h"
-#include "donut_style_helper.h"
 #include "donut_style_painter.h"
 
 #include <QStylePainter>

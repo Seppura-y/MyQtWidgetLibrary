@@ -59,7 +59,6 @@ void DonutStyle::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* 
             if (switch_btn->state & State_On)
             {
                 p->setBrush(QColor("orange"));
-                //p->setBrush(QColor("#77d472"));
             }
 
             if (switch_btn->state & State_Off)
@@ -240,7 +239,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             );
 
             QColor handle_color = opt_slider->lower_hovered_ ? QColor("darkorange") : QColor("white");
-            p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
+            p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setBrush(handle_color);
             p->setRenderHint(QPainter::Antialiasing);
             p->drawEllipse(lower_center,
@@ -254,7 +253,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             );
 
             handle_color = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
-            p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
+            p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handle_color);
             p->drawEllipse(upper_center,
@@ -303,7 +302,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             );
 
             QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
-            p->setPen(opt->state& QStyle::State_MouseOver ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
+            p->setPen(opt->state& QStyle::State_MouseOver ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handleColor);
             p->drawEllipse(center,
@@ -327,8 +326,8 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
 
         QRect slider_rect = option_slider->rect; // Slider widget rectangle
 
-        int groove_size = 30;                    // Size of slider groove
-        int handle_size = 30;                    // Size of slider groove
+        int groove_size = 16;                    // Size of slider groove
+        int handle_size = 16;                    // Size of slider groove
 
         switch (sc)
         {
@@ -344,8 +343,8 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
 
                 slider_rect.setX(temp_x);
                 slider_rect.setY(0);
-                slider_rect.setWidth(30);
-                slider_rect.setHeight(30);
+                slider_rect.setWidth(handle_size);
+                slider_rect.setHeight(handle_size);
 
                 return slider_rect;
             }
