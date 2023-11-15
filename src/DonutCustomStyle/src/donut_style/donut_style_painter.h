@@ -12,7 +12,7 @@ class DonutStylePainter : public QPainter
 public:
     DonutStylePainter();
     DonutStylePainter(QWidget* w);
-    ~DonutStylePainter();
+    ~DonutStylePainter() {}
 
     void drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt);
     void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt);
@@ -25,7 +25,6 @@ public:
 private:
     QWidget* widget_;
     QStyle* q_style_;
-    DonutStyle* donut_style_;
     DonutStyleHelper style_helper_;
 };
 

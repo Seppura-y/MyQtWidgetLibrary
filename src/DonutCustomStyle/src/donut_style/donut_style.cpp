@@ -1,4 +1,4 @@
-ï»¿#include "donut_style.h"
+#include "donut_style.h"
 
 #include "donut_double_slider_p.h"
 
@@ -9,6 +9,30 @@
 DonutStyle::DonutStyle()
 {
 
+}
+
+
+void DonutStyle::drawPrimitive(const QStyle* style, DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w)
+{
+
+}
+
+void DonutStyle::drawControl(const QStyle* style, DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w)
+{
+}
+
+void DonutStyle::drawComplexControl(const QStyle* style, DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w)
+{
+}
+
+QRect DonutStyle::subElementRect(const QStyle* style, DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget)
+{
+    return QRect();
+}
+
+int DonutStyle::pixelMetric(const QStyle* style, DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget)
+{
+    return 0;
 }
 
 
@@ -24,7 +48,9 @@ void DonutStyle::drawControl(DonutStyle::ControlElement element, const QStyleOpt
 
 void DonutStyle::drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const
 {
-    proxy()->drawComplexControl(static_cast<QStyle::ComplexControl>(cc), opt, p, w);
+    const QStyleOptionComplex* option = qstyleoption_cast<const QStyleOptionComplex*>(opt);
+
+    proxy()->drawComplexControl(static_cast<QStyle::ComplexControl>(cc), option, p, w);
 }
 
 QRect DonutStyle::subElementRect(DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const
@@ -53,43 +79,43 @@ void DonutStyle::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* 
     {
     case PE_SwitchButtonGroove:
     {
-        if (const QStyleOptionButton* switch_btn = qstyleoption_cast<const QStyleOptionButton*>(opt))
+        if (const QStyleOptionButton* switchBtn = qstyleoption_cast<const QStyleOptionButton*>(opt))
         {
             p->setPen(Qt::NoPen);
-            if (switch_btn->state & State_On)
+            if (switchBtn->state & State_On)
             {
                 p->setBrush(QColor("orange"));
                 //p->setBrush(QColor("#77d472"));
             }
 
-            if (switch_btn->state & State_Off)
+            if (switchBtn->state & State_Off)
             {
                 p->setPen(QPen(QColor("#e5e5e5"), 2));
                 p->setBrush(QColor("#fdfefd"));
             }
 
-            p->drawRoundedRect(switch_btn->rect.adjusted(1, 1, -1, -1), switch_btn->rect.height() / 2.0, switch_btn->rect.height() / 2.0);
+            p->drawRoundedRect(switchBtn->rect.adjusted(1, 1, -1, -1), switchBtn->rect.height() / 2.0, switchBtn->rect.height() / 2.0);
         }
         break;
     }
 
     case PE_SwitchButtonHandle:
     {
-        if (const QStyleOptionButton* switch_btn = qstyleoption_cast<const QStyleOptionButton*>(opt))
+        if (const QStyleOptionButton* switchBtn = qstyleoption_cast<const QStyleOptionButton*>(opt))
         {
             p->setPen(Qt::NoPen);
-            if (switch_btn->state & State_On)
+            if (switchBtn->state & State_On)
             {
                 //p->setBrush(QColor("orange"));
                 p->setBrush(QColor("#fefffe"));
             }
 
-            if (switch_btn->state & State_Off)
+            if (switchBtn->state & State_Off)
                 p->setPen(QPen(QColor("#e5e5e5"), 2));
 
-            QRect handle_rect = switch_btn->rect.adjusted(1, 2, -1, -1);
-            int r = qMin(handle_rect.width() / 2.0, handle_rect.height() / 2.0);
-            p->drawEllipse(handle_rect.center(), r, r);
+            QRect rectHandle = switchBtn->rect.adjusted(1, 2, -1, -1);
+            int r = qMin(rectHandle.width() / 2.0, rectHandle.height() / 2.0);
+            p->drawEllipse(rectHandle.center(), r, r);
         }
         break;
     }
@@ -98,6 +124,11 @@ void DonutStyle::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* 
     }
 
     QCommonStyle::drawPrimitive(pe, opt, p, w);
+
+    //ºóÐø·ÖÀë¿ªÎªÄ£¿éµÄÅÐ¶Ï
+//    if (Q_UNLIKELY(pe < QStyle::PE_CustomBase))
+//    else
+//        drawPrimitive(this, static_cast<DonutStyle::PrimitiveElement>(pe), opt, p, w);
 }
 
 void DonutStyle::drawControl(QStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const
@@ -106,37 +137,37 @@ void DonutStyle::drawControl(QStyle::ControlElement element, const QStyleOption*
 
     switch(element)
     {
-        case CE_ScrollBarAddPage: //å¢žåŠ æ»‘æ§½
+        case CE_ScrollBarAddPage: //Ôö¼Ó»¬²Û
         {
             p->fillRect(opt->rect, QColor("#bfe9ff"));
             return;
         }
-        case CE_ScrollBarSubPage: //å‡å°‘æ»‘æ§½
+        case CE_ScrollBarSubPage: //¼õÉÙ»¬²Û
         {
             p->fillRect(opt->rect, QColor("#EC6EAD"));
             return;
         }
-        case CE_ScrollBarSlider: //æ»‘å—
+        case CE_ScrollBarSlider: //»¬¿é
         {
             p->fillRect(opt->rect, QColor("#A8BFFF"));
             return;
         }
-        case CE_ScrollBarAddLine: //å¢žåŠ æŒ‰é’®
+        case CE_ScrollBarAddLine: //Ôö¼Ó°´Å¥
         {
             p->fillRect(opt->rect, QColor("#21d4fd"));
             return;
         }
-        case CE_ScrollBarSubLine: //å‡å°‘æŒ‰é’®
+        case CE_ScrollBarSubLine: //¼õÉÙ°´Å¥
         {
             p->fillRect(opt->rect, QColor("#de6161"));
             return;
         }
         case CE_SwitchButton:
         {
-            if (const QStyleOptionButton* switch_btn = qstyleoption_cast<const QStyleOptionButton*>(opt))
+            if (const QStyleOptionButton* switchBtn = qstyleoption_cast<const QStyleOptionButton*>(opt))
             {
-                QStyleOptionButton option = *switch_btn;
-                option.palette = switch_btn->palette;
+                QStyleOptionButton option = *switchBtn;
+                option.palette = switchBtn->palette;
 
                 option.rect = subElementRect(SE_SwitchButtonGroove, opt, w);
                 drawPrimitive(PE_SwitchButtonGroove, &option, p, w);
@@ -149,6 +180,7 @@ void DonutStyle::drawControl(QStyle::ControlElement element, const QStyleOption*
         default:
             break;
     }
+
     return QCommonStyle::drawControl(element, opt, p, w);
 }
 
@@ -158,29 +190,29 @@ QRect DonutStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
     {
         case SE_SwitchButtonGroove:
         {
-            if (const QStyleOptionButton* switch_btn = qstyleoption_cast<const QStyleOptionButton*>(option))
-                return switch_btn->rect;
+            if (const QStyleOptionButton* switchBtn = qstyleoption_cast<const QStyleOptionButton*>(option))
+                return switchBtn->rect;
             break;
         }
         case SE_SwitchButtonHandle:
         {
-            if (const QStyleOptionButton* switch_btn = qstyleoption_cast<const QStyleOptionButton*>(option))
+            if (const QStyleOptionButton* switchBtn = qstyleoption_cast<const QStyleOptionButton*>(option))
             {
-                int handle_width = pixelMetric(PM_SwitchButtonHandleWidth, option, widget);
-                QRect rect_handle(0, 0, 0, 0);
-                rect_handle.setHeight(switch_btn->rect.height());
+                int handleWidth = pixelMetric(PM_SwitchButtonHandleWidth, option, widget);
+                QRect rectHandle(0, 0, 0, 0);
+                rectHandle.setHeight(switchBtn->rect.height());
 
-                if (switch_btn->rect.width() / 2.0 <= handle_width)
-                    rect_handle.setWidth(switch_btn->rect.width() / 2.0);
+                if (switchBtn->rect.width() / 2.0 <= handleWidth)
+                    rectHandle.setWidth(switchBtn->rect.width() / 2.0);
                 else
-                    rect_handle.setWidth(handle_width);
+                    rectHandle.setWidth(handleWidth);
 
-                if (switch_btn->state & QStyle::State_Off)
-                    rect_handle.moveLeft(switch_btn->rect.left() + 5);
-                if (switch_btn->state & QStyle::State_On)
-                    rect_handle.moveRight(switch_btn->rect.right() - 5);
+                if (switchBtn->state & QStyle::State_Off)
+                    rectHandle.moveLeft(switchBtn->rect.left() + 5);
+                if (switchBtn->state & QStyle::State_On)
+                    rectHandle.moveRight(switchBtn->rect.right() - 5);
 
-                return rect_handle;
+                return rectHandle;
             }
             break;
         }
@@ -210,7 +242,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             QRect handle_rect = subControlRect(CC_Slider, opt_slider, SC_SliderHandle);
 
             p->save();
-            // æ¸…ç©ºä¸Šä¸€æ¬¡è°ƒç”¨drawComplexControlæ—¶ç»˜åˆ¶çš„å†…å®¹
+            // Çå¿ÕÉÏÒ»´Îµ÷ÓÃdrawComplexControlÊ±»æÖÆµÄÄÚÈÝ
             p->eraseRect(groove_rect);
             p->setRenderHint(QPainter::Antialiasing);
             p->setPen(Qt::NoPen);
@@ -233,34 +265,48 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 groove_rect.height() / 4.0
             );
 
+            //if (opt->activeSubControls != QStyle::SC_None)
+            {
+                QPainterPath path = QPainterPath();
+                QPoint lower_center = QPoint(
+                    opt_slider->lower_rect_.x() + opt_slider->lower_rect_.width() / 2,
+                    opt_slider->lower_rect_.y() + opt_slider->lower_rect_.height() / 2
+                );
 
-            QPoint lower_center = QPoint(
-                opt_slider->lower_rect_.x() + opt_slider->lower_rect_.width() / 2,
-                opt_slider->lower_rect_.y() + opt_slider->lower_rect_.height() / 2
-            );
+                if (opt->state & QStyle::State_MouseOver)
+                {
+                    QColor handleColor = QColor("darkorange");
+                }
 
-            QColor handle_color = opt_slider->lower_hovered_ ? QColor("darkorange") : QColor("white");
-            p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
-            p->setBrush(handle_color);
-            p->setRenderHint(QPainter::Antialiasing);
-            p->drawEllipse(lower_center,
-                groove_rect.height() / 2 - 1,
-                groove_rect.height() / 2 - 1);
+                QColor handleColor = opt_slider->lower_hovered_ ? QColor("darkorange") : QColor("white");
+                if (opt_slider->lower_hovered_)
+                {
+                    handleColor = QColor("darkorange");
+                }
+
+                p->setBrush(handleColor);
+                p->setRenderHint(QPainter::Antialiasing);
+                p->drawEllipse(lower_center,
+                    groove_rect.height() / 2 - 1,
+                    groove_rect.height() / 2 - 1);
 
 
-            QPoint upper_center = QPoint(
-                opt_slider->upper_rect_.x() + opt_slider->upper_rect_.width() / 2,
-                opt_slider->upper_rect_.y() + opt_slider->upper_rect_.height() / 2
-            );
+                QPoint upper_center = QPoint(
+                    opt_slider->upper_rect_.x() + opt_slider->upper_rect_.width() / 2,
+                    opt_slider->upper_rect_.y() + opt_slider->upper_rect_.height() / 2
+                );
 
-            handle_color = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
-            p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
-            p->setRenderHint(QPainter::Antialiasing);
-            p->setBrush(handle_color);
-            p->drawEllipse(upper_center,
-                groove_rect.height() / 2 - 1,
-                groove_rect.height() / 2 - 1
-            );
+                path.addEllipse(upper_center,
+                    groove_rect.height() / 2.0 - 1,
+                    groove_rect.height() / 2.0 - 1
+                );
+
+                handleColor = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
+                p->setRenderHint(QPainter::Antialiasing);
+                p->setBrush(handleColor);
+                p->drawPath(path);
+
+            }
 
             p->restore();
         }
@@ -297,21 +343,21 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 subpage_rect.height() / 4.0
             );
 
+            QPainterPath path = QPainterPath();
             QPoint center = QPoint(
                 subControlRect(cc, opt_slider, SC_SliderHandle).x() + subControlRect(cc, opt_slider, SC_SliderHandle).width() / 2,
                 subControlRect(cc, opt_slider, SC_SliderHandle).y() + subControlRect(cc, opt_slider, SC_SliderHandle).height() / 2
             );
 
+            path.addEllipse(center,
+                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1,
+                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2.0 - 1);
+
+
             QColor handleColor = opt->state & QStyle::State_MouseOver ? QColor("darkorange") : QColor("white");
-            p->setPen(opt->state& QStyle::State_MouseOver ? Qt::NoPen : QPen(QColor("#e5e5e5"), 2));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handleColor);
-            p->drawEllipse(center,
-                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2 - 1,
-                subControlRect(cc, opt_slider, SC_SliderGroove, nullptr).height() / 2 - 1);
-
-
-
+            p->drawPath(path);
             p->restore();
         }
     }
