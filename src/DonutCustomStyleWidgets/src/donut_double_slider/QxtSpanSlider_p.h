@@ -48,6 +48,8 @@ public:
         return q_ptr->orientation() == Qt::Horizontal ? pt.x() : pt.y();
     }
     int pixelPosToRangeValue(int pos) const;
+
+    // 鼠标点击事件中，分别代入 lower_pressed_ 和 upper_pressed_ 记录此次鼠标点中的是哪个SubControl
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, QxtSpanSlider::SpanHandle handle);
 
     QRect getSpan(QPainter* painter, const QRect& rect) const;
@@ -55,19 +57,25 @@ public:
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
     void swapControls();
 
-    int lower;
-    int upper;
-    int lowerPos;
-    int upperPos;
-    int offset;
-    int position;
-    QxtSpanSlider::SpanHandle lastPressed;
-    QxtSpanSlider::SpanHandle mainControl;
-    QStyle::SubControl lowerPressed;
-    QStyle::SubControl upperPressed;
-    QxtSpanSlider::HandleMovementMode movement;
-    bool firstMovement;
-    bool blockTracking;
+    int lower_;
+    int upper_;
+    int lower_pos_;
+    int upper_pos_;
+    int offset_;
+    int position_;
+
+    // 记录最后点击的是哪个handle
+    QxtSpanSlider::SpanHandle last_pressed_;
+    QxtSpanSlider::SpanHandle main_control_;
+
+    // 记录鼠标点中的是哪个SubControl
+    QStyle::SubControl lower_pressed_;
+    // 记录鼠标点中的是哪个SubControl
+    QStyle::SubControl upper_pressed_;
+
+    QxtSpanSlider::HandleMovementMode movement_;
+    bool first_movement_;
+    bool block_tracking_;
 
     QRect lower_rect_;
     QRect upper_rect_;

@@ -19,19 +19,50 @@ public:
 	DonutDoubleSliderPrivate();
 	void initStyleOption(QStyleOptionSlider* option, DonutDoubleSlider::SpanHandle handle = DonutDoubleSlider::UpperHandle) const;
 
-public:
-	int lower_value_;
-	int upper_value_;
-	int lower_pos_;
-	int upper_pos_;
+    int pick(const QPoint& pt) const
+    {
+        return q_ptr_->orientation() == Qt::Horizontal ? pt.x() : pt.y();
+    }
+    int pixelPosToRangeValue(int pos) const;
 
-	DonutDoubleSlider::SpanHandle last_pressed_;
-	DonutDoubleSlider::SpanHandle main_control_;
-	QStyle::SubControl lower_pressed_;
-	QStyle::SubControl upper_pressed_;
-	DonutDoubleSlider::HandleMovementMode movement_;
-	bool first_movement_;
-	bool block_tracking_;
+    // 鼠标点击事件中，分别代入 lower_pressed_ 和 upper_pressed_ 记录此次鼠标点中的是哪个SubControl
+    void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutDoubleSlider::SpanHandle handle);
+
+    QRect getSpan(QPainter* painter, const QRect& rect) const;
+
+    void triggerAction(QAbstractSlider::SliderAction action, bool main);
+    void swapControls();
+
+    int lower_;
+    int upper_;
+    int lower_pos_;
+    int upper_pos_;
+    int offset_;
+    int position_;
+
+    // 记录最后点击的是哪个handle
+    DonutDoubleSlider::SpanHandle last_pressed_;
+    DonutDoubleSlider::SpanHandle main_control_;
+
+    // 记录鼠标点中的是哪个SubControl
+    QStyle::SubControl lower_pressed_;
+    // 记录鼠标点中的是哪个SubControl
+    QStyle::SubControl upper_pressed_;
+
+    DonutDoubleSlider::HandleMovementMode movement_;
+    bool first_movement_;
+    bool block_tracking_;
+
+    QRect lower_rect_;
+    QRect upper_rect_;
+    bool lower_hovered_;
+    bool upper_hovered_;
+    DonutDoubleSlider::SpanHandle hovered_handle_;
+
+public Q_SLOTS:
+    void updateRange(int min, int max);
+    void movePressedHandle();
+
 private:
 
 	DonutDoubleSlider* q_ptr_;
