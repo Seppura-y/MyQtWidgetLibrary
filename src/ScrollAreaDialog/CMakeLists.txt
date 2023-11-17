@@ -51,6 +51,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src/config
     ${CMAKE_CURRENT_LIST_DIR}/src/dialogs
     ${CMAKE_CURRENT_LIST_DIR}/src/tabs
+    ${CMAKE_CURRENT_LIST_DIR}/src/scroll_area_widget
 
 )
 
@@ -85,7 +86,13 @@ FILE(GLOB ${PROJECT_NAME}_TABS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/tabs/*.cpp
 )
 
+FILE(GLOB ${PROJECT_NAME}_SCROLL_AREA_WIDGET_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/scroll_area_widget/*.h
+)
 
+FILE(GLOB ${PROJECT_NAME}_SCROLL_AREA_WIDGET_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/src/scroll_area_widget/*.cpp
+)
 
 FILE(GLOB ${PROJECT_NAME}_DONUT_STYLE_HEADERS
     ${CMAKE_CURRENT_LIST_DIR}/src/donut_style/*.h
@@ -124,6 +131,7 @@ source_group("src//ui_gens"                 FILES ${${PROJECT_NAME}_UI_HEADERS})
 source_group("src//"                        FILES ${${PROJECT_NAME}_HEADERS} ${${PROJECT_NAME}_SOURCES})
 source_group("src//dialogs"                 FILES ${${PROJECT_NAME}_DIALOGS_HEADERS} ${${PROJECT_NAME}_DIALOGS_SOURCES})
 source_group("src//tabs"                    FILES ${${PROJECT_NAME}_TABS_HEADERS} ${${PROJECT_NAME}_TABS_SOURCES})
+source_group("src//scroll_area_widget"      FILES ${${PROJECT_NAME}_SCROLL_AREA_WIDGET_HEADERS} ${${PROJECT_NAME}_SCROLL_AREA_WIDGET_SOURCES})
 
 source_group("src//config"                  FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
 
@@ -151,6 +159,7 @@ if (WIN32)
 
         ${${PROJECT_NAME}_DIALOGS_HEADERS} ${${PROJECT_NAME}_DIALOGS_SOURCES}
         ${${PROJECT_NAME}_TABS_HEADERS} ${${PROJECT_NAME}_TABS_SOURCES}
+        ${${PROJECT_NAME}_SCROLL_AREA_WIDGET_HEADERS} ${${PROJECT_NAME}_SCROLL_AREA_WIDGET_SOURCES}
         
         ${${PROJECT_NAME}_CSS_FILES}
 

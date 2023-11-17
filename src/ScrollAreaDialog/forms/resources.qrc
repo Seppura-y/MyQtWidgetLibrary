@@ -20,5 +20,7 @@
         <file>res/css/item_list_widget.css</file>
         <file>res/css/my_scrollbar.css</file>
         <file>res/css/volume_button.css</file>
+        <file>res/css/scroll_area_dialog.css</file>
+        <file>res/css/scroll_area_widget.css</file>
     </qresource>
 </RCC>
