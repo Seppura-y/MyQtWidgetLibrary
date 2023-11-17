@@ -33,6 +33,7 @@ set(PROJECT_GRAPHICS_VIEW_BASE              FALSE CACHE BOOL "add project Graphi
 set(PROJECT_CUSTOM_STYLE                    FALSE CACHE BOOL "add project CustomStyle ?")
 set(PROJECT_DONUT_CUSTOM_STYLE              FALSE CACHE BOOL "add project DonutCustomStyle ?")
 set(PROJECT_DONUT_CUSTOM_STYLE_WIDGETS      FALSE CACHE BOOL "add project DonutCustomStyleWidgets ?")
+set(PROJECT_SCROLL_AREA_DIALOG              FALSE CACHE BOOL "add project ScrollAreaDialog ?")
 
 if(PROJECT_FRAMELESS_WIDGET)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/FramelessWidget)
@@ -140,6 +141,10 @@ endif()
 
 if(PROJECT_DONUT_CUSTOM_STYLE_WIDGETS)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/DonutCustomStyleWidgets)
+endif()
+
+if(PROJECT_SCROLL_AREA_DIALOG)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/ScrollAreaDialog)
 endif()
 
 if(STARTUP_PROJ)

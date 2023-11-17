@@ -3,16 +3,18 @@
     font-size: 16px;
 }
 
-QDialog 
-{
+QDialog {
     color: white;
     background-color: #1e1e1e;
-    border: none;
+    border-style: outset;
+    border-width: 1px;
+    border-color: darkorange;
     border-radius: 8px;
 }
 
 
 DialogTitle {
+    margin: 1px 1px 1px 1px;
     color: white;
     background-color: #2e3137;
     border: none;
@@ -23,11 +25,12 @@ DialogTitle {
 }
 
 QPushButton {
+    margin: 1px 1px 1px 1px;
     color: darkorange;
-    background-color: #1e1e1e;
-    border-style: outset;
-    border-width: 1px;
-/*    border-color: #FF8033;*/
+    background-color: transparent;
+    /*border-style: outset;*/
+    /*border-width: 1px;*/
+    /*border-color: #FF8033;*/
     border-radius: 8px;
     font-family: Consolas;
     font-size: 16px;
@@ -53,6 +56,9 @@ QPushButton:pressed {
 DialogContentTabBase {
     background-color: #1c1c1c;
     border-top-left-radius: 8px;
+    border-style: outset;
+    border-width: 1px;
+    border-color: orange;
     border-bottom-left-radius: 0px;
 }
 
@@ -84,23 +90,16 @@ QCheckBox::indicator:checked {
     color: orange;
 }
 
-QLineEdit{
-    border:1px solid darkorange;
-    border-radius: 4px;
-    background-color: #1f1f1f;
-    color: darkgray;
-}
 
 
-QWidget {
+/*QWidget {
     color: white;
     background-color: #2e3137;
     border: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-
 }
-
+*/
 QPushButton {
     color: silver;
     font-size: 18px;
@@ -124,4 +123,11 @@ QPushButton#pb_close:hover {
 
 QPushButton#pb_close:pressed {
     color: tomato;
+}
+
+QLineEdit {
+    border: 1px solid darkorange;
+    border-radius: 4px;
+    background-color: #1f1f1f;
+    color: darkgray;
 }

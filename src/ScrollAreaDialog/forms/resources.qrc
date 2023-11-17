@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>res/css/media_src_dialog.css</file>
+        <file>res/css/screen_capture_dialog.css</file>
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/css/button.css</file>
+        <file>res/css/slider.css</file>
+        <file>res/css/dialog_title.css</file>
+        <file>res/css/camera_menu.css</file>
+        <file>res/css/my_tabwidget.css</file>
+        <file>res/css/dialog_content.css</file>
+        <file>res/css/main_widget.css</file>
+        <file>res/fonts/Font Awesome 6 Duotone-Solid-900.otf</file>
+        <file>res/css/narrow_button.css</file>
+        <file>res/css/title.css</file>
+        <file>res/css/camera_preview_widget.css</file>
+        <file>res/css/control_bar.css</file>
+        <file>res/css/dialog_base.css</file>
+        <file>res/css/display_widget.css</file>
+        <file>res/css/item_list_widget.css</file>
+        <file>res/css/my_scrollbar.css</file>
+        <file>res/css/volume_button.css</file>
+    </qresource>
+</RCC>
