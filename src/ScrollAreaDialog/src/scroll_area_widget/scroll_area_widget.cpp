@@ -1,7 +1,11 @@
 #include "scroll_area_widget.h"
-#include <QHBoxLayout>
 
 #include "config_helper.h"
+#include "scroll_area_item_base.h"
+
+#include <QScrollBar>
+#include <QHBoxLayout>
+#include <string>
 
 ScrollAreaWidget::ScrollAreaWidget(QWidget* parent)
 	: QWidget(parent)
@@ -19,10 +23,54 @@ ScrollAreaWidget::ScrollAreaWidget(QWidget* parent)
 
 	scroll_area_ = new QScrollArea(this);
 	scroll_area_->setFixedWidth(1000 + 30);
+	scroll_area_->setFrameShape(QFrame::NoFrame);
+	//scroll_area_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
+    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/scroll_area_widget.css"));
+
+	setting_widget_1_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_1_);
+
+	setting_widget_2_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_2_);
+
+	setting_widget_3_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_3_);
+
+	setting_widget_4_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_4_);
+
+	setting_widget_5_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_5_);
+
+	setting_widget_6_ = new ScrollAreaItemBase();
+	setting_widgets_.push_back(setting_widget_6_);
+
+
+	QWidget* widget = new QWidget();
+	QVBoxLayout* v_layout = new QVBoxLayout(widget);
+	for (auto wid : setting_widgets_)
+	{
+		v_layout->addWidget(wid);
+		v_layout->addSpacing(10);
+	}
+	v_layout->setContentsMargins(0, 5, 0, 5);
+	scroll_area_->setWidget(widget);
 
 	QHBoxLayout* h_layout = new QHBoxLayout(this);
 	h_layout->addWidget(list_wid_);
+	h_layout->setSpacing(1);
 	h_layout->addWidget(scroll_area_);
 
-    this->setStyleSheet(ConfigHelper::getInstance()->getQssString(":resources/res/css/scroll_area_widget.css"));
+}
+
+void ScrollAreaWidget::onListItemClicked(QListWidgetItem* item)
+{
+
+}
+
+
+void ScrollAreaWidget::onScrollValueChanged(int value)
+{
 }
