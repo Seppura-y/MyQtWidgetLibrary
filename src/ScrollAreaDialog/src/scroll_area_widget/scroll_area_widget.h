@@ -33,7 +33,7 @@ private:
 	ScrollAreaItemBase* setting_widget_6_ = nullptr;
 
 	std::vector<QWidget*> setting_widgets_;
-
+	bool is_item_clicked_ = false;
 };
 
 

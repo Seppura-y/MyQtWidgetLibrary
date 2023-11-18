@@ -63,14 +63,46 @@ ScrollAreaWidget::ScrollAreaWidget(QWidget* parent)
 	h_layout->setSpacing(1);
 	h_layout->addWidget(scroll_area_);
 
+	QObject::connect(list_wid_, &QListWidget::itemClicked, this, &ScrollAreaWidget::onListItemClicked);
+	QObject::connect(scroll_area_->verticalScrollBar(), &QScrollBar::valueChanged, this, &ScrollAreaWidget::onScrollValueChanged);
+	
 }
 
 void ScrollAreaWidget::onListItemClicked(QListWidgetItem* item)
 {
-
+	is_item_clicked_ = true;
+	QString item_text = item->text();
+	QPoint widget_pos;
+	int size = menu_str_list_.size();
+	for (int i = 0; i < size; i++)
+	{
+		if (item_text == menu_str_list_[i])
+		{
+			widget_pos = setting_widgets_[i]->pos();
+		}
+	}
+	scroll_area_->verticalScrollBar()->setValue(widget_pos.y());
 }
 
 
 void ScrollAreaWidget::onScrollValueChanged(int value)
 {
+	if (!is_item_clicked_)
+	{
+		int size = setting_widgets_.size();
+		for (int i = 0; i < size; i++)
+		{
+			if (!setting_widgets_[i]->visibleRegion().isEmpty())
+			{
+				list_wid_->item(i)->setSelected(true);
+				return;
+			}
+			else
+			{
+				list_wid_->item(i)->setSelected(false);
+			}
+		}
+	}
+
+	is_item_clicked_ = false;
 }
