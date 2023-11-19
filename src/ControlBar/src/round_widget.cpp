@@ -38,6 +38,15 @@ RoundWidget::RoundWidget()
     //slider->setFixedSize(400,20);
     ////slider->setFixedSize(400, 400);
     //slider->move(20, 150);
+
+    QSlider* test_slider = new QSlider(this);
+    test_slider->setOrientation(Qt::Horizontal);
+#define MAX_SLIDER_VALUE 65536
+    test_slider->setMaximum(MAX_SLIDER_VALUE);
+    test_slider->setTickPosition(QSlider::TicksBothSides);
+    test_slider->setTickInterval(1000);
+    test_slider->setGeometry(50, this->height() / 2 + 50, 500, 50);
+    test_slider->show();
 }
 
 RoundWidget::~RoundWidget()
