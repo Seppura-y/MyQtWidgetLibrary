@@ -3,7 +3,6 @@
 #include "dialog_title.h"
 #include "dialog_content_widgets.h"
 
-
 class DialogBase : public QDialog
 {
     Q_OBJECT

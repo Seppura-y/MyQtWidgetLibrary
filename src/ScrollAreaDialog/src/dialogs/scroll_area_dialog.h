@@ -4,22 +4,24 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QStringList>
+#include "dialog_base.h"
 
-class ScrollAreaDialog : public QWidget
+class ScrollAreaDialog : public DialogBase
 {
 	Q_OBJECT
 
 public:
-	ScrollAreaDialog(QWidget* parent = nullptr);
+    ScrollAreaDialog(QWidget* parent = nullptr);
+    ~ScrollAreaDialog();
 
-private slots:
 
-
+    QString getFilePath();
+    QString getFileName();
+protected:
+    virtual void initUI() override;
 private:
-	QListWidget* list_wid_ = nullptr;
-	QScrollArea* scroll_area_ = nullptr;
-
-	QStringList* menu_str_list_ = nullptr;
+    QString file_name_;
+    QString file_path_;
 };
 
 

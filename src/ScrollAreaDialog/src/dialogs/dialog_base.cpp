@@ -106,6 +106,7 @@ void DialogBase::initUI()
     //QObject::connect(title_, &DialogTitle::sigCloseBtnClicked, this, &QDialog::reject);
 }
 
+
 void DialogBase::initConnect()
 {
 

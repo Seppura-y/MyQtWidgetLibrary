@@ -7,6 +7,10 @@
 #include <QCheckBox>
 #include <QLineEdit>
 
+#include <QListWidget>
+#include <QScrollArea>
+#include <QScrollBar>
+
 #include "ui_desktop_tab.h"
 #include "dialog_title.h"
 
@@ -99,4 +103,33 @@ public:
 
 private:
     Ui::DesktopTab ui;
+};
+
+class ScrollAreaItemBase;
+class ScrollAreaContent : public DialogContentBase
+{
+    Q_OBJECT
+
+public:
+    ScrollAreaContent(QWidget* parent = nullptr);
+private slots:
+    void onListItemClicked(QListWidgetItem* item);
+    void onScrollValueChanged(int value);
+
+private:
+
+    QListWidget* list_wid_ = nullptr;
+    QScrollArea* scroll_area_ = nullptr;
+
+    QStringList menu_str_list_;
+
+    ScrollAreaItemBase* setting_widget_1_ = nullptr;
+    ScrollAreaItemBase* setting_widget_2_ = nullptr;
+    ScrollAreaItemBase* setting_widget_3_ = nullptr;
+    ScrollAreaItemBase* setting_widget_4_ = nullptr;
+    ScrollAreaItemBase* setting_widget_5_ = nullptr;
+    ScrollAreaItemBase* setting_widget_6_ = nullptr;
+
+    std::vector<QWidget*> setting_widgets_;
+    bool is_item_clicked_ = false;
 };

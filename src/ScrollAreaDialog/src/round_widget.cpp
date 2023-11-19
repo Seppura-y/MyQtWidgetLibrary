@@ -9,6 +9,7 @@
 #include "config_helper.h"
 
 #include "dialog_base.h"
+#include "scroll_area_dialog.h"
 
 
 RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
@@ -30,7 +31,8 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
     QObject::connect(pb, &QPushButton::clicked, [=]
         {
 
-            MediaFileDialog* dialog = new MediaFileDialog();
+            ScrollAreaDialog* dialog = new ScrollAreaDialog();
+            //MediaFileDialog* dialog = new MediaFileDialog();
             for (;;)
             {
                 if (dialog->exec() == QDialog::Accepted)
