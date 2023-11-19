@@ -10,7 +10,7 @@
 
 #include "dialog_base.h"
 #include "scroll_area_dialog.h"
-
+#include "triangle_dialog.h"
 
 RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
 {
@@ -31,7 +31,22 @@ RoundWidget::RoundWidget(QWidget* parent) : QWidget(parent)
     QObject::connect(pb, &QPushButton::clicked, [=]
         {
 
-            ScrollAreaDialog* dialog = new ScrollAreaDialog();
+            TriangleDialog* dialog = new TriangleDialog(800, 200, this);
+            int triangle_start_x = 60;
+
+            dialog->setTrianglePosition(triangle_start_x, 20, 12);
+
+            // 设置三角窗口的弹出位置， 有Qt::Popup属性
+            QPoint p1 = pb->mapToGlobal(QPoint(0, 0));  //按钮左上角相对于桌面的绝对位置
+            QRect rect1 = pb->rect();
+
+            int x = p1.x() + rect1.width() / 2 - triangle_start_x - 20 / 2;
+            int y = p1.y() + rect1.height() + 1 - 15;
+            dialog->move(x, y);
+
+            //dialog->show();
+
+            //ScrollAreaDialog* dialog = new ScrollAreaDialog();
             //MediaFileDialog* dialog = new MediaFileDialog();
             for (;;)
             {

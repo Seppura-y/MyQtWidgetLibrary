@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/main_widget">
+        <file>res/fonts/Font Awesome 6 Pro-Light-300.otf</file>
+        <file>res/css/main_widget.css</file>
+        <file>res/css/display_widget.css</file>
+    </qresource>
+</RCC>
