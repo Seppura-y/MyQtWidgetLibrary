@@ -53,6 +53,7 @@ LIST(APPEND SOURCES_DIR
     ${CMAKE_CURRENT_LIST_DIR}/src/donut_custom_slider
     ${CMAKE_CURRENT_LIST_DIR}/src/donut_double_slider
     ${CMAKE_CURRENT_LIST_DIR}/src/donut_switch_button
+    ${CMAKE_CURRENT_LIST_DIR}/src/donut_timeline
 )
 
 include_directories(${FORMS_DIR})
@@ -92,6 +93,14 @@ FILE(GLOB ${PROJECT_NAME}_DONUT_CUSTOM_SLIDER_HEADERS
 
 FILE(GLOB ${PROJECT_NAME}_DONUT_CUSTOM_SLIDER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/donut_custom_slider/*.cpp
+)
+
+FILE(GLOB ${PROJECT_NAME}_DONUT_TIMELINE_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/src/donut_timeline/*.h
+)
+
+FILE(GLOB ${PROJECT_NAME}_DONUT_TIMELINE_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/src/donut_timeline/*.cpp
 )
 
 
@@ -134,6 +143,7 @@ source_group("src//donut_switch_button"     FILES ${${PROJECT_NAME}_DONUT_SWITCH
 source_group("src//donut_double_slider"     FILES ${${PROJECT_NAME}_DONUT_DOUBLE_SLIDER_HEADERS} ${${PROJECT_NAME}_DONUT_DOUBLE_SLIDER_SOURCES})
 source_group("src//donut_custom_slider"     FILES ${${PROJECT_NAME}_DONUT_CUSTOM_SLIDER_HEADERS} ${${PROJECT_NAME}_DONUT_CUSTOM_SLIDER_SOURCES})
 source_group("src//donut_style"             FILES ${${PROJECT_NAME}_DONUT_STYLE_HEADERS} ${${PROJECT_NAME}_DONUT_STYLE_SOURCES})
+source_group("src//donut_timeline"          FILES ${${PROJECT_NAME}_DONUT_TIMELINE_HEADERS} ${${PROJECT_NAME}_DONUT_TIMELINE_SOURCES})
 
 source_group("src//config"                  FILES ${${PROJECT_NAME}_CONFIG_HEADERS} ${${PROJECT_NAME}_CONFIG_SOURCES})
 
@@ -170,6 +180,9 @@ if (WIN32)
 
         ${${PROJECT_NAME}_DONUT_STYLE_HEADERS}
         ${${PROJECT_NAME}_DONUT_STYLE_SOURCES}
+
+        ${${PROJECT_NAME}_DONUT_TIMELINE_HEADERS}
+        ${${PROJECT_NAME}_DONUT_TIMELINE_SOURCES}
 
         ${${PROJECT_NAME}_CSS_FILES}
 
