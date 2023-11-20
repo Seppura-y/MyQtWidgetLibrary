@@ -43,11 +43,16 @@ public:
     int upperPosition() const;
 
 public Q_SLOTS:
+    // 内部调用setSpan, 传入d_ptr_->upper_作为上限值
     void setLowerValue(int lower);
+    // 内部调用setSpan, 传入d_ptr_->lower_作为下限值
     void setUpperValue(int upper);
+
     void setSpan(int lower, int upper);
 
+    // 更新d_ptr_->lower_pos_
     void setLowerPosition(int lower);
+    // 更新d_ptr_->upper_pos_
     void setUpperPosition(int upper);
 
 Q_SIGNALS:

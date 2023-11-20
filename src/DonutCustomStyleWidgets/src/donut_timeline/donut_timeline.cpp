@@ -10,6 +10,8 @@
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 
+#include <iostream>
+
 DonutTimelineStyleOption::DonutTimelineStyleOption()
 	: QStyleOptionSlider()
 {
@@ -68,12 +70,18 @@ int DonutTimelinePrivate::pixelPosToRangeValue(int pos) const
         slider_min = groove_rect.y();
         slider_max = groove_rect.bottom() - handle_length + 1;
     }
-    return QStyle::sliderValueFromPosition(p->minimum(), p->maximum(), pos - slider_min,
-        slider_max - slider_min, opt.upsideDown);
+
+    return QStyle::sliderValueFromPosition(
+        p->minimum(), p->maximum(), 
+        pos - slider_min,
+        slider_max - slider_min,
+        opt.upsideDown
+    );
 }
 
 void DonutTimelinePrivate::handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutTimeline::SpanHandle handle)
 {
+    std::cout << "handleMousePress" << std::endl;
     QStyleOptionSlider opt;
     initStyleOption(&opt, handle);
 
@@ -85,7 +93,7 @@ void DonutTimelinePrivate::handleMousePress(const QPoint& pos, QStyle::SubContro
     if (control == QStyle::SC_SliderHandle)
     {
         position_ = value;
-        offset_ = pick(pos - sr.topLeft());
+        //offset_ = pick(pos - sr.topLeft());
         last_pressed_ = handle;
         p->setSliderDown(true);
         emit p->sliderPressed(handle);
@@ -118,6 +126,7 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
     const int max = q_ptr_->maximum();
     const DonutTimeline::SpanHandle altControl = (main_control_ == DonutTimeline::LowerHandle ? DonutTimeline::UpperHandle : DonutTimeline::LowerHandle);
 
+    // 手动设置停止追踪slider位置，防止setUpperPosition 和 setLowerPosition中循环调用triggerAction
     block_tracking_ = true;
 
     switch (action)
@@ -163,9 +172,9 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
 
     if (!no && !up)
     {
-        if (movement_ == DonutTimeline::NoCrossing)
+        if (movement_ == DonutTimeline::NoCrossing) // NoCrossing状态，两个range handle 可以重叠，但不能拖动到对方的范围外
             value = qMin(value, upper_);
-        else if (movement_ == DonutTimeline::NoOverlapping)
+        else if (movement_ == DonutTimeline::NoOverlapping) // NoOverlapping状态，两个range handle 不可以重叠，也不能拖动到对方的范围外
             value = qMin(value, upper_ - 1);
 
         if (movement_ == DonutTimeline::FreeMovement && value > upper_)
@@ -297,6 +306,11 @@ void DonutTimeline::setUpperValue(int upper)
 
 void DonutTimeline::setSpan(int lower, int upper)
 {
+    //template <typename T>
+    //constexpr inline const T& qBound(const T & min, const T & val, const T & max)
+    //{
+    //    return qMax(min, qMin(max, val));
+    //}
     const int low = qBound(minimum(), qMin(lower, upper), maximum());
     const int upp = qBound(minimum(), qMax(lower, upper), maximum());
     if (low != d_ptr_->lower_ || upp != d_ptr_->upper_)
@@ -329,8 +343,15 @@ void DonutTimeline::setLowerPosition(int lower)
     if (d_ptr_->lower_pos_ != lower)
     {
         d_ptr_->lower_pos_ = lower;
+        std::cout << "setLowerPosition" << std::endl;
         if (!hasTracking())
+        {
+            // If tracking is enabled (the default), the slider emits the valueChanged() signal while the slider is being dragged.
+            // If tracking is disabled, the slider emits the valueChanged() signal only when the user releases the slider.
+            
+
             update();
+        }
         if (isSliderDown())
             emit lowerPositionChanged(lower);
         if (hasTracking() && !d_ptr_->block_tracking_)
@@ -451,22 +472,23 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
     QStyleOptionSlider opt;
     d_ptr_->initStyleOption(&opt);
     const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
-    int newPosition = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) - d_ptr_->offset_);
+    int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // 这里减去 d_ptr_->offset_ 是为了在鼠标移出主窗口时
     if (m >= 0)
     {
         const QRect r = rect().adjusted(-m, -m, m, m);
         if (!r.contains(event->pos()))
         {
-            newPosition = d_ptr_->position_;
+            std::cout << "mouseMoveEvent : beside PM_MaximumDragDistance" << std::endl;
+            new_position = d_ptr_->position_;   // 鼠标移动PM_MaximumDragDistance时，设置回d_ptr_->position_，调用handleMousePress时更新d_ptr_->position_
         }
     }
 
     // pick the preferred handle on the first movement
-    if (d_ptr_->first_movement_)
+    if (d_ptr_->first_movement_)    // 目前没看出这段if的作用，注释掉也没影响
     {
         if (d_ptr_->lower_ == d_ptr_->upper_)
         {
-            if (newPosition < lowerValue())
+            if (new_position < lowerValue())
             {
                 d_ptr_->swapControls();
                 d_ptr_->first_movement_ = false;
@@ -480,36 +502,38 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
 
     if (d_ptr_->lower_pressed_ == QStyle::SC_SliderHandle)
     {
-        if (d_ptr_->movement_ == NoCrossing)
-            newPosition = qMin(newPosition, upperValue());
-        else if (d_ptr_->movement_ == NoOverlapping)
-            newPosition = qMin(newPosition, upperValue() - 1);
+        std::cout << "mouseMoveEvent : lower_pressed_ == QStyle::SC_SliderHandle" << std::endl;
 
-        if (d_ptr_->movement_ == FreeMovement && newPosition > d_ptr_->upper_)
+        if (d_ptr_->movement_ == NoCrossing)
+            new_position = qMin(new_position, upperValue());
+        else if (d_ptr_->movement_ == NoOverlapping)
+            new_position = qMin(new_position, upperValue() - 1);
+
+        if (d_ptr_->movement_ == FreeMovement && new_position > d_ptr_->upper_)
         {
             d_ptr_->swapControls();
-            setUpperPosition(newPosition);
+            setUpperPosition(new_position);
         }
         else
         {
-            setLowerPosition(newPosition);
+            setLowerPosition(new_position);
         }
     }
     else if (d_ptr_->upper_pressed_ == QStyle::SC_SliderHandle)
     {
         if (d_ptr_->movement_ == NoCrossing)
-            newPosition = qMax(newPosition, lowerValue());
+            new_position = qMax(new_position, lowerValue());
         else if (d_ptr_->movement_ == NoOverlapping)
-            newPosition = qMax(newPosition, lowerValue() + 1);
+            new_position = qMax(new_position, lowerValue() + 1);
 
-        if (d_ptr_->movement_ == FreeMovement && newPosition < d_ptr_->lower_)
+        if (d_ptr_->movement_ == FreeMovement && new_position < d_ptr_->lower_)
         {
             d_ptr_->swapControls();
-            setLowerPosition(newPosition);
+            setLowerPosition(new_position);
         }
         else
         {
-            setUpperPosition(newPosition);
+            setUpperPosition(new_position);
         }
     }
     event->accept();
@@ -577,9 +601,11 @@ void DonutTimeline::paintEvent(QPaintEvent* event)
     case DonutTimeline::LowerHandle:
         opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
         opt.state |= QStyle::State_Sunken;
+        break;
     case DonutTimeline::UpperHandle:
         opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
         opt.state |= QStyle::State_Sunken;
+        break;
     }
 
     switch (d_ptr_->hovered_handle_)

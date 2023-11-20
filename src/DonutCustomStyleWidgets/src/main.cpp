@@ -33,13 +33,13 @@ int main(int argc, char* argv[])
     //span_slider.show();
 
 
-    DonutDoubleSlider span_slider(Qt::Horizontal, &w);
-    span_slider.setGeometry(20, 200, 500, 20);
-    span_slider.setHandleMovementMode(DonutDoubleSlider::NoOverlapping);
-    span_slider.show();
+    //DonutDoubleSlider span_slider(Qt::Horizontal, &w);
+    //span_slider.setGeometry(20, 200, 500, 20);
+    //span_slider.setHandleMovementMode(DonutDoubleSlider::NoOverlapping);
+    //span_slider.show();
 
     DonutTimeline timeline(Qt::Horizontal, &w);
-    timeline.setGeometry(20, 300, 500, 20);
+    timeline.setGeometry(20, 200, 500, 20);
     timeline.setHandleMovementMode(DonutTimeline::NoOverlapping);
     timeline.show();
 

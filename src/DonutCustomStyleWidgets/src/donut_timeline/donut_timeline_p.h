@@ -29,6 +29,7 @@ public:
     // SC_SliderGroove 或 SC_SliderHandle 或 SC_SliderTickmarks
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutTimeline::SpanHandle handle);
 
+    // 未用
     QRect getSpan(QPainter* painter, const QRect& rect) const;
 
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
@@ -36,10 +37,13 @@ public:
 
     int lower_;
     int upper_;
+    int current_;
 
     int lower_pos_;
     int upper_pos_;
+    int current_pos_;
 
+    // 实测不设置offset也没看出什么影响
     int offset_;
     int position_;
 
@@ -55,6 +59,8 @@ public:
 
     DonutTimeline::HandleMovementMode movement_;
     bool first_movement_;
+
+    // 停止追踪slider位置的标志位，防止setUpperPosition 和 setLowerPosition中循环调用triggerAction
     bool block_tracking_;
 
     QRect lower_rect_;
