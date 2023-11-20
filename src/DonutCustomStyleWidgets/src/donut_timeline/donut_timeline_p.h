@@ -10,7 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(QStylePainter)
 QT_FORWARD_DECLARE_CLASS(QStyleOptionSlider)
 
-// DonutDoubleSlider的数据类
+// DonutTimeline的数据类
 class DonutTimelinePrivate : public QObject
 {
 	Q_OBJECT
@@ -25,7 +25,8 @@ public:
     }
     int pixelPosToRangeValue(int pos) const;
 
-    // 鼠标点击事件中，分别代入 lower_pressed_ 和 upper_pressed_ 记录此次鼠标点中的是哪个SubControl
+    // mousePressedEvent中，分别传入 lower_pressed_ 和 upper_pressed_的引用， 以查看此次鼠标点中的是哪个SubControl
+    // SC_SliderGroove 或 SC_SliderHandle 或 SC_SliderTickmarks
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutTimeline::SpanHandle handle);
 
     QRect getSpan(QPainter* painter, const QRect& rect) const;
@@ -58,8 +59,10 @@ public:
 
     QRect lower_rect_;
     QRect upper_rect_;
+
     bool lower_hovered_;
     bool upper_hovered_;
+
     DonutTimeline::SpanHandle hovered_handle_;
 
 public Q_SLOTS:

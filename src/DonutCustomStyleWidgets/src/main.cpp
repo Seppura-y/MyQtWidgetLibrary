@@ -3,6 +3,8 @@
 #include "donut_custom_slider.h"
 #include "donut_switch_button.h"
 #include "donut_double_slider.h"
+#include "donut_timeline.h"
+#include "donut_custom_timeline.h"
 #include "QxtSpanSlider.h"
 
 int main(int argc, char* argv[])
@@ -35,6 +37,18 @@ int main(int argc, char* argv[])
     span_slider.setGeometry(20, 200, 500, 20);
     span_slider.setHandleMovementMode(DonutDoubleSlider::NoOverlapping);
     span_slider.show();
+
+    DonutTimeline timeline(Qt::Horizontal, &w);
+    timeline.setGeometry(20, 300, 500, 20);
+    timeline.setHandleMovementMode(DonutTimeline::NoOverlapping);
+    timeline.show();
+
+    DonutCustomTimeline custom_timeline(&w);
+    custom_timeline.setMaximum(800);
+    custom_timeline.setTickInterval(800 / 80);
+    custom_timeline.setOrientation(Qt::Horizontal);
+    custom_timeline.setGeometry(20, 300, 600, 50);
+    custom_timeline.show();
 
     return a.exec();
 }
