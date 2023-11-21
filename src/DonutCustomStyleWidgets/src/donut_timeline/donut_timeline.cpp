@@ -72,9 +72,9 @@ int DonutTimelinePrivate::pixelPosToRangeValue(int pos) const
     }
 
     return QStyle::sliderValueFromPosition(
-        p->minimum(), p->maximum(), 
-        pos - slider_min,
-        slider_max - slider_min,
+        p->minimum(), p->maximum(), // value值的范围
+        pos - slider_min,           // pixel position
+        slider_max - slider_min,    // pixel range
         opt.upsideDown
     );
 }
@@ -117,6 +117,7 @@ QRect DonutTimelinePrivate::getSpan(QPainter* painter, const QRect& rect) const
     return rect.intersected(groove);
 }
 
+// case sliderMove 没有加break，即跳过if (!no && !up)判断
 void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, bool main)
 {
     int value = 0;
@@ -126,7 +127,8 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
     const int max = q_ptr_->maximum();
     const DonutTimeline::SpanHandle altControl = (main_control_ == DonutTimeline::LowerHandle ? DonutTimeline::UpperHandle : DonutTimeline::LowerHandle);
 
-    // 手动设置停止追踪slider位置，防止setUpperPosition 和 setLowerPosition中循环调用triggerAction
+    // 手动设置停止追踪slider位置，
+    // 防止mouseMoveEvent 中调用 setUpperPosition 和 setLowerPosition时，在其中循环调用triggerAction
     block_tracking_ = true;
 
     switch (action)
@@ -169,9 +171,12 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
         qWarning("DonutTimelinePrivate::triggerAction: Unknown action");
         break;
     }
+    std::cout << "no : " << no << "up : " << up << std::endl;
 
     if (!no && !up)
     {
+        std::cout << "!no && !up ---------------" << std::endl;
+
         if (movement_ == DonutTimeline::NoCrossing) // NoCrossing状态，两个range handle 可以重叠，但不能拖动到对方的范围外
             value = qMin(value, upper_);
         else if (movement_ == DonutTimeline::NoOverlapping) // NoOverlapping状态，两个range handle 不可以重叠，也不能拖动到对方的范围外
@@ -184,11 +189,14 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
         }
         else
         {
+            std::cout << "setLowerPosition : " << value << std::endl;
             q_ptr_->setLowerPosition(value);
         }
     }
     else if (!no)
     {
+        std::cout << "!no : -------------------" << std::endl;
+
         if (movement_ == DonutTimeline::NoCrossing)
             value = qMax(value, lower_);
         else if (movement_ == DonutTimeline::NoOverlapping)
@@ -207,6 +215,7 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
 
     block_tracking_ = false;
     q_ptr_->setLowerValue(lower_pos_);
+    std::cout << "setLowerValue : " << lower_pos_ << std::endl;
     q_ptr_->setUpperValue(upper_pos_);
 }
 
@@ -218,6 +227,7 @@ void DonutTimelinePrivate::swapControls()
     main_control_ = (main_control_ == DonutTimeline::LowerHandle ? DonutTimeline::UpperHandle : DonutTimeline::LowerHandle);
 }
 
+// 鼠标拖动实测从来不会触发
 void DonutTimelinePrivate::updateRange(int min, int max)
 {
     Q_UNUSED(min);
@@ -340,10 +350,12 @@ int DonutTimeline::lowerPosition() const
 
 void DonutTimeline::setLowerPosition(int lower)
 {
+    //std::cout << "setLowerPosition" << std::endl;
     if (d_ptr_->lower_pos_ != lower)
     {
         d_ptr_->lower_pos_ = lower;
-        std::cout << "setLowerPosition" << std::endl;
+        std::cout << "setLowerPosition finished" << std::endl;
+        std::cout << "d_ptr_->block_tracking_" << d_ptr_->block_tracking_ << std::endl;
         if (!hasTracking())
         {
             // If tracking is enabled (the default), the slider emits the valueChanged() signal while the slider is being dragged.
@@ -502,7 +514,7 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
 
     if (d_ptr_->lower_pressed_ == QStyle::SC_SliderHandle)
     {
-        std::cout << "mouseMoveEvent : lower_pressed_ == QStyle::SC_SliderHandle" << std::endl;
+        //std::cout << "mouseMoveEvent : lower_pressed_ == QStyle::SC_SliderHandle" << std::endl;
 
         if (d_ptr_->movement_ == NoCrossing)
             new_position = qMin(new_position, upperValue());

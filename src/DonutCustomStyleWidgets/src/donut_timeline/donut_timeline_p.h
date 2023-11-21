@@ -23,6 +23,8 @@ public:
     {
         return q_ptr_->orientation() == Qt::Horizontal ? pt.x() : pt.y();
     }
+
+    // 由像素位置转换为数值
     int pixelPosToRangeValue(int pos) const;
 
     // mousePressedEvent中，分别传入 lower_pressed_ 和 upper_pressed_的引用， 以查看此次鼠标点中的是哪个SubControl
@@ -33,18 +35,22 @@ public:
     QRect getSpan(QPainter* painter, const QRect& rect) const;
 
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
+
+    // FreeMovement才用到
     void swapControls();
 
     int lower_;
     int upper_;
-    int current_;
+    int middle_;
 
     int lower_pos_;
     int upper_pos_;
-    int current_pos_;
+    int middle_pos_;
 
     // 实测不设置offset也没看出什么影响
     int offset_;
+
+    // 每次点击handle时记录初始位置，用于实现当鼠标拖动离开PM_MaximumDragDistance范围时，设置回最初点击的位置
     int position_;
 
     // 记录最后点击的是哪个handle
@@ -56,6 +62,7 @@ public:
     QStyle::SubControl lower_pressed_;
     // 记录鼠标点中的是哪个SubControl
     QStyle::SubControl upper_pressed_;
+    QStyle::SubControl middle_pressed_;
 
     DonutTimeline::HandleMovementMode movement_;
     bool first_movement_;
@@ -65,9 +72,12 @@ public:
 
     QRect lower_rect_;
     QRect upper_rect_;
+    QRect middle_rect_;
 
+    // 根据这几个值更改鼠标悬停外观
     bool lower_hovered_;
     bool upper_hovered_;
+    bool middle_hovered_;
 
     DonutTimeline::SpanHandle hovered_handle_;
 
