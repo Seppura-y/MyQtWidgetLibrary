@@ -48,6 +48,7 @@ public:
     int lower_pos_;
     int upper_pos_;
     int middle_pos_;
+    int mouse_hover_pos_;
 
     // 实测不设置offset也没看出什么影响
     int offset_;
@@ -110,6 +111,7 @@ public:
 
 	//int upper_position_;
 	//int lower_position_;
+    int cur_position_;
 
 	QStyle::SubControls lower_handle_;
     QStyle::SubControls upper_handle_;

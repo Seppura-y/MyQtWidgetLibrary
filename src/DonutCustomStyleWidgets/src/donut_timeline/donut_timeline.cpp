@@ -544,106 +544,115 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
     }
     this->update();
 
+    DonutTimelineStyleOption opt;
+    d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
+    const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
+    int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // 这里减去 d_ptr_->offset_ 是为了在鼠标移出主窗口时
+
     if (d_ptr_->lower_pressed_ != QStyle::SC_SliderHandle
         && d_ptr_->upper_pressed_ != QStyle::SC_SliderHandle
         && d_ptr_->middle_pressed_ != QStyle::SC_SliderHandle)
     {
+        d_ptr_->mouse_hover_pos_ = new_position;
         event->ignore();
         return;
     }
-
-    QStyleOptionSlider opt;
-    d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
-    const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
-    int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // 这里减去 d_ptr_->offset_ 是为了在鼠标移出主窗口时
-    if (m >= 0)
+    else
     {
-        const QRect r = rect().adjusted(-m, -m, m, m);
-        if (!r.contains(event->pos()))
+        //QStyleOptionSlider opt;
+        DonutTimelineStyleOption opt;
+        d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
+        const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
+        int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // 这里减去 d_ptr_->offset_ 是为了在鼠标移出主窗口时
+        if (m >= 0)
         {
-            //std::cout << "mouseMoveEvent : beside PM_MaximumDragDistance" << std::endl;
-            new_position = d_ptr_->position_;   // 鼠标移动PM_MaximumDragDistance时，设置回d_ptr_->position_，调用handleMousePress时更新d_ptr_->position_
-        }
-    }
-
-    // pick the preferred handle on the first movement
-    if (d_ptr_->first_movement_)    // 目前没看出这段if的作用，注释掉也没影响
-    {
-        if (d_ptr_->lower_ == d_ptr_->upper_)
-        {
-            if (new_position < lowerValue())
+            const QRect r = rect().adjusted(-m, -m, m, m);
+            if (!r.contains(event->pos()))
             {
-                d_ptr_->swapControls();
+                //std::cout << "mouseMoveEvent : beside PM_MaximumDragDistance" << std::endl;
+                new_position = d_ptr_->position_;   // 鼠标移动PM_MaximumDragDistance时，设置回d_ptr_->position_，调用handleMousePress时更新d_ptr_->position_
+            }
+        }
+
+        // pick the preferred handle on the first movement
+        if (d_ptr_->first_movement_)    // 目前没看出这段if的作用，注释掉也没影响
+        {
+            if (d_ptr_->lower_ == d_ptr_->upper_)
+            {
+                if (new_position < lowerValue())
+                {
+                    d_ptr_->swapControls();
+                    d_ptr_->first_movement_ = false;
+                }
+            }
+            else
+            {
                 d_ptr_->first_movement_ = false;
             }
         }
-        else
-        {
-            d_ptr_->first_movement_ = false;
-        }
-    }
 
-    if (d_ptr_->lower_pressed_ == QStyle::SC_SliderHandle)
-    {
-        //std::cout << "mouseMoveEvent : lower_pressed_ == QStyle::SC_SliderHandle" << std::endl;
-
-        if (d_ptr_->movement_ == NoCrossing)
-            new_position = qMin(new_position, upperValue());
-        else if (d_ptr_->movement_ == NoOverlapping)
-            new_position = qMin(new_position, upperValue() - 1);
-
-        if (d_ptr_->movement_ == FreeMovement && new_position > d_ptr_->upper_)
+        if (d_ptr_->lower_pressed_ == QStyle::SC_SliderHandle)
         {
-            d_ptr_->swapControls();
-            setUpperPosition(new_position);
-        }
-        else
-        {
-            setLowerPosition(new_position);
-            if (new_position >= middlePosition())
+            //std::cout << "mouseMoveEvent : lower_pressed_ == QStyle::SC_SliderHandle" << std::endl;
+
+            if (d_ptr_->movement_ == NoCrossing)
+                new_position = qMin(new_position, upperValue());
+            else if (d_ptr_->movement_ == NoOverlapping)
+                new_position = qMin(new_position, upperValue() - 1);
+
+            if (d_ptr_->movement_ == FreeMovement && new_position > d_ptr_->upper_)
             {
-                //std::cout << "setMiddlePosition " << new_position << " : " << middlePosition() << std::endl;
-                setMiddlePosition(new_position + 1);
+                d_ptr_->swapControls();
+                setUpperPosition(new_position);
+            }
+            else
+            {
+                setLowerPosition(new_position);
+                if (new_position >= middlePosition())
+                {
+                    //std::cout << "setMiddlePosition " << new_position << " : " << middlePosition() << std::endl;
+                    setMiddlePosition(new_position + 1);
+                }
             }
         }
-    }
-    else if (d_ptr_->upper_pressed_ == QStyle::SC_SliderHandle)
-    {
-        if (d_ptr_->movement_ == NoCrossing)
-            new_position = qMax(new_position, lowerValue());
-        else if (d_ptr_->movement_ == NoOverlapping)
-            new_position = qMax(new_position, lowerValue() + 1);
+        else if (d_ptr_->upper_pressed_ == QStyle::SC_SliderHandle)
+        {
+            if (d_ptr_->movement_ == NoCrossing)
+                new_position = qMax(new_position, lowerValue());
+            else if (d_ptr_->movement_ == NoOverlapping)
+                new_position = qMax(new_position, lowerValue() + 1);
 
-        if (d_ptr_->movement_ == FreeMovement && new_position < d_ptr_->lower_)
-        {
-            d_ptr_->swapControls();
-            setLowerPosition(new_position);
-        }
-        else
-        {
-            setUpperPosition(new_position);
-            if (new_position <= middlePosition())
+            if (d_ptr_->movement_ == FreeMovement && new_position < d_ptr_->lower_)
             {
-                setMiddlePosition(new_position - 1);
+                d_ptr_->swapControls();
+                setLowerPosition(new_position);
+            }
+            else
+            {
+                setUpperPosition(new_position);
+                if (new_position <= middlePosition())
+                {
+                    setMiddlePosition(new_position - 1);
+                }
             }
         }
-    }
-    else if (d_ptr_->middle_pressed_ == QStyle::SC_SliderHandle)
-    {
-        if (d_ptr_->movement_ == NoCrossing)
-            new_position = qMin(qMax(new_position, lowerValue()), upperValue());
-        else if (d_ptr_->movement_ == NoOverlapping)
-            new_position = qMin(qMax(new_position, lowerValue() + 1), upperValue() - 1);
+        else if (d_ptr_->middle_pressed_ == QStyle::SC_SliderHandle)
+        {
+            if (d_ptr_->movement_ == NoCrossing)
+                new_position = qMin(qMax(new_position, lowerValue()), upperValue());
+            else if (d_ptr_->movement_ == NoOverlapping)
+                new_position = qMin(qMax(new_position, lowerValue() + 1), upperValue() - 1);
 
-        if (d_ptr_->movement_ == FreeMovement && new_position < d_ptr_->middle_)
-        {
-            //d_ptr_->swapControls();
-            //setLowerPosition(new_position);
-        }
-        else
-        {
-            //std::cout << "setMiddlePosition" << std::endl;
-            setMiddlePosition(new_position);
+            if (d_ptr_->movement_ == FreeMovement && new_position < d_ptr_->middle_)
+            {
+                //d_ptr_->swapControls();
+                //setLowerPosition(new_position);
+            }
+            else
+            {
+                //std::cout << "setMiddlePosition" << std::endl;
+                setMiddlePosition(new_position);
+            }
         }
     }
     event->accept();
@@ -749,6 +758,8 @@ void DonutTimeline::paintEvent(QPaintEvent* event)
         opt.middle_hovered_ = false;
         break;
     }
+
+    opt.cur_position_ = d_ptr_->mouse_hover_pos_;
 
     painter.drawComplexControl(DonutStyle::CC_DountTimeline, &opt);
 }

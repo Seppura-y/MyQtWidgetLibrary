@@ -7,6 +7,8 @@
 #include <QStyleOption>
 #include <QPainterPath>
 
+#include <iostream>
+
 DonutStyle::DonutStyle()
 {
 
@@ -213,10 +215,9 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             // 清空上一次调用drawComplexControl时绘制的内容
             p->eraseRect(groove_rect);
             //p->setRenderHint(QPainter::Antialiasing);
+            std::cout << "painter set pen : " << std::endl;
             p->setPen(Qt::NoPen);
             p->setBrush(QColor("#2e3137"));
-
-
             p->drawRect(groove_rect.adjusted(0, 4, 0, -4));
 
             QRect spr(
@@ -286,22 +287,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 }
             }
 
-            p->setPen(Qt::NoPen);
-
-            //p->drawRoundedRect(
-            //    groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
-            //    groove_rect.height() / 4.0,
-            //    groove_rect.height() / 4.0
-            //);
-
-            p->setBrush(QColor("orange"));
-
-
-            //p->drawRoundedRect(spr.adjusted(0, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
-            //    groove_rect.height() / 4.0,
-            //    groove_rect.height() / 4.0
-            //);
-
+            int hovered_offset = 6;
 
             QPoint lower_center = QPoint(
                 opt_slider->lower_rect_.x() + opt_slider->lower_rect_.width() / 2,
@@ -312,11 +298,14 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setBrush(handle_color);
             p->setRenderHint(QPainter::Antialiasing);
-            //p->drawEllipse(lower_center,
-            //    groove_rect.height() / 2 - 1,
-            //    groove_rect.height() / 2 - 1);
 
-            QRect lower_rectangle = QRect(opt_slider->lower_rect_.x() /*lower_center.x()*/, groove_rect.y() + 8, 8, groove_rect.height() - 16);
+            QRect lower_rectangle = QRect(
+                opt_slider->lower_rect_.x(),
+                groove_rect.y() + (opt_slider->lower_hovered_ ? hovered_offset : 8),
+                8,
+                groove_rect.height() - (opt_slider->lower_hovered_ ? hovered_offset * 2 : 16)
+            );
+
             p->drawRoundedRect(lower_rectangle, 4, 4);
 
 
@@ -329,11 +318,12 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handle_color);
-            //p->drawEllipse(upper_center,
-            //    groove_rect.height() / 2 - 1,
-            //    groove_rect.height() / 2 - 1
-            //);
-            QRect upper_rectangle = QRect(/*opt_slider->upper_rect_.x() +*/ upper_center.x() - 4 , groove_rect.y() + 8, 8, groove_rect.height() - 16);
+
+            QRect upper_rectangle = QRect(upper_center.x() - 4,
+                groove_rect.y() + (opt_slider->upper_hovered_ ? hovered_offset : 8),
+                8,
+                groove_rect.height() - (opt_slider->upper_hovered_ ? hovered_offset * 2 : 16)
+            );
             p->drawRoundedRect(upper_rectangle, 4, 4);
 
             QPoint middle_center = QPoint(
@@ -341,16 +331,38 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 opt_slider->middle_rect_.y() + opt_slider->middle_rect_.height() / 2
             );
 
-            handle_color = opt_slider->middle_hovered_ ? QColor("white") : QColor("darkorange");
+            handle_color = opt_slider->middle_hovered_ ? QColor("darkorange") : QColor("white");
             p->setPen(opt_slider->middle_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handle_color);
-            //p->drawEllipse(middle_center,
-            //    groove_rect.height() / 2 - 1,
-            //    groove_rect.height() / 2 - 1
-            //);
-            QRect middle_rectangle = QRect(opt_slider->middle_rect_.x() /*middle_center.x()*/, groove_rect.y(), 8, groove_rect.height());
+
+            QRect middle_rectangle = QRect(
+                opt_slider->middle_rect_.x() /*middle_center.x()*/,
+                groove_rect.y() + (opt_slider->middle_hovered_ ? 2 : 0),
+                8,
+                groove_rect.height() - (opt_slider->middle_hovered_ ? 4 : 0)
+            );
             p->drawRoundedRect(middle_rectangle, 4, 4);
+
+            p->setPen({ QColor{ "red"}, 1 });
+            p->setBrush(QColor("red"));
+            //int cur_x = opt_slider->cur_position_;
+            int cur_x = QStyle::sliderPositionFromValue(
+                opt_slider->minimum,
+                opt_slider->maximum,
+                opt_slider->cur_position_,
+                opt_slider->rect.width() - 12,
+                opt_slider->upsideDown
+            );
+            int cur_y = handle_rect.y();
+            //int cur_y = handle_rect.y() + handle_rect.height() / 2;
+            //int temp_y = handle_rect.y() + tick_height / 2;
+
+            //int cur_y = groove_rect.y();
+            std::cout << "opt_slider->cur_position : " << opt_slider->cur_position_ << std::endl;
+            p->drawLine(cur_x, cur_y, cur_x, cur_y + handle_rect.height());
+
+
             p->restore();
         }
         return;
