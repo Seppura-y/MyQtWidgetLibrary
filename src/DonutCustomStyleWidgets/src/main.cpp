@@ -40,7 +40,10 @@ int main(int argc, char* argv[])
 
     DonutTimeline timeline(Qt::Horizontal, &w);
     timeline.setGeometry(20, 200, 500, 50);
-    timeline.setFixedHeight(50);
+    //timeline.setFixedHeight(50);
+    timeline.setTickPosition(QSlider::TicksBothSides);
+    timeline.setMaximum(800);
+    timeline.setTickInterval(800 / 80);
     //timeline.setHandleMovementMode(DonutTimeline::FreeMovement);
     timeline.setHandleMovementMode(DonutTimeline::NoOverlapping);
     timeline.setUpperPosition(100);

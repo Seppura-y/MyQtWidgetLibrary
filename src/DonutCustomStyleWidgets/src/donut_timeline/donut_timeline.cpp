@@ -677,13 +677,6 @@ void DonutTimeline::paintEvent(QPaintEvent* event)
     opt.sliderPosition = 0;
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
 
-    //const QRect frame_rect =
-    //    style()->subElementRect(QStyle::SubElement::SE_SliderLayoutItem, &opt, this);
-
-    //painter.setPen(Qt::NoPen);
-    //painter.setBrush(QColor("lightgray"));
-    //painter.drawRect(frame_rect);
-
     // handle rects
     opt.sliderPosition = d_ptr_->lower_pos_;
     const QRect lr = style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, this);

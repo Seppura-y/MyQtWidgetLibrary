@@ -212,30 +212,95 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->save();
             // 清空上一次调用drawComplexControl时绘制的内容
             p->eraseRect(groove_rect);
-            p->setRenderHint(QPainter::Antialiasing);
-
-
+            //p->setRenderHint(QPainter::Antialiasing);
             p->setPen(Qt::NoPen);
-            p->setBrush(QColor("lightgray"));
-            p->drawRect(groove_rect);
+            p->setBrush(QColor("#2e3137"));
 
 
-            p->drawRoundedRect(
-                groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
-                groove_rect.height() / 4.0,
-                groove_rect.height() / 4.0
-            );
-
-            p->setBrush(QColor("orange"));
+            p->drawRect(groove_rect.adjusted(0, 4, 0, -4));
 
             QRect spr(
                 QPoint(opt_slider->span_rect_.x(), groove_rect.y()),
                 QSize(opt_slider->span_rect_.width(), groove_rect.height())
             );
-            p->drawRoundedRect(spr.adjusted(0, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
-                groove_rect.height() / 4.0,
-                groove_rect.height() / 4.0
-            );
+
+            //int interval = 20;
+            int interval = opt_slider->tickInterval;
+            if (interval == 0)
+            {
+                interval = opt_slider->pageStep;
+            }
+
+            if (opt_slider->tickPosition != QSlider::TickPosition::NoTicks)
+            {
+                // This is the horizontal margin of the slider's *handle*, as defined in the stylesheet.
+                float margin = opt_slider->maximum / 800;
+                //constexpr float margin = 5;
+
+                const float handle_width = static_cast<float>(handle_rect.width());
+                const float handle_half_width = handle_width / 2.0f;
+                const float slider_value_range = static_cast<float>(opt_slider->maximum - opt_slider->minimum);
+                // Drawing range = control's width, minus twice the handle half width (one on each side), minus twice the margin (one on each side).
+                const float drawing_range = static_cast<float>(opt_slider->wid_->width()) - handle_width - 2.0f * margin;
+                const float factor = drawing_range / slider_value_range;
+
+                for (int i = opt_slider->minimum; i <= opt_slider->maximum; i += interval)
+                {
+                    // Height of the ticks' bars to draw.
+                    int tick_height = handle_rect.height();
+                    //constexpr int tick_height = 5;
+
+                    int temp_x = QStyle::sliderPositionFromValue(
+                        opt_slider->minimum,
+                        opt_slider->maximum,
+                        i,
+                        opt_slider->rect.width() - 12,
+                        opt_slider->upsideDown
+                    );
+
+                    int temp_y = handle_rect.y() + tick_height / 2;
+
+                    if (spr.contains(temp_x, temp_y))
+                    {
+                        p->setPen({ QColor{ "white"}, 0.3 });
+                    }
+                    else
+                    {
+                        p->setPen({ QColor{ "darkgray"}, 0.15 });
+                    }
+
+                    const int offset_value_space = i - opt_slider->minimum; // How far from the slider's minimum value we are.
+                    const float offset_drawing_space = factor * static_cast<float>(offset_value_space) + handle_half_width + margin; // Where to draw in the horizontal range.
+                    const int x = static_cast<int>(offset_drawing_space);
+
+                    if (opt_slider->tickPosition == QSlider::TicksBothSides || opt_slider->tickPosition == QSlider::TicksAbove)
+                    {
+                        const int y = groove_rect.top();
+                        p->drawLine(x, y + 4, x, y + tick_height - 4);
+                    }
+                    if (opt_slider->tickPosition == QSlider::TicksBothSides || opt_slider->tickPosition == QSlider::TicksBelow)
+                    {
+                        const int y = groove_rect.bottom();
+                        p->drawLine(x, y - 4, x, y - tick_height + 4);
+                    }
+                }
+            }
+
+            p->setPen(Qt::NoPen);
+
+            //p->drawRoundedRect(
+            //    groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
+            //    groove_rect.height() / 4.0,
+            //    groove_rect.height() / 4.0
+            //);
+
+            p->setBrush(QColor("orange"));
+
+
+            //p->drawRoundedRect(spr.adjusted(0, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
+            //    groove_rect.height() / 4.0,
+            //    groove_rect.height() / 4.0
+            //);
 
 
             QPoint lower_center = QPoint(
@@ -247,9 +312,12 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setBrush(handle_color);
             p->setRenderHint(QPainter::Antialiasing);
-            p->drawEllipse(lower_center,
-                groove_rect.height() / 2 - 1,
-                groove_rect.height() / 2 - 1);
+            //p->drawEllipse(lower_center,
+            //    groove_rect.height() / 2 - 1,
+            //    groove_rect.height() / 2 - 1);
+
+            QRect lower_rectangle = QRect(opt_slider->lower_rect_.x() /*lower_center.x()*/, groove_rect.y() + 8, 8, groove_rect.height() - 16);
+            p->drawRoundedRect(lower_rectangle, 4, 4);
 
 
             QPoint upper_center = QPoint(
@@ -261,10 +329,12 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handle_color);
-            p->drawEllipse(upper_center,
-                groove_rect.height() / 2 - 1,
-                groove_rect.height() / 2 - 1
-            );
+            //p->drawEllipse(upper_center,
+            //    groove_rect.height() / 2 - 1,
+            //    groove_rect.height() / 2 - 1
+            //);
+            QRect upper_rectangle = QRect(/*opt_slider->upper_rect_.x() +*/ upper_center.x() - 4 , groove_rect.y() + 8, 8, groove_rect.height() - 16);
+            p->drawRoundedRect(upper_rectangle, 4, 4);
 
             QPoint middle_center = QPoint(
                 opt_slider->middle_rect_.x() + opt_slider->middle_rect_.width() / 2,
@@ -275,11 +345,12 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->setPen(opt_slider->middle_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
             p->setRenderHint(QPainter::Antialiasing);
             p->setBrush(handle_color);
-            p->drawEllipse(middle_center,
-                groove_rect.height() / 2 - 1,
-                groove_rect.height() / 2 - 1
-            );
-
+            //p->drawEllipse(middle_center,
+            //    groove_rect.height() / 2 - 1,
+            //    groove_rect.height() / 2 - 1
+            //);
+            QRect middle_rectangle = QRect(opt_slider->middle_rect_.x() /*middle_center.x()*/, groove_rect.y(), 8, groove_rect.height());
+            p->drawRoundedRect(middle_rectangle, 4, 4);
             p->restore();
         }
         return;
@@ -451,7 +522,8 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
         QRect slider_rect = option_slider->rect; // Slider widget rectangle
 
         int groove_size = slider_rect.height();                    // Size of slider groove
-        int handle_size = groove_size + 2;                    // Size of slider groove
+        int handle_size = 12;                    // Size of slider groove
+        //int handle_size = groove_size + 2;                    // Size of slider groove
 
         switch (sc)
         {
@@ -468,7 +540,7 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
             slider_rect.setX(temp_x);
             slider_rect.setY(0);
             slider_rect.setWidth(handle_size);
-            slider_rect.setHeight(handle_size);
+            slider_rect.setHeight(groove_size);
 
             return slider_rect;
         }
