@@ -40,7 +40,9 @@ int main(int argc, char* argv[])
 
     DonutTimeline timeline(Qt::Horizontal, &w);
     timeline.setGeometry(20, 200, 500, 20);
+    //timeline.setHandleMovementMode(DonutTimeline::FreeMovement);
     timeline.setHandleMovementMode(DonutTimeline::NoOverlapping);
+    timeline.setUpperPosition(100);
     timeline.show();
 
     DonutCustomTimeline custom_timeline(&w);

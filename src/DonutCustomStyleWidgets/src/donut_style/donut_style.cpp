@@ -1,6 +1,7 @@
 ﻿#include "donut_style.h"
 
 #include "donut_double_slider_p.h"
+#include "donut_timeline_p.h"
 
 #include <QPainter>
 #include <QStyleOption>
@@ -200,7 +201,86 @@ QRect DonutStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
 
 void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* widget) const
 {
-    if (cc == CC_DoubleSlider)
+    if (cc == CC_DountTimeline)
+    {
+        const DonutTimelineStyleOption* opt_slider = qstyleoption_cast<const DonutTimelineStyleOption*>(opt);
+        if (opt_slider)
+        {
+            QRect groove_rect = subControlRect(CC_Slider, opt_slider, SC_SliderGroove);
+            QRect handle_rect = subControlRect(CC_Slider, opt_slider, SC_SliderHandle);
+
+            p->save();
+            // 清空上一次调用drawComplexControl时绘制的内容
+            p->eraseRect(groove_rect);
+            p->setRenderHint(QPainter::Antialiasing);
+            p->setPen(Qt::NoPen);
+            p->setBrush(QColor("lightgray"));
+
+            p->drawRoundedRect(
+                groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
+                groove_rect.height() / 4.0,
+                groove_rect.height() / 4.0
+            );
+
+            p->setBrush(QColor("orange"));
+
+            QRect spr(
+                QPoint(opt_slider->span_rect_.x(), groove_rect.y()),
+                QSize(opt_slider->span_rect_.width(), groove_rect.height())
+            );
+            p->drawRoundedRect(spr.adjusted(0, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
+                groove_rect.height() / 4.0,
+                groove_rect.height() / 4.0
+            );
+
+
+            QPoint lower_center = QPoint(
+                opt_slider->lower_rect_.x() + opt_slider->lower_rect_.width() / 2,
+                opt_slider->lower_rect_.y() + opt_slider->lower_rect_.height() / 2
+            );
+
+            QColor handle_color = opt_slider->lower_hovered_ ? QColor("darkorange") : QColor("white");
+            p->setPen(opt_slider->lower_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
+            p->setBrush(handle_color);
+            p->setRenderHint(QPainter::Antialiasing);
+            p->drawEllipse(lower_center,
+                groove_rect.height() / 2 - 1,
+                groove_rect.height() / 2 - 1);
+
+
+            QPoint upper_center = QPoint(
+                opt_slider->upper_rect_.x() + opt_slider->upper_rect_.width() / 2,
+                opt_slider->upper_rect_.y() + opt_slider->upper_rect_.height() / 2
+            );
+
+            handle_color = opt_slider->upper_hovered_ ? QColor("darkorange") : QColor("white");
+            p->setPen(opt_slider->upper_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
+            p->setRenderHint(QPainter::Antialiasing);
+            p->setBrush(handle_color);
+            p->drawEllipse(upper_center,
+                groove_rect.height() / 2 - 1,
+                groove_rect.height() / 2 - 1
+            );
+
+            QPoint middle_center = QPoint(
+                opt_slider->middle_rect_.x() + opt_slider->middle_rect_.width() / 2,
+                opt_slider->middle_rect_.y() + opt_slider->middle_rect_.height() / 2
+            );
+
+            handle_color = opt_slider->middle_hovered_ ? QColor("white") : QColor("darkorange");
+            p->setPen(opt_slider->middle_hovered_ ? Qt::NoPen : QPen(QColor("#e5e5e5"), 1));
+            p->setRenderHint(QPainter::Antialiasing);
+            p->setBrush(handle_color);
+            p->drawEllipse(middle_center,
+                groove_rect.height() / 2 - 1,
+                groove_rect.height() / 2 - 1
+            );
+
+            p->restore();
+        }
+        return;
+    }
+    else if (cc == CC_DoubleSlider)
     {
         const DonutDoubleSliderStyleOption* opt_slider = qstyleoption_cast<const DonutDoubleSliderStyleOption*>(opt);
         if (opt_slider)

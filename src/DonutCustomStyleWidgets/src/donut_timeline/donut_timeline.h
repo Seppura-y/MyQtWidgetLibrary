@@ -30,7 +30,8 @@ public:
     {
         NoHandle,
         LowerHandle,
-        UpperHandle
+        UpperHandle,
+        MiddleHandle
     };
 
     HandleMovementMode handleMovementMode() const;
@@ -38,15 +39,19 @@ public:
 
     int lowerValue() const;
     int upperValue() const;
+    int middleValue() const;
 
     int lowerPosition() const;
     int upperPosition() const;
+    int middlePosition() const;
 
 public Q_SLOTS:
     // 内部调用setSpan, 传入d_ptr_->upper_作为上限值
     void setLowerValue(int lower);
     // 内部调用setSpan, 传入d_ptr_->lower_作为下限值
     void setUpperValue(int upper);
+
+    void setMiddleValue(int middle);
 
     void setSpan(int lower, int upper);
 
@@ -55,13 +60,17 @@ public Q_SLOTS:
     // 更新d_ptr_->upper_pos_
     void setUpperPosition(int upper);
 
+    void setMiddlePosition(int middle);
 Q_SIGNALS:
     void spanChanged(int lower, int upper);
+
     void lowerValueChanged(int lower);
     void upperValueChanged(int upper);
+    void middleValueChanged(int middle);
 
     void lowerPositionChanged(int lower);
     void upperPositionChanged(int upper);
+    void middlePositionChanged(int middle);
 
     void sliderPressed(SpanHandle handle);
 

@@ -17,6 +17,7 @@ class DonutTimelinePrivate : public QObject
 
 public:
     DonutTimelinePrivate();
+
 	void initStyleOption(QStyleOptionSlider* option, DonutTimeline::SpanHandle handle = DonutTimeline::UpperHandle) const;
 
     int pick(const QPoint& pt) const
@@ -99,19 +100,22 @@ public:
     DonutTimelineStyleOption& operator=(const DonutTimelineStyleOption&) = default;
 public:
 	QRect upper_rect_;
-	QRect lower_rect_;
+    QRect lower_rect_;
+    QRect middle_rect_;
 	QRect span_rect_;
 
 	QPoint span_start_;
 	QPoint span_end_;
 
-	int upper_position_;
-	int lower_position_;
+	//int upper_position_;
+	//int lower_position_;
 
 	QStyle::SubControls lower_handle_;
-	QStyle::SubControls upper_handle_;
+    QStyle::SubControls upper_handle_;
+    QStyle::SubControls middle_handle_;
 
 	bool lower_hovered_ = false;
-	bool upper_hovered_ = false;
+    bool upper_hovered_ = false;
+    bool middle_hovered_ = false;
 };
 #endif
