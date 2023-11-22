@@ -206,15 +206,19 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
         const DonutTimelineStyleOption* opt_slider = qstyleoption_cast<const DonutTimelineStyleOption*>(opt);
         if (opt_slider)
         {
-            QRect groove_rect = subControlRect(CC_Slider, opt_slider, SC_SliderGroove);
-            QRect handle_rect = subControlRect(CC_Slider, opt_slider, SC_SliderHandle);
+            QRect groove_rect = subControlRect(static_cast<QStyle::ComplexControl>(CC_DountTimeline), opt_slider, SC_SliderGroove);
+            QRect handle_rect = subControlRect(static_cast<QStyle::ComplexControl>(CC_DountTimeline), opt_slider, SC_SliderHandle);
 
             p->save();
             // 清空上一次调用drawComplexControl时绘制的内容
             p->eraseRect(groove_rect);
             p->setRenderHint(QPainter::Antialiasing);
+
+
             p->setPen(Qt::NoPen);
             p->setBrush(QColor("lightgray"));
+            p->drawRect(groove_rect);
+
 
             p->drawRoundedRect(
                 groove_rect.adjusted(1, groove_rect.height() / 4.0, -1, -groove_rect.height() / 4.0),
@@ -408,7 +412,8 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
 
         int groove_size = 16;                    // Size of slider groove
         int handle_size = 16;                    // Size of slider groove
-
+        //int groove_size = slider_rect.height();                    // Size of slider groove
+        //int handle_size = groove_size + 2;                    // Size of slider groove
         switch (sc)
         {
             case SC_SliderHandle:
@@ -439,6 +444,45 @@ QRect DonutStyle::subControlRect(QStyle::ComplexControl cc, const QStyleOptionCo
             }
         }
     }
+    else if (cc == CC_DountTimeline)
+    {
+        const DonutTimelineStyleOption* option_slider = qstyleoption_cast<const DonutTimelineStyleOption*>(opt);
+
+        QRect slider_rect = option_slider->rect; // Slider widget rectangle
+
+        int groove_size = slider_rect.height();                    // Size of slider groove
+        int handle_size = groove_size + 2;                    // Size of slider groove
+
+        switch (sc)
+        {
+        case SC_SliderHandle:
+        {
+            int temp_x = QStyle::sliderPositionFromValue(
+                option_slider->minimum,
+                option_slider->maximum,
+                option_slider->sliderPosition,
+                option_slider->rect.width() - handle_size,
+                option_slider->upsideDown
+            );
+
+            slider_rect.setX(temp_x);
+            slider_rect.setY(0);
+            slider_rect.setWidth(handle_size);
+            slider_rect.setHeight(handle_size);
+
+            return slider_rect;
+        }
+        case SC_SliderGroove:
+        {
+            slider_rect.setWidth(slider_rect.width());
+            slider_rect.setHeight(groove_size);
+            slider_rect.setX(0);
+            slider_rect.setY(0);
+
+            return slider_rect;
+        }
+        }
+    }
     return QCommonStyle::subControlRect(cc, opt, sc, widget);
 }
 
@@ -465,6 +509,31 @@ QSize DonutStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption* 
 QStyle::SubControl DonutStyle::hitTestComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, const QPoint& point, const QWidget* widget) const
 {
     if (cc == CC_Slider && opt)
+    {
+        SubControl sc = SC_None;
+
+        if (const QStyleOptionSlider* option_slider = qstyleoption_cast<const QStyleOptionSlider*>(opt))
+        {
+            QRect temp_rect = subControlRect(cc, option_slider, SC_SliderHandle);
+
+            if (temp_rect.isValid() && temp_rect.contains(point))
+            {
+                sc = SC_SliderHandle;
+            }
+            else
+            {
+                temp_rect = subControlRect(cc, option_slider, SC_SliderGroove);
+
+                if (temp_rect.isValid() && temp_rect.contains(point))
+                {
+                    sc = SC_SliderGroove;
+                }
+            }
+        }
+
+        return sc;
+    }
+    else if (cc == CC_DountTimeline && opt)
     {
         SubControl sc = SC_None;
 

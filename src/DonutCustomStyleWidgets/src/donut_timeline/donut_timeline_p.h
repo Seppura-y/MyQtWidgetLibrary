@@ -9,6 +9,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QStylePainter)
 QT_FORWARD_DECLARE_CLASS(QStyleOptionSlider)
+QT_FORWARD_DECLARE_CLASS(QWidget)
 
 // DonutTimeline的数据类
 class DonutTimelinePrivate : public QObject
@@ -117,5 +118,7 @@ public:
 	bool lower_hovered_ = false;
     bool upper_hovered_ = false;
     bool middle_hovered_ = false;
+
+    QWidget* wid_ = nullptr;
 };
 #endif

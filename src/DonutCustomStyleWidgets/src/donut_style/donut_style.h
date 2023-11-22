@@ -38,7 +38,13 @@ public:
         CC_DountTimeline = QStyle::CC_CustomBase + 2,
         CC_CustomBase = QStyle::CC_CustomBase + 0xf00000
     };
-    enum SubControls { SC_LowerHandle = SC_CustomBase + 1, SC_UpperHandle = SC_CustomBase + 2, SC_MiddleHandle = SC_CustomBase + 4 };
+    enum SubControls { 
+        SC_TimelineBase = QStyle::SC_CustomBase + 0xf00000,
+        SC_LowerHandle = SC_TimelineBase + 1,
+        SC_UpperHandle = SC_TimelineBase + 2,
+        SC_MiddleHandle = SC_TimelineBase + 4,
+        SC_TimelineGroove = SC_TimelineBase + 8
+    };
 public:
     DonutStyle();
 

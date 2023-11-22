@@ -39,7 +39,8 @@ int main(int argc, char* argv[])
     //span_slider.show();
 
     DonutTimeline timeline(Qt::Horizontal, &w);
-    timeline.setGeometry(20, 200, 500, 20);
+    timeline.setGeometry(20, 200, 500, 50);
+    timeline.setFixedHeight(50);
     //timeline.setHandleMovementMode(DonutTimeline::FreeMovement);
     timeline.setHandleMovementMode(DonutTimeline::NoOverlapping);
     timeline.setUpperPosition(100);

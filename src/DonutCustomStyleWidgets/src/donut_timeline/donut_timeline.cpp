@@ -81,8 +81,8 @@ int DonutTimelinePrivate::pixelPosToRangeValue(int pos) const
     int slider_max = 0;
     int handle_length = 0;
     const QSlider* p = q_ptr_;
-    const QRect groove_rect = p->style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, p);
-    const QRect handle_rect = p->style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, p);
+    const QRect groove_rect = p->style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderGroove, p);
+    const QRect handle_rect = p->style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, p);
     if (p->orientation() == Qt::Horizontal)
     {
         handle_length = handle_rect.width();
@@ -113,8 +113,8 @@ void DonutTimelinePrivate::handleMousePress(const QPoint& pos, QStyle::SubContro
     DonutTimeline* p = q_ptr_;
     const QStyle::SubControl old_control = control;
 
-    control = p->style()->hitTestComplexControl(QStyle::CC_Slider, &opt, pos, p);
-    const QRect sr = p->style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, p);
+    control = p->style()->hitTestComplexControl(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, pos, p);
+    const QRect sr = p->style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, p);
     if (control == QStyle::SC_SliderHandle)
     {
         position_ = value;
@@ -137,7 +137,7 @@ QRect DonutTimelinePrivate::getSpan(QPainter* painter, const QRect& rect) const
 
     const QSlider* p = q_ptr_;
     // area
-    QRect groove = p->style()->subControlRect(QStyle::CC_Slider, &options, QStyle::SC_SliderGroove, p);
+    QRect groove = p->style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &options, QStyle::SC_SliderGroove, p);
 
     return rect.intersected(groove);
 }
@@ -672,21 +672,29 @@ void DonutTimeline::paintEvent(QPaintEvent* event)
     DonutTimelineStyleOption opt;
     d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
 
+    opt.wid_ = this;
     opt.sliderValue = 0;
     opt.sliderPosition = 0;
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
 
+    //const QRect frame_rect =
+    //    style()->subElementRect(QStyle::SubElement::SE_SliderLayoutItem, &opt, this);
+
+    //painter.setPen(Qt::NoPen);
+    //painter.setBrush(QColor("lightgray"));
+    //painter.drawRect(frame_rect);
+
     // handle rects
     opt.sliderPosition = d_ptr_->lower_pos_;
-    const QRect lr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    const QRect lr = style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, this);
     const int lrv = d_ptr_->pick(lr.center());
 
     opt.sliderPosition = d_ptr_->upper_pos_;
-    const QRect ur = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    const QRect ur = style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, this);
     const int urv = d_ptr_->pick(ur.center());
 
     opt.sliderPosition = d_ptr_->middle_pos_;
-    const QRect mr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    const QRect mr = style()->subControlRect(static_cast<QStyle::ComplexControl>(DonutStyle::CC_DountTimeline), &opt, QStyle::SC_SliderHandle, this);
     const int mrv = d_ptr_->pick(mr.center());
 
     opt.lower_rect_ = lr;
