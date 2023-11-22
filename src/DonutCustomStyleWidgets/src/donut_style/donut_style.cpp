@@ -214,8 +214,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             p->save();
             // 清空上一次调用drawComplexControl时绘制的内容
             p->eraseRect(groove_rect);
-            //p->setRenderHint(QPainter::Antialiasing);
-            std::cout << "painter set pen : " << std::endl;
+
             p->setPen(Qt::NoPen);
             p->setBrush(QColor("#2e3137"));
             p->drawRect(groove_rect.adjusted(0, 4, 0, -4));
@@ -263,11 +262,11 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
 
                     if (spr.contains(temp_x, temp_y))
                     {
-                        p->setPen({ QColor{ "white"}, 0.3 });
+                        p->setPen({ QColor{ "lightgray"}, 0.36 });
                     }
                     else
                     {
-                        p->setPen({ QColor{ "darkgray"}, 0.15 });
+                        p->setPen({ QColor{ "darkgray"}, 0.12 });
                     }
 
                     const int offset_value_space = i - opt_slider->minimum; // How far from the slider's minimum value we are.
@@ -344,9 +343,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             );
             p->drawRoundedRect(middle_rectangle, 4, 4);
 
-            p->setPen({ QColor{ "red"}, 1 });
-            p->setBrush(QColor("red"));
-            //int cur_x = opt_slider->cur_position_;
+            p->setPen({ QColor{ "orange"}, 2 });
             int cur_x = QStyle::sliderPositionFromValue(
                 opt_slider->minimum,
                 opt_slider->maximum,
@@ -355,11 +352,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
                 opt_slider->upsideDown
             );
             int cur_y = handle_rect.y();
-            //int cur_y = handle_rect.y() + handle_rect.height() / 2;
-            //int temp_y = handle_rect.y() + tick_height / 2;
 
-            //int cur_y = groove_rect.y();
-            std::cout << "opt_slider->cur_position : " << opt_slider->cur_position_ << std::endl;
             p->drawLine(cur_x, cur_y, cur_x, cur_y + handle_rect.height());
 
 
