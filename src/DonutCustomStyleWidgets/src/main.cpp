@@ -6,6 +6,7 @@
 #include "donut_timeline.h"
 #include "donut_custom_timeline.h"
 #include "QxtSpanSlider.h"
+#include "switch_test.h"
 
 int main(int argc, char* argv[])
 {
@@ -48,5 +49,8 @@ int main(int argc, char* argv[])
     custom_timeline.setGeometry(20, 400, 600, 50);
     custom_timeline.show();
 
+    SwitchButton bt(&w);
+    bt.setGeometry(80, 100, 50, 30);
+    bt.show();
     return a.exec();
 }
