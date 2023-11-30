@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 
+// 带动画效果的SwicthButton , 再paintEvent中实现外观而不是自定义style
 class SwitchButton : public QWidget
 {
     Q_OBJECT
