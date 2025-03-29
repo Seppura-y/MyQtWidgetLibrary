@@ -13,7 +13,7 @@
 # 运行效果图
 - 播放器UI示例
   - 主题色彩参考虎牙客户端
-  - 使用自定义控件：三个Handle的QSlider，实现视频片段选择播放
+  - 自定义时间轴：三个Handle的QSlider，可以自由选择全片播放或者片段播放
 ![Image](https://github.com/user-attachments/assets/2fab8ff7-f7f6-4a6a-9ffb-0182dffbd702)
   - 普通的自定义风格的QSlider
 ![Image](https://github.com/user-attachments/assets/a84bbb45-0dbd-4fdf-b83b-3d0b8e836a10)
