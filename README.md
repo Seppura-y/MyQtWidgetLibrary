@@ -28,5 +28,8 @@
 ![Image](https://github.com/user-attachments/assets/cfe10fec-ad9d-4e14-932c-e1400a37d0dd)
 
 
-
-
+- 监控客户端自定义布局
+![Image](https://github.com/user-attachments/assets/6beef8f6-1416-4c15-b0df-f426425b0de1)
+![Image](https://github.com/user-attachments/assets/d22335ca-75c0-4c1b-9e4e-640881acfcdb)
+![Image](https://github.com/user-attachments/assets/ff948133-8e07-4104-93b4-a330979ef0f3)
+![Image](https://github.com/user-attachments/assets/cbe475dd-23dc-4e55-ba29-b5c48b8d4655)
