@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     switch_btn.show();
 
     DonutDoubleSlider span_slider(Qt::Horizontal, &w);
-    span_slider.setGeometry(20, 200, 500, 20);
+    span_slider.setGeometry(20, 200, 500, 500);
     span_slider.setHandleMovementMode(DonutDoubleSlider::NoOverlapping);
     span_slider.show();
 

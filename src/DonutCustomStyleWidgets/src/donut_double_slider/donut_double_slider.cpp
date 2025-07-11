@@ -8,10 +8,11 @@
 #include <QApplication>
 #include <QStylePainter>
 #include <QStyleOptionSlider>
-#include <QStylePainter>
+#include <QFontMetrics>
+#include <QPainter>
 
 DonutDoubleSliderStyleOption::DonutDoubleSliderStyleOption()
-	: QStyleOptionSlider()
+    : QStyleOptionSlider()
 {
 
 }
@@ -40,10 +41,6 @@ void DonutDoubleSliderPrivate::initStyleOption(QStyleOptionSlider* option, Donut
     option->sliderPosition = (handle == DonutDoubleSlider::LowerHandle ? lower_pos_ : upper_pos_);
     option->sliderValue = (handle == DonutDoubleSlider::LowerHandle ? lower_ : upper_);
 }
-
-
-
-
 
 int DonutDoubleSliderPrivate::pixelPosToRangeValue(int pos) const
 {
@@ -527,74 +524,204 @@ void DonutDoubleSlider::mouseReleaseEvent(QMouseEvent* event)
     update();
 }
 
-
 void DonutDoubleSlider::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-    DonutStylePainter painter(this);
 
-    DonutDoubleSliderStyleOption opt;
+    // 计算滑块的像素位置
+    QStyleOptionSlider opt;
     d_ptr_->initStyleOption(&opt);
 
-    opt.sliderValue = 0;
-    opt.sliderPosition = 0;
-    opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
+    // 获取groove rect
+    QRect grooveRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
 
-    // handle rects
-    opt.sliderPosition = d_ptr_->lower_pos_;
-    const QRect lr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    const int lrv = d_ptr_->pick(lr.center());
-    opt.sliderPosition = d_ptr_->upper_pos_;
-    const QRect ur = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    const int urv = d_ptr_->pick(ur.center());
+    // 计算lower handle的像素位置
+    int lowerPixelPos = QStyle::sliderPositionFromValue(minimum(), maximum(),
+        d_ptr_->lower_pos_,
+        orientation() == Qt::Horizontal ? grooveRect.width() : grooveRect.height());
 
-    opt.lower_rect_ = lr;
-    opt.upper_rect_ = ur;
-    d_ptr_->lower_rect_ = lr;
-    d_ptr_->upper_rect_ = ur;
-    // span
-    const int minv = qMin(lrv, urv);
-    const int maxv = qMax(lrv, urv);
-    const QPoint c = QRect(lr.center(), ur.center()).center();
-    QRect spanRect;
+    // 计算upper handle的像素位置  
+    int upperPixelPos = QStyle::sliderPositionFromValue(minimum(), maximum(),
+        d_ptr_->upper_pos_,
+        orientation() == Qt::Horizontal ? grooveRect.width() : grooveRect.height());
+
+    // 首先使用DonutStylePainter绘制滑块
+    {
+        DonutStylePainter painter(this);
+        DonutDoubleSliderStyleOption opt;
+        d_ptr_->initStyleOption(&opt);
+
+        opt.sliderValue = 0;
+        opt.sliderPosition = 0;
+        opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderTickmarks;
+
+        // handle rects
+        opt.sliderPosition = d_ptr_->lower_pos_;
+        const QRect lr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+        const int lrv = d_ptr_->pick(lr.center());
+        opt.sliderPosition = d_ptr_->upper_pos_;
+        const QRect ur = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+        const int urv = d_ptr_->pick(ur.center());
+
+        opt.lower_rect_ = lr;
+        opt.upper_rect_ = ur;
+        d_ptr_->lower_rect_ = lr;
+        d_ptr_->upper_rect_ = ur;
+
+        // span
+        const int minv = qMin(lrv, urv);
+        const int maxv = qMax(lrv, urv);
+        const QPoint c = QRect(lr.center(), ur.center()).center();
+        if (orientation() == Qt::Horizontal)
+        {
+            opt.span_rect_ = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
+            opt.span_start_ = QPoint(minv, c.y());
+            opt.span_end_ = QPoint(maxv, c.y());
+        }
+        else
+        {
+            opt.span_rect_ = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
+            opt.span_start_ = QPoint(c.x(), minv);
+            opt.span_end_ = QPoint(c.x(), maxv);
+        }
+
+        opt.lower_handle_ = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
+        switch (d_ptr_->last_pressed_)
+        {
+        case DonutDoubleSlider::LowerHandle:
+            opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
+            opt.state |= QStyle::State_Sunken;
+            break;
+        case DonutDoubleSlider::UpperHandle:
+            opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
+            opt.state |= QStyle::State_Sunken;
+            break;
+        }
+
+        switch (d_ptr_->hovered_handle_)
+        {
+        case DonutDoubleSlider::LowerHandle:
+            opt.lower_hovered_ = true;
+            break;
+        case DonutDoubleSlider::UpperHandle:
+            opt.upper_hovered_ = true;
+            break;
+        default:
+            opt.lower_hovered_ = false;
+            opt.upper_hovered_ = false;
+            break;
+        }
+
+        painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
+    }
+
+    // 然后使用标准QPainter绘制值标签
+    QPainter labelPainter(this);
+    labelPainter.setRenderHint(QPainter::Antialiasing);
+
+    // 设置字体和颜色
+    QFont font = this->font();
+    font.setPixelSize(12);
+    font.setBold(true);
+    labelPainter.setFont(font);
+
+    QFontMetrics fm(font);
+
+    // 计算实际的handle位置
+    QRect actualLowerRect, actualUpperRect;
+
     if (orientation() == Qt::Horizontal)
     {
-        opt.span_rect_ = QRect(QPoint(minv, c.y() - 15), QPoint(maxv, c.y() + 1));
-        opt.span_start_ = QPoint(minv, c.y());
-        opt.span_end_ = QPoint(maxv, c.y());
+        // 水平滑块
+        int handleWidth = 16; // 假设handle宽度
+        int handleHeight = 20; // 假设handle高度
+        int grooveY = grooveRect.center().y();
+
+        actualLowerRect = QRect(grooveRect.x() + lowerPixelPos - handleWidth / 2,
+            grooveY - handleHeight / 2,
+            handleWidth, handleHeight);
+
+        actualUpperRect = QRect(grooveRect.x() + upperPixelPos - handleWidth / 2,
+            grooveY - handleHeight / 2,
+            handleWidth, handleHeight);
     }
     else
     {
-        opt.span_rect_ = QRect(QPoint(c.x() - 2, minv), QPoint(c.x() + 1, maxv));
-        opt.span_start_ = QPoint(c.x(), minv);
-        opt.span_end_ = QPoint(c.x(), maxv);
+        // 垂直滑块
+        int handleWidth = 20; // 假设handle宽度
+        int handleHeight = 16; // 假设handle高度
+        int grooveX = grooveRect.center().x();
+
+        actualLowerRect = QRect(grooveX - handleWidth / 2,
+            grooveRect.y() + lowerPixelPos - handleHeight / 2,
+            handleWidth, handleHeight);
+
+        actualUpperRect = QRect(grooveX - handleWidth / 2,
+            grooveRect.y() + upperPixelPos - handleHeight / 2,
+            handleWidth, handleHeight);
     }
 
+    // 绘制lower值标签
+    QString lowerText = QString::number(lowerValue());
+    QRect lowerTextRect = fm.boundingRect(lowerText);
 
-    opt.lower_handle_ = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
-    switch (d_ptr_->last_pressed_)
+    QRect lowerLabelRect;
+    if (orientation() == Qt::Horizontal)
     {
-    case DonutDoubleSlider::LowerHandle:
-        opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_LowerHandle;
-        opt.state |= QStyle::State_Sunken;
-    case DonutDoubleSlider::UpperHandle:
-        opt.activeSubControls = (QStyle::SubControl)DonutStyle::SC_UpperHandle;
-        opt.state |= QStyle::State_Sunken;
+        lowerLabelRect = QRect(
+            actualLowerRect.center().x() - lowerTextRect.width() / 2 - 8,
+            actualLowerRect.bottom() + 5,
+            lowerTextRect.width() + 16,
+            lowerTextRect.height() + 10
+        );
     }
-
-    switch (d_ptr_->hovered_handle_)
+    else
     {
-    case DonutDoubleSlider::LowerHandle:
-        opt.lower_hovered_ = true;
-        break;
-    case DonutDoubleSlider::UpperHandle:
-        opt.upper_hovered_ = true;
-        break;
-    default:
-        opt.lower_hovered_ = false;
-        opt.upper_hovered_ = false;
-        break;
+        lowerLabelRect = QRect(
+            actualLowerRect.right() + 5,
+            actualLowerRect.center().y() - lowerTextRect.height() / 2 - 5,
+            lowerTextRect.width() + 16,
+            lowerTextRect.height() + 10
+        );
     }
 
-    painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
+    // 绘制lower标签
+    labelPainter.setPen(Qt::NoPen);
+    labelPainter.setBrush(QBrush(QColor(50, 50, 50, 200)));
+    labelPainter.drawRoundedRect(lowerLabelRect, 4, 4);
+
+    labelPainter.setPen(QPen(QColor(255, 255, 255), 1));
+    labelPainter.drawText(lowerLabelRect, Qt::AlignCenter, lowerText);
+
+    // 绘制upper值标签
+    QString upperText = QString::number(upperValue());
+    QRect upperTextRect = fm.boundingRect(upperText);
+
+    QRect upperLabelRect;
+    if (orientation() == Qt::Horizontal)
+    {
+        upperLabelRect = QRect(
+            actualUpperRect.center().x() - upperTextRect.width() / 2 - 8,
+            actualUpperRect.bottom() + 5,
+            upperTextRect.width() + 16,
+            upperTextRect.height() + 10
+        );
+    }
+    else
+    {
+        upperLabelRect = QRect(
+            actualUpperRect.right() + 5,
+            actualUpperRect.center().y() - upperTextRect.height() / 2 - 5,
+            upperTextRect.width() + 16,
+            upperTextRect.height() + 10
+        );
+    }
+
+    // 绘制upper标签
+    labelPainter.setPen(Qt::NoPen);
+    labelPainter.setBrush(QBrush(QColor(50, 50, 50, 200)));
+    labelPainter.drawRoundedRect(upperLabelRect, 4, 4);
+
+    labelPainter.setPen(QPen(QColor(255, 255, 255), 1));
+    labelPainter.drawText(upperLabelRect, Qt::AlignCenter, upperText);
 }
