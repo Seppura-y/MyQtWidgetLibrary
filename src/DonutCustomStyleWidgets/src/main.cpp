@@ -25,7 +25,42 @@ int main(int argc, char* argv[])
     slider.show();
 
     DonutSwitchButton switch_btn(&w);
-    switch_btn.setGeometry(20, 100, 50, 30);
+
+    switch_btn.setStyleSheet(R"(
+    DonutSwitchButton {
+        qproperty-onColor: rgb(34, 139, 34);
+        qproperty-offColor: rgb(255, 69, 0);
+        qproperty-knobColor: rgb(255, 255, 255);
+        qproperty-borderColor: rgb(100, 100, 100);
+        qproperty-borderWidth: 2;
+        qproperty-knobShape: RoundedRectKnob;
+        qproperty-trackShape: RoundedTrack;
+        qproperty-onText: "开启";
+        qproperty-offText: "关闭";
+        qproperty-showText: true;
+        qproperty-trackRadius: 10;
+        qproperty-knobRadius: 5;
+    }
+    )");
+    //switch_btn.setGeometry(20, 100, 50, 30);
+    // 设置颜色
+    switch_btn.setOnColor(QColor(34, 139, 34));   // 绿色
+    switch_btn.setOffColor(QColor(255, 69, 0));   // 红色
+    switch_btn.setKnobColor(QColor(255, 255, 255)); // 白色
+
+    // 设置形状
+    switch_btn.setKnobShape(DonutSwitchButton::RoundedRectKnob);
+    switch_btn.setTrackShape(DonutSwitchButton::RoundedTrack);
+
+    // 设置文字
+    //switch_btn.setOnText(QString("OK"));
+    //switch_btn.setOffText(QString("CK"));
+    switch_btn.setShowText(true);
+
+    // 设置边框
+    switch_btn.setBorderWidth(2);
+    switch_btn.setBorderColor(QColor(100, 100, 100));
+
     switch_btn.show();
 
     DonutDoubleSlider span_slider(Qt::Horizontal, &w);
