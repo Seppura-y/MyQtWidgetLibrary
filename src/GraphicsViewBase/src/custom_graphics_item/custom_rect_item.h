@@ -5,13 +5,13 @@
 
 enum STATE_FLAG {
     DEFAULT_FLAG = 0,
-    MOV_LEFT_LINE,    //¾ØĞÎµÄ×ó±ß½çÇøÓò
-    MOV_TOP_LINE,     //¾ØĞÎµÄÉÏ±ß½çÇøÓò
-    MOV_RIGHT_LINE,   //¾ØĞÎµÄÓÒ±ß½çÇøÓò
-    MOV_BOTTOM_LINE,  //¾ØĞÎµÄÏÂ±ß½çÇøÓò
-    MOV_RIGHTBOTTOM_RECT,  //¾ØĞÎµÄÓÒÏÂ½Ç
-    MOV_RECT,  //ÒÆ¶¯×´Ì¬
-    ROTATE     //Ğı×ª×´Ì¬
+    MOV_LEFT_LINE,    //çŸ©å½¢çš„å·¦è¾¹ç•ŒåŒºåŸŸ
+    MOV_TOP_LINE,     //çŸ©å½¢çš„ä¸Šè¾¹ç•ŒåŒºåŸŸ
+    MOV_RIGHT_LINE,   //çŸ©å½¢çš„å³è¾¹ç•ŒåŒºåŸŸ
+    MOV_BOTTOM_LINE,  //çŸ©å½¢çš„ä¸‹è¾¹ç•ŒåŒºåŸŸ
+    MOV_RIGHTBOTTOM_RECT,  //çŸ©å½¢çš„å³ä¸‹è§’
+    MOV_RECT,  //ç§»åŠ¨çŠ¶æ€
+    ROTATE     //æ—‹è½¬çŠ¶æ€
 };
 
 class CustomRectItem : public QObject, public QGraphicsItem
@@ -22,7 +22,7 @@ public:
     CustomRectItem(QGraphicsItem* parent = nullptr);
     ~CustomRectItem();
 
-    // ±ØĞëÖØĞ´¸Ãº¯Êı
+    // å¿…é¡»é‡å†™è¯¥å‡½æ•°
     QRectF  boundingRect() const override;
 
     void setRectSize(QRectF mrect, bool bResetRotateCenter = true);
@@ -36,12 +36,12 @@ public:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
     void SetRotate(qreal RotateAngle, QPointF ptCenter = QPointF(-999, -999));
-    QPointF getRotatePoint(QPointF ptCenter, QPointF ptIn, qreal angle);//»ñÈ¡Ğı×ªºóµÄµã
-    QList<QPointF> getRotatePoints(QPointF ptCenter, QList<QPointF> ptIns, qreal angle);//»ñÈ¡¶à¸öĞı×ªºóµÄµã
-    QPolygonF getRotatePolygonFromRect(QPointF ptCenter, QRectF rectIn, qreal angle);//½«¾ØĞÎĞı×ªÖ®ºó·µ»Ø¶à±ßĞÎ
+    QPointF getRotatePoint(QPointF ptCenter, QPointF ptIn, qreal angle);//è·å–æ—‹è½¬åçš„ç‚¹
+    QList<QPointF> getRotatePoints(QPointF ptCenter, QList<QPointF> ptIns, qreal angle);//è·å–å¤šä¸ªæ—‹è½¬åçš„ç‚¹
+    QPolygonF getRotatePolygonFromRect(QPointF ptCenter, QRectF rectIn, qreal angle);//å°†çŸ©å½¢æ—‹è½¬ä¹‹åè¿”å›å¤šè¾¹å½¢
     QRectF getCrtPosRectToSceen();
 
-    QPointF getSmallRotateRectCenter(QPointF ptA, QPointF ptB);//»ñÈ¡Ğı×ªÊ±ºò¾ØĞÎÕıÉÏ·½µÄĞı×ª±ê¼Ç¾ØĞÎ
+    QPointF getSmallRotateRectCenter(QPointF ptA, QPointF ptB);//è·å–æ—‹è½¬æ—¶å€™çŸ©å½¢æ­£ä¸Šæ–¹çš„æ—‹è½¬æ ‡è®°çŸ©å½¢
     QRectF  getSmallRotateRect(QPointF ptA, QPointF ptB);
 
 private:
@@ -62,8 +62,8 @@ private:
     QPointF m_startPos;
     STATE_FLAG m_StateFlag;
     QPointF* m_pPointFofSmallRotateRect;
-    QRectF m_SmallRotateRect;//¾ØĞÎ¶¥²¿ÓÃÀ´±íÊ¾Ğı×ªµÄ±ê¼ÇµÄ¾ØĞÎ
-    QPolygonF m_SmallRotatePolygon;//¾ØĞÎ¶¥²¿ÓÃÀ´±íÊ¾Ğı×ªµÄ±ê¼ÇµÄ¾ØĞÎĞı×ªºóĞÎ³ÉµÄ¶à±ßĞÎ
+    QRectF m_SmallRotateRect;//çŸ©å½¢é¡¶éƒ¨ç”¨æ¥è¡¨ç¤ºæ—‹è½¬çš„æ ‡è®°çš„çŸ©å½¢
+    QPolygonF m_SmallRotatePolygon;//çŸ©å½¢é¡¶éƒ¨ç”¨æ¥è¡¨ç¤ºæ—‹è½¬çš„æ ‡è®°çš„çŸ©å½¢æ—‹è½¬åå½¢æˆçš„å¤šè¾¹å½¢
     bool    m_bRotate;
     qreal   m_RotateAngle;
     QPointF m_RotateCenter;

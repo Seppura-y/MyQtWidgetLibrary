@@ -13,7 +13,7 @@ ItemSelectWidget::ItemSelectWidget(QWidget* parent)
 
     QHBoxLayout* h_layout = new QHBoxLayout(this);
     item_tree_ = new QTreeView(this);
-    item_tree_->setEditTriggers(QAbstractItemView::NoEditTriggers);  //ÉèÖÃ²»¿É±à¼­
+    item_tree_->setEditTriggers(QAbstractItemView::NoEditTriggers);  //è®¾ç½®ä¸å¯ç¼–è¾‘
     item_tree_->setFixedWidth(300);
 
     painter_widget_ = new PainterWidget(this);
@@ -38,7 +38,7 @@ void ItemSelectWidget::treeView()
     QStandardItem* parent_item = NULL;
     QStandardItem* child_item = NULL;
 
-    // µã
+    // ç‚¹
     parent_item = new QStandardItem(QIcon(":/res/icons/point.png"), "draw ponit");
     model->appendRow(parent_item);
 
@@ -48,7 +48,7 @@ void ItemSelectWidget::treeView()
     child_item = new QStandardItem(QIcon(":/res/icons/multipoints.png"), "multipoints");
     parent_item->appendRow(child_item);
 
-    // Ïß
+    // çº¿
     parent_item = new QStandardItem(QIcon(":/res/icons/line.png"), "draw line");
     model->appendRow(parent_item);
 
@@ -58,7 +58,7 @@ void ItemSelectWidget::treeView()
     child_item = new QStandardItem(QIcon(":/res/icons/arc.png"), "arc");
     parent_item->appendRow(child_item);
 
-    // ·â±ÕµÄÍ¼ĞÎ
+    // å°é—­çš„å›¾å½¢
     parent_item = new QStandardItem(QIcon(":/res/icons/rect.png"), "draw rect");
     model->appendRow(parent_item);
 
@@ -74,7 +74,7 @@ void ItemSelectWidget::treeView()
     child_item = new QStandardItem(QIcon(":/res/icons/ellipse.png"), "ellipse");
     parent_item->appendRow(child_item);
 
-    // ÈÎÒâÂ·¾¶»æÖÆ
+    // ä»»æ„è·¯å¾„ç»˜åˆ¶
     parent_item = new QStandardItem(QIcon(":/res/icons/polygon.png"), "draw polygon");
     model->appendRow(parent_item);
 
@@ -96,7 +96,7 @@ void ItemSelectWidget::treeView()
     child_item = new QStandardItem(QIcon(":/res/icons/pie.png"), "pie");
     parent_item->appendRow(child_item);
 
-    // Í¼Æ¬»æÖÆ
+    // å›¾ç‰‡ç»˜åˆ¶
     parent_item = new QStandardItem(QIcon(":/res/icons/image.png"), "draw image");
     model->appendRow(parent_item);
 
@@ -106,19 +106,19 @@ void ItemSelectWidget::treeView()
     child_item = new QStandardItem(QIcon(":/res/icons/pixmap.png"), "pixmap");
     parent_item->appendRow(child_item);
 
-    // ÎÄ±¾»æÖÆ
+    // æ–‡æœ¬ç»˜åˆ¶
     parent_item = new QStandardItem(QIcon(":/res/icons/text.png"), "draw text");
     model->appendRow(parent_item);
 
-    // ²Á³ı
+    // æ“¦é™¤
     parent_item = new QStandardItem(QIcon(":/res/icons/erase.png"), "draw erase");
     model->appendRow(parent_item);
 
-    // Â·¾¶Ìî³ä
+    // è·¯å¾„å¡«å……
     parent_item = new QStandardItem(QIcon(":/res/icons/fillpath.png"), "draw fillpath");
     model->appendRow(parent_item);
 
-    // ¾ØĞÎÌî³ä
+    // çŸ©å½¢å¡«å……
     parent_item = new QStandardItem(QIcon(":/res/icons/fillrect.png"), "draw fillrect");
     model->appendRow(parent_item);
 
@@ -134,7 +134,7 @@ void ItemSelectWidget::onTreeViewExpand(const QModelIndex& index)
     if (text.compare("point") == 0)
     {
         painter_widget_->setDrawType(DRAW_TYPE::point);
-        painter_widget_->update();  //²»¸üĞÂ¾Í²»»áÁ¢¼´ÏÔÊ¾
+        painter_widget_->update();  //ä¸æ›´æ–°å°±ä¸ä¼šç«‹å³æ˜¾ç¤º
     }
     else if (text.compare("multipoints") == 0)
     {

@@ -25,8 +25,8 @@ void MainWid::onDialogShow()
     TriangleDialog* pDialog = new TriangleDialog(343, 320, this);
     pDialog->setTrianglePosition(triangle_start_x, 20, 12);
 
-    // ÉèÖÃÈý½Ç´°¿ÚµÄµ¯³öÎ»ÖÃ£¬ ÓÐQt::PopupÊôÐÔ
-    QPoint p1 = pb_dialog_show_->mapToGlobal(QPoint(0, 0));  //°´Å¥×óÉÏ½ÇÏà¶ÔÓÚ×ÀÃæµÄ¾ø¶ÔÎ»ÖÃ
+    // è®¾ç½®ä¸‰è§’çª—å£çš„å¼¹å‡ºä½ç½®ï¼Œ æœ‰Qt::Popupå±žæ€§
+    QPoint p1 = pb_dialog_show_->mapToGlobal(QPoint(0, 0));  //æŒ‰é’®å·¦ä¸Šè§’ç›¸å¯¹äºŽæ¡Œé¢çš„ç»å¯¹ä½ç½®
     QRect rect1 = pb_dialog_show_->rect();
 
     int x = p1.x() + rect1.width() / 2 - triangle_start_x - 20 / 2;

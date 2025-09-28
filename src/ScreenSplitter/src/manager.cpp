@@ -424,7 +424,7 @@ void Manager::SetItem()
 
 void Manager::SetPicItem(int itemType, int index)
 {
-    QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择文件"), QString("./"), QString("Json Files (*.jpg *.png)"));
+    QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("閫夋嫨鏂囦欢"), QString("./"), QString("Json Files (*.jpg *.png)"));
     QString openPicName = openPicUrl.right(openPicUrl.size() - openPicUrl.lastIndexOf('/') - 1);
     if (index >= 0)
     {
@@ -603,7 +603,7 @@ void Manager::InitItemList()
 
 void Manager::loading()
 {
-    QString filename = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择json配置文件"), QString("./"), QString("Json Files (*.json)"));
+    QString filename = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("閫夋嫨json閰嶇疆鏂囦欢"), QString("./"), QString("Json Files (*.json)"));
     if (filename.isEmpty() || !filename.contains(QString("json")))
     {
         return;
@@ -768,10 +768,10 @@ void Manager::clearing()
 
 void Manager::saving()
 {
-    QString filename = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("选择或创建json文件"), QString("./"), QString("Json Files (*.json)"));
+    QString filename = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("閫夋嫨鎴栧垱寤簀son鏂囦欢"), QString("./"), QString("Json Files (*.json)"));
     if (!filename.contains(QString(".json")))
     {
-        qDebug() << QString("请选择json文件");
+        qDebug() << QString("璇烽�夋嫨json鏂囦欢");
         return;
     }
     QJsonObject::iterator it;

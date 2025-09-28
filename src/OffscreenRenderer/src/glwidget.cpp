@@ -112,7 +112,7 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::initRenderThread()
 {
-    // UIÏß³ÌµÄcontext ¼°Æä¹ØÁªµÄ mainSurface
+    // UIçº¿ç¨‹çš„context åŠå…¶å…³è”çš„ mainSurface
     auto context = QOpenGLContext::currentContext();
     auto mainSurface = context->surface();
 
@@ -120,11 +120,11 @@ void GLWidget::initRenderThread()
     renderSurface->setFormat(context->format());
     renderSurface->create();
 
-    // doneCurrentÈ¡ÏûUIÏß³ÌµÄcontextÓëmainSurfaceµÄ¹ØÁª
-    // ÒÔ±ãÈÃäÖÈ¾Ïß³ÌµÄcontextºÍUIÏß³ÌµÄcontextÉèÖÃ¹²Ïí¹ØÏµ
+    // doneCurrentå–æ¶ˆUIçº¿ç¨‹çš„contextä¸ŽmainSurfaceçš„å…³è”
+    // ä»¥ä¾¿è®©æ¸²æŸ“çº¿ç¨‹çš„contextå’ŒUIçº¿ç¨‹çš„contextè®¾ç½®å…±äº«å…³ç³»
     context->doneCurrent();
 
-    // äÖÈ¾Ïß³Ì³õÊ¼»¯Íê±Ï£¬¿ÉÒÔÔÙ½«UIÏß³ÌµÄcontextÓëmainSurface¹ØÁª
+    // æ¸²æŸ“çº¿ç¨‹åˆå§‹åŒ–å®Œæ¯•ï¼Œå¯ä»¥å†å°†UIçº¿ç¨‹çš„contextä¸ŽmainSurfaceå…³è”
     m_thread = new RenderThread(renderSurface, context, this);
     context->makeCurrent(mainSurface);
 

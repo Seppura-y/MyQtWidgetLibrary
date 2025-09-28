@@ -527,7 +527,7 @@ QRectF DonutSwitchButtonPrivate::knobRect() const
 
 QRectF DonutSwitchButtonPrivate::knobRectAtPosition(qreal position) const
 {
-    QRectF track = trackRect();  // ĞŞ¸´£ºÕıÈ·µ÷ÓÃº¯Êı
+    QRectF track = trackRect();  // ä¿®å¤ï¼šæ­£ç¡®è°ƒç”¨å‡½æ•°
 
     qreal knobRadius = knob_size_ / 2.0;
     qreal trackPadding = knob_margin_;
@@ -543,8 +543,8 @@ QRectF DonutSwitchButtonPrivate::knobRectAtPosition(qreal position) const
 
 QRectF DonutSwitchButtonPrivate::onTextRect() const
 {
-    QRectF track = trackRect();  // ĞŞ¸´£ºÕıÈ·µ÷ÓÃº¯Êı
-    QRectF knob = knobRect();    // ĞŞ¸´£ºÕıÈ·µ÷ÓÃº¯Êı
+    QRectF track = trackRect();  // ä¿®å¤ï¼šæ­£ç¡®è°ƒç”¨å‡½æ•°
+    QRectF knob = knobRect();    // ä¿®å¤ï¼šæ­£ç¡®è°ƒç”¨å‡½æ•°
 
     return QRectF(knob.right(), track.top(),
         track.right() - knob.right(), track.height());
@@ -552,8 +552,8 @@ QRectF DonutSwitchButtonPrivate::onTextRect() const
 
 QRectF DonutSwitchButtonPrivate::offTextRect() const
 {
-    QRectF track = trackRect();  // ĞŞ¸´£ºÕıÈ·µ÷ÓÃº¯Êı
-    QRectF knob = knobRect();    // ĞŞ¸´£ºÕıÈ·µ÷ÓÃº¯Êı
+    QRectF track = trackRect();  // ä¿®å¤ï¼šæ­£ç¡®è°ƒç”¨å‡½æ•°
+    QRectF knob = knobRect();    // ä¿®å¤ï¼šæ­£ç¡®è°ƒç”¨å‡½æ•°
 
     return QRectF(track.left(), track.top(),
         knob.left() - track.left(), track.height());

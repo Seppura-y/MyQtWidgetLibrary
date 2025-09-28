@@ -14,14 +14,14 @@ TriangleDialog::TriangleDialog(int width, int height, QWidget* parent)
 	: QDialog(parent), start_x_(50), triangle_width_(TRIANGLE_WIDTH), triangle_height_(TRIANGLE_HEIGHT)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);  // ÉèÖÃÍ¸Ã÷´°¿Ú, Îª´°¿ÚÒõÓ°ºÍÔ²½Ç×ö×¼±¸
+    setAttribute(Qt::WA_TranslucentBackground);  // è®¾ç½®é€æ˜çª—å£, ä¸ºçª—å£é˜´å½±å’Œåœ†è§’åšå‡†å¤‡
 
     //UserInfoWidget* pUserinfoWidget = new UserInfoWidget(this);
 
     QVBoxLayout* pVlay = new QVBoxLayout(this);
     //pVlay->addWidget(pUserinfoWidget);
 
-    //ÉèÖÃ²¼¾ÖµÄËÄÖÜ±ß¾à
+    //è®¾ç½®å¸ƒå±€çš„å››å‘¨è¾¹è·
     pVlay->setContentsMargins(
         SHADOW_WIDTH,                   // left
         SHADOW_WIDTH + TRIANGLE_HEIGHT, // top
@@ -29,14 +29,14 @@ TriangleDialog::TriangleDialog(int width, int height, QWidget* parent)
         SHADOW_WIDTH                    // bottom
     );
 
-    // ÉèÖÃÒõÓ°±ß¿ò
+    // è®¾ç½®é˜´å½±è¾¹æ¡†
     auto shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setOffset(0, 0);
     shadowEffect->setColor(Qt::red);
     shadowEffect->setBlurRadius(SHADOW_WIDTH);
     this->setGraphicsEffect(shadowEffect);
 
-    //ÉèÖÃ´°¿Ú¹Ì¶¨´óĞ¡
+    //è®¾ç½®çª—å£å›ºå®šå¤§å°
     setFixedSize(width, height);
 }
 
@@ -55,11 +55,11 @@ void TriangleDialog::paintEvent(QPaintEvent* ev)
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(55, 55, 55));
 
-    // ÒÔÏÂ¼ÆËã×¢Òâ×ø±êÔ­µãÊÇ×óÉÏ½Ç
+    // ä»¥ä¸‹è®¡ç®—æ³¨æ„åæ ‡åŸç‚¹æ˜¯å·¦ä¸Šè§’
     QPolygon triangle_polygon;
-    triangle_polygon << QPoint(start_x_, triangle_height_ + SHADOW_WIDTH);      // ×ó
-    triangle_polygon << QPoint(start_x_ + triangle_width_ / 2, SHADOW_WIDTH);   // ÖĞ
-    triangle_polygon << QPoint(start_x_ + triangle_width_, triangle_height_ + SHADOW_WIDTH);    // ÓÒ
+    triangle_polygon << QPoint(start_x_, triangle_height_ + SHADOW_WIDTH);      // å·¦
+    triangle_polygon << QPoint(start_x_ + triangle_width_ / 2, SHADOW_WIDTH);   // ä¸­
+    triangle_polygon << QPoint(start_x_ + triangle_width_, triangle_height_ + SHADOW_WIDTH);    // å³
 
     QPainterPath draw_path;
     draw_path.addRoundedRect(
@@ -68,7 +68,7 @@ void TriangleDialog::paintEvent(QPaintEvent* ev)
             SHADOW_WIDTH + triangle_height_,                        // top
             this->width() - SHADOW_WIDTH * 2,                       // width
             this->height() - SHADOW_WIDTH * 2 - triangle_height_),  // height
-            BORDER_RADIUS, BORDER_RADIUS                            // µ¹½Ç
+            BORDER_RADIUS, BORDER_RADIUS                            // å€’è§’
     );
 
     draw_path.addPolygon(triangle_polygon);

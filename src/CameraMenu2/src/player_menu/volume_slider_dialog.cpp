@@ -20,7 +20,7 @@ VolumeSliderDialog::VolumeSliderDialog(QWidget* parent)
     v_layout->addWidget(slider_);
 
 	setFixedSize(40, 120);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Qt::ToolTip Ðü¸¡ÏÔÊ¾Ð§¹û
+    setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Qt::ToolTip æ‚¬æµ®æ˜¾ç¤ºæ•ˆæžœ
     setStyleSheet("QDialog{background-color: rgba(54, 54, 54, 0.5);}");
 
 

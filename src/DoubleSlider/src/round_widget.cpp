@@ -86,20 +86,20 @@ bool DonutSliderStyle::eventFilter(QObject* watched, QEvent* event)
     //        bool isMouseOverHandle = handleRect.contains(mouseEvent->pos());
 
     //        if (isMouseOverHandle && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)) {
-    //            // ´¦ÀíÊó±ê°´ÏÂºÍÒÆ¶¯ÊÂ¼ş
+    //            // å¤„ç†é¼ æ ‡æŒ‰ä¸‹å’Œç§»åŠ¨äº‹ä»¶
     //            int value = slider->minimum() + (slider->maximum() - slider->minimum()) * (mouseEvent->pos().x() - handleRect.left()) / handleRect.width();
     //            slider->setValue(value);
     //        }
     //    }
     //}
 
-    // ¼ÌĞø´«µİÊÂ¼ş
+    // ç»§ç»­ä¼ é€’äº‹ä»¶
     return QProxyStyle::eventFilter(watched, event);
 }
 
 QRect DonutSliderStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex* opt, SubControl sc, const QWidget* widget) const
 {
-    // ·µ»Ø×Ó¿Ø¼şËùÕ¼µÄ¾ØĞÎÇøÓò
+    // è¿”å›å­æ§ä»¶æ‰€å çš„çŸ©å½¢åŒºåŸŸ
     //if (cc != QStyle::CC_Slider || opt->direction != Qt::LeftToRight || sc == QStyle::SC_SliderTickmarks)
     if (cc != QStyle::CC_Slider || (sc != QStyle::SC_SliderGroove && sc != QStyle::SC_SliderHandle))
     {
@@ -117,14 +117,14 @@ QRect DonutSliderStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
     {
         const QStyleOptionSlider* sliderOpt = qstyleoption_cast<const QStyleOptionSlider*>(opt);
         if (!sliderOpt) {
-            // ´¦ÀíÀàĞÍ×ª»»Ê§°ÜµÄÇé¿ö
+            // å¤„ç†ç±»å‹è½¬æ¢å¤±è´¥çš„æƒ…å†µ
             return QRect();
         }
 
         int x = this->sliderPositionFromValue(
             sliderOpt->minimum, sliderOpt->maximum, sliderOpt->sliderPosition, rect_.width()
         );
-        // ½â¾ö»¬¿éÅÜ³ö»¬¶¯ÌõµÄÇé¿ö
+        // è§£å†³æ»‘å—è·‘å‡ºæ»‘åŠ¨æ¡çš„æƒ…å†µ
         x *= (rect_.width() - handle_size_.width()) / rect_.width();
         QRectF sliderRect = QRectF(0, 0, handle_size_.width(), handle_size_.height());
         return sliderRect.toRect();
@@ -136,7 +136,7 @@ QRect DonutSliderStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
 
 void DonutSliderStyle::drawComplexControl(ComplexControl cc, const QStyleOptionComplex* opt, QPainter* painter, const QWidget* widget) const
 {
-    // »æÖÆ×Ó¿Ø¼ş
+    // ç»˜åˆ¶å­æ§ä»¶
     if (cc != QStyle::CC_Slider /*|| opt->direction != Qt::LeftToRight*/)
     {
         return QProxyStyle::drawComplexControl(cc, opt, painter, widget);
@@ -147,23 +147,23 @@ void DonutSliderStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
     painter->setRenderHints(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
 
-    // »æÖÆ»¬²Û
+    // ç»˜åˆ¶æ»‘æ§½
     painter->save();
     painter->translate(grooveRect.topLeft());
 
-    // »æÖÆ»®¹ıµÄ²¿·Ö
+    // ç»˜åˆ¶åˆ’è¿‡çš„éƒ¨åˆ†
     int w = handleRect.x() - grooveRect.x();
     int h = 6; // self.config['groove.height'];
     painter->setBrush(QColor(255, 255, 255));    // self.config["sub-page.color"]
     painter->drawRect(0, 0, w, h);
 
-    // »æÖÆÎ´»®¹ıµÄ²¿·Ö
+    // ç»˜åˆ¶æœªåˆ’è¿‡çš„éƒ¨åˆ†
     int x = w + handle_size_.width();
     painter->setBrush(QColor(0, 0, 0));    // self.config["add-page.color"]
     painter->drawRect(x, 0, grooveRect.width() - w, h);
     painter->restore();
 
-    // »æÖÆ»¬¿é
+    // ç»˜åˆ¶æ»‘å—
     int ringWidth = 4;      // self.config["handle.ring-width"];
     int hollowRadius = 6;   // self.config["handle.hollow-radius"];
     int radius = ringWidth + hollowRadius;
@@ -179,10 +179,10 @@ void DonutSliderStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
     painter->setBrush(handleColor);
     painter->drawPath(path);
 
-    // »¬¿é°´ÏÂ
+    // æ»‘å—æŒ‰ä¸‹
     const QStyleOptionSlider* sliderOpt = qstyleoption_cast<const QStyleOptionSlider*>(opt);
     if (!sliderOpt) {
-        // ´¦ÀíÀàĞÍ×ª»»Ê§°ÜµÄÇé¿ö
+        // å¤„ç†ç±»å‹è½¬æ¢å¤±è´¥çš„æƒ…å†µ
         return;
     }
     bool isSliderDown = sliderOpt->state & QStyle::State_Sunken;
@@ -215,7 +215,7 @@ void DonutStylePainter::drawComplexControl(QStyle::ComplexControl cc, const QSty
         return;
     }
 
-    // »æÖÆ»¬¿é
+    // ç»˜åˆ¶æ»‘å—
     auto handleRect = opt.rect;
     int radius = 8;
 
@@ -230,7 +230,7 @@ void DonutStylePainter::drawComplexControl(QStyle::ComplexControl cc, const QSty
     this->setBrush(handleColor);
     this->drawPath(path);
 
-    // »¬¿é°´ÏÂ
+    // æ»‘å—æŒ‰ä¸‹
     if (opt.state & QStyle::State_Sunken)
     {
         handleColor = QColor(0, 255, 0);
@@ -240,7 +240,7 @@ void DonutStylePainter::drawComplexControl(QStyle::ComplexControl cc, const QSty
     }
     //const QStyleOptionSlider* sliderOpt = qstyleoption_cast<const QStyleOptionSlider*>(opt);
     //if (!sliderOpt) {
-    //    // ´¦ÀíÀàĞÍ×ª»»Ê§°ÜµÄÇé¿ö
+    //    // å¤„ç†ç±»å‹è½¬æ¢å¤±è´¥çš„æƒ…å†µ
     //    return;
     //}
     //bool isSliderDown = sliderOpt->state & QStyle::State_Sunken;

@@ -35,38 +35,35 @@ int main(int argc, char* argv[])
         qproperty-borderWidth: 2;
         qproperty-knobShape: RoundedRectKnob;
         qproperty-trackShape: RoundedTrack;
-        qproperty-onText: "¿ªÆô";
-        qproperty-offText: "¹Ø±Õ";
+        qproperty-onText: "å¼€å¯";
+        qproperty-offText: "å…³é—­";
         qproperty-showText: true;
         qproperty-trackRadius: 10;
         qproperty-knobRadius: 5;
     }
     )");
     //switch_btn.setGeometry(20, 100, 50, 30);
-    // ÉèÖÃÑÕÉ«
-    switch_btn.setOnColor(QColor(34, 139, 34));   // ÂÌÉ«
-    switch_btn.setOffColor(QColor(255, 69, 0));   // ºìÉ«
-    switch_btn.setKnobColor(QColor(255, 255, 255)); // °×É«
+    // è®¾ç½®é¢œè‰²
+    switch_btn.setOnColor(QColor(34, 139, 34));   // ç»¿è‰²
+    switch_btn.setOffColor(QColor(255, 69, 0));   // çº¢è‰²
+    switch_btn.setKnobColor(QColor(255, 255, 255)); // ç™½è‰²
 
-    // ÉèÖÃĞÎ×´
+    // è®¾ç½®å½¢çŠ¶
     switch_btn.setKnobShape(DonutSwitchButton::RoundedRectKnob);
     switch_btn.setTrackShape(DonutSwitchButton::RoundedTrack);
 
-    // ÉèÖÃÎÄ×Ö
+    // è®¾ç½®æ–‡å­—
     //switch_btn.setOnText(QString("OK"));
     //switch_btn.setOffText(QString("CK"));
     switch_btn.setShowText(true);
 
-    // ÉèÖÃ±ß¿ò
+    // è®¾ç½®è¾¹æ¡†
     switch_btn.setBorderWidth(2);
     switch_btn.setBorderColor(QColor(100, 100, 100));
 
     switch_btn.show();
 
     DonutDoubleSlider span_slider(Qt::Horizontal, &w);
-    span_slider.setGeometry(20, 200, 500, 500);
-    span_slider.setHandleMovementMode(DonutDoubleSlider::NoOverlapping);
-    span_slider.show();
 
     DonutTimeline timeline(Qt::Horizontal, &w);
     timeline.setGeometry(20, 300, 500, 46);

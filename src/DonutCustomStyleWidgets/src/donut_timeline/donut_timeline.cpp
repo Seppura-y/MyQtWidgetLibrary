@@ -97,7 +97,7 @@ int DonutTimelinePrivate::pixelPosToRangeValue(int pos) const
     }
 
     return QStyle::sliderValueFromPosition(
-        p->minimum(), p->maximum(), // valueÖµµÄ·¶Î§
+        p->minimum(), p->maximum(), // valueå€¼çš„èŒƒå›´
         pos - slider_min,           // pixel position
         slider_max - slider_min,    // pixel range
         opt.upsideDown
@@ -142,7 +142,7 @@ QRect DonutTimelinePrivate::getSpan(QPainter* painter, const QRect& rect) const
     return rect.intersected(groove);
 }
 
-// case sliderMove Ã»ÓĞ¼Óbreak£¬¼´Ìø¹ıif (!no && !up)ÅĞ¶Ï
+// case sliderMove æ²¡æœ‰åŠ breakï¼Œå³è·³è¿‡if (!no && !up)åˆ¤æ–­
 void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, bool main)
 {
     int value = 0;
@@ -152,8 +152,8 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
     const int max = q_ptr_->maximum();
     const DonutTimeline::SpanHandle altControl = (main_control_ == DonutTimeline::LowerHandle ? DonutTimeline::UpperHandle : DonutTimeline::LowerHandle);
 
-    // ÊÖ¶¯ÉèÖÃÍ£Ö¹×·×ÙsliderÎ»ÖÃ£¬
-    // ·ÀÖ¹mouseMoveEvent ÖĞµ÷ÓÃ setUpperPosition ºÍ setLowerPositionÊ±£¬ÔÚÆäÖĞÑ­»·µ÷ÓÃtriggerAction
+    // æ‰‹åŠ¨è®¾ç½®åœæ­¢è¿½è¸ªsliderä½ç½®ï¼Œ
+    // é˜²æ­¢mouseMoveEvent ä¸­è°ƒç”¨ setUpperPosition å’Œ setLowerPositionæ—¶ï¼Œåœ¨å…¶ä¸­å¾ªç¯è°ƒç”¨triggerAction
     block_tracking_ = true;
 
     switch (action)
@@ -202,9 +202,9 @@ void DonutTimelinePrivate::triggerAction(QAbstractSlider::SliderAction action, b
     {
         //std::cout << "!no && !up ---------------" << std::endl;
 
-        if (movement_ == DonutTimeline::NoCrossing) // NoCrossing×´Ì¬£¬Á½¸örange handle ¿ÉÒÔÖØµş£¬µ«²»ÄÜÍÏ¶¯µ½¶Ô·½µÄ·¶Î§Íâ
+        if (movement_ == DonutTimeline::NoCrossing) // NoCrossingçŠ¶æ€ï¼Œä¸¤ä¸ªrange handle å¯ä»¥é‡å ï¼Œä½†ä¸èƒ½æ‹–åŠ¨åˆ°å¯¹æ–¹çš„èŒƒå›´å¤–
             value = qMin(value, upper_);
-        else if (movement_ == DonutTimeline::NoOverlapping) // NoOverlapping×´Ì¬£¬Á½¸örange handle ²»¿ÉÒÔÖØµş£¬Ò²²»ÄÜÍÏ¶¯µ½¶Ô·½µÄ·¶Î§Íâ
+        else if (movement_ == DonutTimeline::NoOverlapping) // NoOverlappingçŠ¶æ€ï¼Œä¸¤ä¸ªrange handle ä¸å¯ä»¥é‡å ï¼Œä¹Ÿä¸èƒ½æ‹–åŠ¨åˆ°å¯¹æ–¹çš„èŒƒå›´å¤–
             value = qMin(value, upper_ - 1);
 
         if (movement_ == DonutTimeline::FreeMovement && value > upper_)
@@ -253,7 +253,7 @@ void DonutTimelinePrivate::swapControls()
     main_control_ = (main_control_ == DonutTimeline::LowerHandle ? DonutTimeline::UpperHandle : DonutTimeline::LowerHandle);
 }
 
-// Êó±êÍÏ¶¯Êµ²â´ÓÀ´²»»á´¥·¢
+// é¼ æ ‡æ‹–åŠ¨å®æµ‹ä»æ¥ä¸ä¼šè§¦å‘
 void DonutTimelinePrivate::updateRange(int min, int max)
 {
     Q_UNUSED(min);
@@ -276,8 +276,8 @@ void DonutTimelinePrivate::movePressedHandle()
     case DonutTimeline::UpperHandle:
         if (upper_pos_ != upper_)
         {
-            // main_control_ == DonutTimeline::UpperHandleÕâÖÖÇé¿öÖ»³öÏÖÔÚFreeMovementÏÂ£¬·¢ÉúswapControlºó
-            // ³õÊ¼»¯×´Ì¬ÏÂ£¬ÊÇlower»¹ÊÇupperÒÑ¾­¹Ì¶¨£¬²»ÂÛswap¶àÉÙ´Î
+            // main_control_ == DonutTimeline::UpperHandleè¿™ç§æƒ…å†µåªå‡ºç°åœ¨FreeMovementä¸‹ï¼Œå‘ç”ŸswapControlå
+            // åˆå§‹åŒ–çŠ¶æ€ä¸‹ï¼Œæ˜¯lowerè¿˜æ˜¯upperå·²ç»å›ºå®šï¼Œä¸è®ºswapå¤šå°‘æ¬¡
             bool main = (main_control_ == DonutTimeline::UpperHandle);
             triggerAction(QAbstractSlider::SliderMove, main);
         }
@@ -561,7 +561,7 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
     DonutTimelineStyleOption opt;
     d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
     const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
-    int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // ÕâÀï¼õÈ¥ d_ptr_->offset_ ÊÇÎªÁËÔÚÊó±êÒÆ³öÖ÷´°¿ÚÊ±
+    int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // è¿™é‡Œå‡å» d_ptr_->offset_ æ˜¯ä¸ºäº†åœ¨é¼ æ ‡ç§»å‡ºä¸»çª—å£æ—¶
 
     if (d_ptr_->lower_pressed_ != QStyle::SC_SliderHandle
         && d_ptr_->upper_pressed_ != QStyle::SC_SliderHandle
@@ -577,19 +577,19 @@ void DonutTimeline::mouseMoveEvent(QMouseEvent* event)
         DonutTimelineStyleOption opt;
         d_ptr_->initStyleOption(&opt, DonutTimeline::SpanHandle::UpperHandle);
         const int m = style()->pixelMetric(QStyle::PM_MaximumDragDistance, &opt, this);
-        int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // ÕâÀï¼õÈ¥ d_ptr_->offset_ ÊÇÎªÁËÔÚÊó±êÒÆ³öÖ÷´°¿ÚÊ±
+        int new_position = d_ptr_->pixelPosToRangeValue(d_ptr_->pick(event->pos()) /*- d_ptr_->offset_*/); // è¿™é‡Œå‡å» d_ptr_->offset_ æ˜¯ä¸ºäº†åœ¨é¼ æ ‡ç§»å‡ºä¸»çª—å£æ—¶
         if (m >= 0)
         {
             const QRect r = rect().adjusted(-m, -m, m, m);
             if (!r.contains(event->pos()))
             {
                 //std::cout << "mouseMoveEvent : beside PM_MaximumDragDistance" << std::endl;
-                new_position = d_ptr_->position_;   // Êó±êÒÆ¶¯PM_MaximumDragDistanceÊ±£¬ÉèÖÃ»Ød_ptr_->position_£¬µ÷ÓÃhandleMousePressÊ±¸üĞÂd_ptr_->position_
+                new_position = d_ptr_->position_;   // é¼ æ ‡ç§»åŠ¨PM_MaximumDragDistanceæ—¶ï¼Œè®¾ç½®å›d_ptr_->position_ï¼Œè°ƒç”¨handleMousePressæ—¶æ›´æ–°d_ptr_->position_
             }
         }
 
         // pick the preferred handle on the first movement
-        if (d_ptr_->first_movement_)    // Ä¿Ç°Ã»¿´³öÕâ¶ÎifµÄ×÷ÓÃ£¬×¢ÊÍµôÒ²Ã»Ó°Ïì
+        if (d_ptr_->first_movement_)    // ç›®å‰æ²¡çœ‹å‡ºè¿™æ®µifçš„ä½œç”¨ï¼Œæ³¨é‡Šæ‰ä¹Ÿæ²¡å½±å“
         {
             if (d_ptr_->lower_ == d_ptr_->upper_)
             {

@@ -37,7 +37,7 @@ void MouseMovePainterWidget::clearCanvas()
 
 void MouseMovePainterWidget::paintEvent(QPaintEvent* ev)
 {
-    // 设置了才能使这个作为子窗口的widget的样式表生效
+    // 璁剧疆浜嗘墠鑳戒娇杩欎釜浣滀负瀛愮獥鍙ｇ殑widget鐨勬牱寮忚〃鐢熸晥
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
@@ -102,7 +102,7 @@ void MouseMovePainterWidget::mouseReleaseEvent(QMouseEvent* ev)
     {
         if (is_drawing_)
         {
-            // 鼠标松开后最新的点入队列
+            // 榧犳爣鏉惧紑鍚庢渶鏂扮殑鐐瑰叆闃熷垪
             point_list_.push_back(QPointF(ev->x(), ev->y()));
             is_moving_ = false;
             this->update();

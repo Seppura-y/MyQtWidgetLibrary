@@ -10,7 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(QStylePainter)
 QT_FORWARD_DECLARE_CLASS(QStyleOptionSlider)
 
-// DonutDoubleSlider的数据类
+// DonutDoubleSlider鐨勬暟鎹被
 class DonutDoubleSliderPrivate : public QObject
 {
 	Q_OBJECT

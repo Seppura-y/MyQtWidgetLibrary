@@ -42,20 +42,20 @@ void MainWid::initGraphicsView()
     QRectF rect(-200, -100, 400, 200);
     scene_ = new QGraphicsScene(rect);
 
-    //¸øÊÓÍ¼ÉèÖÃ³¡¾°
+    //ç»™è§†å›¾è®¾ç½®åœºæ™¯
     view_->setScene(scene_);
 
-    //»­Ò»¸ö¾ØÐÎ¿ò£¬´óÐ¡µÈÓÚscene
+    //ç”»ä¸€ä¸ªçŸ©å½¢æ¡†ï¼Œå¤§å°ç­‰äºŽscene
     QGraphicsRectItem* item = new QGraphicsRectItem(rect);
 
-    //¿ÉÑ¡£¬¿ÉÒÔÓÐ½¹µã£¬µ«ÊÇ²»ÄÜÒÆ¶¯
+    //å¯é€‰ï¼Œå¯ä»¥æœ‰ç„¦ç‚¹ï¼Œä½†æ˜¯ä¸èƒ½ç§»åŠ¨
     item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
     QPen    pen;
     pen.setWidth(20);
     item->setPen(pen);
     scene_->addItem(item);
 
-    //Ò»¸öÎ»ÓÚsceneÖÐÐÄµÄÍÖÔ²
+    //ä¸€ä¸ªä½äºŽsceneä¸­å¿ƒçš„æ¤­åœ†
     QGraphicsEllipseItem* item2 = new QGraphicsEllipseItem(-100, -50, 200, 100);
     item2->setPos(-200, 0);
     item2->setBrush(QBrush(Qt::blue));
@@ -64,7 +64,7 @@ void MainWid::initGraphicsView()
         | QGraphicsItem::ItemIsFocusable);
     scene_->addItem(item2);
 
-    //Ò»¸öÔ²£¬ÖÐÐÄÎ»ÓÚsceneµÄ±ßÔµ
+    //ä¸€ä¸ªåœ†ï¼Œä¸­å¿ƒä½äºŽsceneçš„è¾¹ç¼˜
     QGraphicsEllipseItem* item3 = new QGraphicsEllipseItem(-50, -50, 100, 100);
     item3->setPos(rect.right(), rect.bottom());
     item3->setBrush(QBrush(Qt::red));

@@ -41,7 +41,7 @@ void SockClient::StartTransfer()
     m_sndFile_ = new QFile(m_snd_filename_);
     if (!m_sndFile_->open(QFile::ReadOnly)) 
     {
-        qDebug() << "client£ºopen file error!";
+        qDebug() << "clientï¼šopen file error!";
         return;
     }
     m_totalBytes_ = m_sndFile_->size();

@@ -97,11 +97,11 @@ void VolumeButton::enterEvent(QEvent* ev)
 
 	QPoint button_pos = this->mapToGlobal(QPoint(0, 0));
 	QRect button_rect = this->rect();
-	QRect dialog_rect = volume_slider_dialog_->rect();	//rect包含标题栏，去掉标题栏后height不变
+	QRect dialog_rect = volume_slider_dialog_->rect();	//rect鍖呭惈鏍囬鏍忥紝鍘绘帀鏍囬鏍忓悗height涓嶅彉
 
 	int x = button_pos.x() + (button_rect.width() - dialog_rect.width()) / 2;
 	int y = button_pos.y() - dialog_rect.height() - 5;
-	volume_slider_dialog_->move(x, y);	//相对于global
+	volume_slider_dialog_->move(x, y);	//鐩稿浜巊lobal
 
 	volume_slider_dialog_->show();
 	timer_id_ = startTimer(250);

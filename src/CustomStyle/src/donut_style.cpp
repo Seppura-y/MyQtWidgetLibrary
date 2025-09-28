@@ -108,7 +108,7 @@ void DonutStyle::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* 
 
     QCommonStyle::drawPrimitive(pe, opt, p, w);
 
-    //ºóĞø·ÖÀë¿ªÎªÄ£¿éµÄÅĞ¶Ï
+    //åç»­åˆ†ç¦»å¼€ä¸ºæ¨¡å—çš„åˆ¤æ–­
 //    if (Q_UNLIKELY(pe < QStyle::PE_CustomBase))
 //    else
 //        drawPrimitive(this, static_cast<DonutStyle::PrimitiveElement>(pe), opt, p, w);
@@ -120,27 +120,27 @@ void DonutStyle::drawControl(QStyle::ControlElement element, const QStyleOption*
 
     switch(element)
     {
-        case CE_ScrollBarAddPage: //Ôö¼Ó»¬²Û
+        case CE_ScrollBarAddPage: //å¢åŠ æ»‘æ§½
         {
             p->fillRect(opt->rect, QColor("#bfe9ff"));
             return;
         }
-        case CE_ScrollBarSubPage: //¼õÉÙ»¬²Û
+        case CE_ScrollBarSubPage: //å‡å°‘æ»‘æ§½
         {
             p->fillRect(opt->rect, QColor("#EC6EAD"));
             return;
         }
-        case CE_ScrollBarSlider: //»¬¿é
+        case CE_ScrollBarSlider: //æ»‘å—
         {
             p->fillRect(opt->rect, QColor("#A8BFFF"));
             return;
         }
-        case CE_ScrollBarAddLine: //Ôö¼Ó°´Å¥
+        case CE_ScrollBarAddLine: //å¢åŠ æŒ‰é’®
         {
             p->fillRect(opt->rect, QColor("#21d4fd"));
             return;
         }
-        case CE_ScrollBarSubLine: //¼õÉÙ°´Å¥
+        case CE_ScrollBarSubLine: //å‡å°‘æŒ‰é’®
         {
             p->fillRect(opt->rect, QColor("#de6161"));
             return;
@@ -456,7 +456,7 @@ DonutStylePainter::DonutStylePainter(QWidget* w)
     m_widget = w;
     m_qStyle = w->style();
     m_myStyleHelp.setStyle(m_qStyle);
-    QPainter::begin(w); //ÊÇµ÷ÓÃ¸¸ÀàµÄ begin(), µ÷ÊÔ°ëÌì²Å·¢ÏÖ
+    QPainter::begin(w); //æ˜¯è°ƒç”¨çˆ¶ç±»çš„ begin(), è°ƒè¯•åŠå¤©æ‰å‘ç°
 }
 
 void DonutStylePainter::drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt)

@@ -183,42 +183,42 @@ void DisplayWidget::initToolBar()
 	btn_split_1_->setText(QChar(0x23f9));
 	btn_split_1_->setFixedSize(28, 28);
 	btn_split_1_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_1_->setToolTip(QString::fromLocal8Bit("1x1ÊÓÍ¼"));
+	btn_split_1_->setToolTip(QString::fromLocal8Bit("1x1è§†å›¾"));
 
 	btn_split_4_->setCheckable(true);
 	btn_split_4_->setFont(font);
 	btn_split_4_->setText(QChar(0xe196));
 	btn_split_4_->setFixedSize(28, 28);
 	btn_split_4_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_4_->setToolTip(QString::fromLocal8Bit("4x4ÊÓÍ¼"));
+	btn_split_4_->setToolTip(QString::fromLocal8Bit("4x4è§†å›¾"));
 
 	btn_split_9_->setCheckable(true);
 	btn_split_9_->setFont(font);
 	btn_split_9_->setText(QChar(0xe195));
 	btn_split_9_->setFixedSize(28, 28);
 	btn_split_9_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_9_->setToolTip(QString::fromLocal8Bit("9x9ÊÓÍ¼"));
+	btn_split_9_->setToolTip(QString::fromLocal8Bit("9x9è§†å›¾"));
 
 	btn_split_16_->setCheckable(true);
 	btn_split_16_->setFont(font);
 	btn_split_16_->setText(QChar(0xe198));
 	btn_split_16_->setFixedSize(28, 28);
 	btn_split_16_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_16_->setToolTip(QString::fromLocal8Bit("16x16ÊÓÍ¼"));
+	btn_split_16_->setToolTip(QString::fromLocal8Bit("16x16è§†å›¾"));
 
 	btn_split_25_->setCheckable(true);
 	btn_split_25_->setFont(font);
 	btn_split_25_->setText(QChar(0xe199));
 	btn_split_25_->setFixedSize(28, 28);
 	btn_split_25_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_25_->setToolTip(QString::fromLocal8Bit("25x25ÊÓÍ¼"));
+	btn_split_25_->setToolTip(QString::fromLocal8Bit("25x25è§†å›¾"));
 
 	btn_split_custom_->setCheckable(true);
 	btn_split_custom_->setFont(font);
 	btn_split_custom_->setText(QChar(0xe3c1));
 	btn_split_custom_->setFixedSize(28, 28);
 	btn_split_custom_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_split_custom_->setToolTip(QString::fromLocal8Bit("×Ô¶¨ÒåÊÓÍ¼"));
+	btn_split_custom_->setToolTip(QString::fromLocal8Bit("è‡ªå®šä¹‰è§†å›¾"));
 
 	seperator->setEnabled(false);
 	seperator->setMinimumWidth(20);
@@ -262,7 +262,7 @@ void DisplayWidget::initToolBar()
 	btn_add_source_->setText(QChar(0xe59e));
 	btn_add_source_->setFixedSize(28, 28);
 	btn_add_source_->setCursor(QCursor(Qt::PointingHandCursor));
-	btn_add_source_->setToolTip(QString::fromLocal8Bit("Ìí¼Ó²¶»ñÔ´"));
+	btn_add_source_->setToolTip(QString::fromLocal8Bit("æ·»åŠ æ•è·æº"));
 
 	layout_toolbar_->addSpacerItem(hor_spacer1);
 	layout_toolbar_->addWidget(btn_split_1_);

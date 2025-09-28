@@ -16,10 +16,10 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 	this->setStyleSheet("background-color:rgb(51, 51, 51);color:rgb(200,200,200);");
 
 	QLabel* lab_base_set = new QLabel(this);
-	lab_base_set->setText(u8"»ù±¾ÉèÖÃ");
+	lab_base_set->setText(u8"åŸºæœ¬è®¾ç½®");
 
 	QCheckBox* ckb_start_with_win = new QCheckBox(this);
-	ckb_start_with_win->setText(u8"¿ª»úÆô¶¯");
+	ckb_start_with_win->setText(u8"å¼€æœºå¯åŠ¨");
 	std::string s = R"(
 		QCheckBox::indicator:checked { color: red; }
 		QCheckBox::indicator:checked:hover { color: darkred; }
@@ -35,14 +35,14 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 
 	QCheckBox* ckb_no_disturb = new QCheckBox(this);
 	ckb_no_disturb->setFixedWidth(140);
-	ckb_no_disturb->setText(u8"¿ªÆôÃâ´òÈÅÄ£Ê½");
+	ckb_no_disturb->setText(u8"å¼€å¯å…æ‰“æ‰°æ¨¡å¼");
 
 	QLabel* lb_1 = new QLabel(this);
 	lb_1->setText("?");
 
 	QCheckBox* ckb_boss_key = new QCheckBox(this);
 	ckb_boss_key->setFixedWidth(105);
-	ckb_boss_key->setText(u8"¿ªÆôÀÏ°å¼ü");
+	ckb_boss_key->setText(u8"å¼€å¯è€æ¿é”®");
 
 	QLineEdit* le_1 = new QLineEdit(this);
 	le_1->setFixedWidth(100);
@@ -51,24 +51,24 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 	lb_2->setText("?");
 
 	QCheckBox* ckb_show_main = new QCheckBox(this);
-	ckb_show_main->setText(u8"ÐÂ½¨Ê±ÏÔÊ¾Ö÷½çÃæ");
+	ckb_show_main->setText(u8"æ–°å»ºæ—¶æ˜¾ç¤ºä¸»ç•Œé¢");
 
 	QLabel* lb_download_mode = new QLabel(this);
-	lb_download_mode->setText(u8"ÏÂÔØÄ£Ê½");
+	lb_download_mode->setText(u8"ä¸‹è½½æ¨¡å¼");
 
 	QRadioButton* rb_max_speed = new QRadioButton(this);
-	rb_max_speed->setText(u8"È«ËÙÏÂÔØ");
+	rb_max_speed->setText(u8"å…¨é€Ÿä¸‹è½½");
 
 	QRadioButton* rb_limmit_speed = new QRadioButton(this);
-	rb_limmit_speed->setText(u8"ÏÞËÙÏÂÔØ");
+	rb_limmit_speed->setText(u8"é™é€Ÿä¸‹è½½");
 	rb_limmit_speed->setFixedWidth(90);
 
 	QPushButton* pb_setting = new QPushButton(this);
-	pb_setting->setText(u8"ÐÞ¸ÄÉèÖÃ");
+	pb_setting->setText(u8"ä¿®æ”¹è®¾ç½®");
 	pb_setting->setStyleSheet("background-color:#1A1A1A;color:#5F5F5F");
 
 	QLabel* lb_cfginfo = new QLabel(this);
-	lb_cfginfo->setText(u8"ÏÞÖÆÊ±¼ä¶Î: 00:00-23:59 ×î´óÏÂÔØËÙ¶È:²»ÏÞËÙ");
+	lb_cfginfo->setText(u8"é™åˆ¶æ—¶é—´æ®µ: 00:00-23:59 æœ€å¤§ä¸‹è½½é€Ÿåº¦:ä¸é™é€Ÿ");
 
 	QVBoxLayout* main_layout = new QVBoxLayout(this);
 	main_layout->addWidget(lab_base_set);
@@ -85,7 +85,7 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 	h_layout_2->addWidget(ckb_no_disturb);
 	h_layout_2->addWidget(lb_1);
 
-	v_layout_1->addLayout(h_layout_2);  // Ìí¼ÓÃâ´òÈÅµÄË®Æ½²¼¾Ö
+	v_layout_1->addLayout(h_layout_2);  // æ·»åŠ å…æ‰“æ‰°çš„æ°´å¹³å¸ƒå±€
 	v_layout_1->addSpacing(20);
 
 	QHBoxLayout* h_layout_3 = new QHBoxLayout;
@@ -99,10 +99,10 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 	v_layout_1->addWidget(ckb_show_main);
 	v_layout_1->addSpacing(20);
 
-	v_layout_1->addWidget(lb_download_mode);  // ÏÂÔØÄ£Ê½
+	v_layout_1->addWidget(lb_download_mode);  // ä¸‹è½½æ¨¡å¼
 	v_layout_1->addSpacing(20);
 
-	QHBoxLayout* h_layout_4 = new QHBoxLayout;  //  ÏÂÔØÄ£Ê½ÏÂÃæµÄË®Æ½²¼¾Ö
+	QHBoxLayout* h_layout_4 = new QHBoxLayout;  //  ä¸‹è½½æ¨¡å¼ä¸‹é¢çš„æ°´å¹³å¸ƒå±€
 	h_layout_4->addSpacing(30);
 
 	QVBoxLayout* v_layout_2 = new QVBoxLayout();
@@ -113,7 +113,7 @@ ScrollAreaItemBase::ScrollAreaItemBase(QWidget* parent)
 	v_layout_2->addLayout(h_layout_5);
 	v_layout_2->addSpacing(20);
 
-	// ÏÞËÙÏÂÔØ
+	// é™é€Ÿä¸‹è½½
 	QHBoxLayout* h_layout_6 = new QHBoxLayout;
 	h_layout_6->addWidget(rb_limmit_speed);
 	h_layout_6->addWidget(pb_setting);

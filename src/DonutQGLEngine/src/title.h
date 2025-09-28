@@ -28,7 +28,7 @@ public:
 
 	void setMenu(MenuBar* bar);
 	QWidget* getMenuWidget() { return menu_wid_; }
-	//ÅÅ³ı°´¼üµÄTitleBar¿Õ°×ÇøÓò
+	//æ’é™¤æŒ‰é”®çš„TitleBarç©ºç™½åŒºåŸŸ
 	QRect getPlainTitleRect();
 
 	class HintButton : public QPushButton

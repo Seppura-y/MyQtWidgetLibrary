@@ -9,15 +9,15 @@ class DonutStyle : public QCommonStyle
     Q_OBJECT //connect qobject_cast
 
 public:
-    //ÕâÀïĞÂÔö¼ÓµÄÃ¶¾Ù£¬ÊÇÊôÓÚ MyStyle:: , ¶ø·Ç QStyle:: ·¶Î§
+    //è¿™é‡Œæ–°å¢åŠ çš„æšä¸¾ï¼Œæ˜¯å±äº MyStyle:: , è€Œé QStyle:: èŒƒå›´
     enum ControlElement {
-        CE_SwitchButton = QStyle::CE_CustomBase + 1,                   //switchButton ¿Ø¼ş
+        CE_SwitchButton = QStyle::CE_CustomBase + 1,                   //switchButton æ§ä»¶
         CE_CustomBase = QStyle::CE_CustomBase + 0xf00000
     };
 
     enum SubElement {
-        SE_SwitchButtonGroove = QStyle::SE_CustomBase + 1,             //»¬²Û¾ØĞÎ´óĞ¡
-        SE_SwitchButtonHandle,                                         //»¬¿é¾ØĞÎ´óĞ¡
+        SE_SwitchButtonGroove = QStyle::SE_CustomBase + 1,             //æ»‘æ§½çŸ©å½¢å¤§å°
+        SE_SwitchButtonHandle,                                         //æ»‘å—çŸ©å½¢å¤§å°
         SE_CustomBase = QStyle::SE_CustomBase + 0xf00000
     };
 
@@ -28,8 +28,8 @@ public:
     };
 
     enum PrimitiveElement {
-        PE_SwitchButtonGroove = QStyle::PE_CustomBase + 1,             //»¬²Û
-        PE_SwitchButtonHandle,                                         //»¬¿é
+        PE_SwitchButtonGroove = QStyle::PE_CustomBase + 1,             //æ»‘æ§½
+        PE_SwitchButtonHandle,                                         //æ»‘å—
         PE_CustomBase = QStyle::PE_CustomBase + 0xf00000
     };
 
@@ -44,30 +44,30 @@ public:
     // QStyle interface
 public:
 
-    //static º¯Êı£¬¹© StyleHelper µ÷ÓÃ [ÓÃÀ´»æ»­×ÔÔö¼ÓµÄ¿Ø¼şÃ¶¾Ù]
+    //static å‡½æ•°ï¼Œä¾› StyleHelper è°ƒç”¨ [ç”¨æ¥ç»˜ç”»è‡ªå¢åŠ çš„æ§ä»¶æšä¸¾]
     static void drawPrimitive(const QStyle* style, DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w = nullptr);
     static void drawControl(const QStyle* style, DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w);
     
-    // static°æ±¾
+    // staticç‰ˆæœ¬
     static void drawComplexControl(const QStyle* style, const DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w);
 
     static QRect subElementRect(const QStyle* style, DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget);
     static int pixelMetric(const QStyle* style, DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget);
 
-    //×Ô¶¨ÒåµÄÃ¶¾ÙÀàĞÍ , Ö»ÄÜ¹»ÔÚ´ËÄÚÁªº¯ÊıÀïÃæµ÷ÓÃ
-    //[Ö÷ÒªÓÃÀ´»æ»­ ×Ô¶¨ÒåĞÂÔö µÄ¿Ø¼şÃ¶¾Ù --> Êµ¼Êµ÷ÓÃÔÚ ÏÂÃæµÄ virtual ÀïÃæ»æ»­]
+    //è‡ªå®šä¹‰çš„æšä¸¾ç±»å‹ , åªèƒ½å¤Ÿåœ¨æ­¤å†…è”å‡½æ•°é‡Œé¢è°ƒç”¨
+    //[ä¸»è¦ç”¨æ¥ç»˜ç”» è‡ªå®šä¹‰æ–°å¢ çš„æ§ä»¶æšä¸¾ --> å®é™…è°ƒç”¨åœ¨ ä¸‹é¢çš„ virtual é‡Œé¢ç»˜ç”»]
     inline void drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w = nullptr) const;
     void drawControl(DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const;
     
-    // ×ª·¢£¬Êµ¼Êµ÷ÓÃÖØÔØQStyleµÄ°æ±¾
+    // è½¬å‘ï¼Œå®é™…è°ƒç”¨é‡è½½QStyleçš„ç‰ˆæœ¬
     void drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const;
 
     inline QRect subElementRect(DonutStyle::SubElement subElement, const QStyleOption* option, const QWidget* widget) const;
     inline int pixelMetric(DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget) const;
 
-    //ÕâÀïµÄ¿ì½İ·½Ê½´´½¨µÄÃ¶¾Ù,¶¼ÊÇ²»´øQStyle:: ; µ«ÊÇ¿ì½İ·½Ê½µÄ¶¨ÒåÊÇ´øÊÇQStyle:: , ´Ë´¦ÉùÃ÷µÄµØ·½±ØĞë¼ÓÉÏ QStyle:: /*ºóÃæ¸ÄĞ´¸ü¸´ÔÓµÄµÃĞ´ÉÏDonutStyle:: ÒòÌí¼Ó×Ô¶¨ÒåµÄÃ¶¾Ù*/
-    //ÕâÀï override µÄĞéº¯Êı£¬Ö»ÄÜ¹»µ÷ÓÃ¾ÉÓĞµÄ  QStyle:: µÄº¯Êı
-    //[Ö÷ÒªÓÃÀ´»æ»­ Qt ¡¢ ×Ô¶¨ÒåĞÂÔö µÄ¿Ø¼şÃ¶¾Ù]
+    //è¿™é‡Œçš„å¿«æ·æ–¹å¼åˆ›å»ºçš„æšä¸¾,éƒ½æ˜¯ä¸å¸¦QStyle:: ; ä½†æ˜¯å¿«æ·æ–¹å¼çš„å®šä¹‰æ˜¯å¸¦æ˜¯QStyle:: , æ­¤å¤„å£°æ˜çš„åœ°æ–¹å¿…é¡»åŠ ä¸Š QStyle:: /*åé¢æ”¹å†™æ›´å¤æ‚çš„å¾—å†™ä¸ŠDonutStyle:: å› æ·»åŠ è‡ªå®šä¹‰çš„æšä¸¾*/
+    //è¿™é‡Œ override çš„è™šå‡½æ•°ï¼Œåªèƒ½å¤Ÿè°ƒç”¨æ—§æœ‰çš„  QStyle:: çš„å‡½æ•°
+    //[ä¸»è¦ç”¨æ¥ç»˜ç”» Qt ã€ è‡ªå®šä¹‰æ–°å¢ çš„æ§ä»¶æšä¸¾]
     virtual void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
     virtual void drawControl(QStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
     virtual void drawComplexControl(QStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* widget) const override;
@@ -82,9 +82,9 @@ public:
     virtual void polish(QWidget* widget) override;
     virtual void unpolish(QWidget* widget) override;
 
-    // Ê¹ÓÃÉùÃ÷
-    // ÔÚ×ÓÀàÖĞÒıÈëÕâĞ©º¯Êı£¬ÒÔ±ã×ÓÀà¿ÉÒÔÊ¹ÓÃ»ùÀàµÄÊµÏÖ
-    // ÖØÊµÏÖ,Ê¹µÃ¸¸ÀàµÄ¶à¸öÍ¬Ãû º¯Êı (²»Í¬²ÎÊı) ÈÎÈ»¿ÉÒÔÔÚ±¾ÀàÀïÃæÊ¹ÓÃ
+    // ä½¿ç”¨å£°æ˜
+    // åœ¨å­ç±»ä¸­å¼•å…¥è¿™äº›å‡½æ•°ï¼Œä»¥ä¾¿å­ç±»å¯ä»¥ä½¿ç”¨åŸºç±»çš„å®ç°
+    // é‡å®ç°,ä½¿å¾—çˆ¶ç±»çš„å¤šä¸ªåŒå å‡½æ•° (ä¸åŒå‚æ•°) ä»»ç„¶å¯ä»¥åœ¨æœ¬ç±»é‡Œé¢ä½¿ç”¨
     //using QCommonStyle::polish;
     //using QCommonStyle::unpolish;
     //using QCommonStyle::drawPrimitive;

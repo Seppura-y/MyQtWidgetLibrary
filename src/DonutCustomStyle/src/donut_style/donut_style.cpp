@@ -125,7 +125,7 @@ void DonutStyle::drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* 
 
     QCommonStyle::drawPrimitive(pe, opt, p, w);
 
-    //后续分离开为模块的判断
+    //鍚庣画鍒嗙寮�涓烘ā鍧楃殑鍒ゆ柇
 //    if (Q_UNLIKELY(pe < QStyle::PE_CustomBase))
 //    else
 //        drawPrimitive(this, static_cast<DonutStyle::PrimitiveElement>(pe), opt, p, w);
@@ -137,27 +137,27 @@ void DonutStyle::drawControl(QStyle::ControlElement element, const QStyleOption*
 
     switch(element)
     {
-        case CE_ScrollBarAddPage: //增加滑槽
+        case CE_ScrollBarAddPage: //澧炲姞婊戞Ы
         {
             p->fillRect(opt->rect, QColor("#bfe9ff"));
             return;
         }
-        case CE_ScrollBarSubPage: //减少滑槽
+        case CE_ScrollBarSubPage: //鍑忓皯婊戞Ы
         {
             p->fillRect(opt->rect, QColor("#EC6EAD"));
             return;
         }
-        case CE_ScrollBarSlider: //滑块
+        case CE_ScrollBarSlider: //婊戝潡
         {
             p->fillRect(opt->rect, QColor("#A8BFFF"));
             return;
         }
-        case CE_ScrollBarAddLine: //增加按钮
+        case CE_ScrollBarAddLine: //澧炲姞鎸夐挳
         {
             p->fillRect(opt->rect, QColor("#21d4fd"));
             return;
         }
-        case CE_ScrollBarSubLine: //减少按钮
+        case CE_ScrollBarSubLine: //鍑忓皯鎸夐挳
         {
             p->fillRect(opt->rect, QColor("#de6161"));
             return;
@@ -242,7 +242,7 @@ void DonutStyle::drawComplexControl(QStyle::ComplexControl cc, const QStyleOptio
             QRect handle_rect = subControlRect(CC_Slider, opt_slider, SC_SliderHandle);
 
             p->save();
-            // 清空上一次调用drawComplexControl时绘制的内容
+            // 娓呯┖涓婁竴娆¤皟鐢╠rawComplexControl鏃剁粯鍒剁殑鍐呭
             p->eraseRect(groove_rect);
             p->setRenderHint(QPainter::Antialiasing);
             p->setPen(Qt::NoPen);

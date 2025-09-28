@@ -67,7 +67,7 @@ void DonutSwitchButtonPrivate::init()
     is_checked_ = false;
     q_ptr_->setObjectName("DonutSwitchButton");
     q_ptr_->setChecked(true);
-    q_ptr_->setCheckable(true); //clicked  toggled ¶¼ÐèÒª¿ªÆô
+    q_ptr_->setCheckable(true); //clicked  toggled éƒ½éœ€è¦å¼€å¯
     q_ptr_->connect(q_ptr_, SIGNAL(clicked(bool)), q_ptr_, SLOT(setChecked(bool)));
 }
 

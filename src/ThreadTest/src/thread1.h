@@ -1,6 +1,6 @@
 #include <QThread>
 
-// ¹¹Ôìº¯ÊıÊôÓÚÖ÷Ïß³Ì£¬runº¯ÊıÊôÓÚ×ÓÏß³Ì
+// æ„é€ å‡½æ•°å±äºä¸»çº¿ç¨‹ï¼Œrunå‡½æ•°å±äºå­çº¿ç¨‹
 class Thread1 : public QThread
 {
 public:

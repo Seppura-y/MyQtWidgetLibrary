@@ -22,9 +22,9 @@ CameraMenu::CameraMenu(QWidget* parent)
     ui.setupUi(this);
     InitUi();
 
-    ui.tw_item->setTabText(0, QString::fromLocal8Bit("Ïà»ú"));
-    ui.tw_item->setTabText(1, QString::fromLocal8Bit("ÎÄ¼þ"));
-    ui.tw_item->setTabText(2, QString::fromLocal8Bit("Ô´"));
+    ui.tw_item->setTabText(0, QString::fromLocal8Bit("ç›¸æœº"));
+    ui.tw_item->setTabText(1, QString::fromLocal8Bit("æ–‡ä»¶"));
+    ui.tw_item->setTabText(2, QString::fromLocal8Bit("æº"));
 
     //lw_camera_ = new ItemListWidget(this);
     //lw_camera_ = (ItemListWidget*)ui.tw_item->widget(1);
@@ -518,7 +518,7 @@ void CameraMenu::SetListItem(ItemListType item_type, int item_index)
 
 void CameraMenu::SetLocalListItem(ItemListType item_type, int item_index)
 {
-    QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("Ñ¡ÔñÎÄ¼þ"), QString("./"), QString("Files (*.mp4)"));
+    QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("é€‰æ‹©æ–‡ä»¶"), QString("./"), QString("Files (*.mp4)"));
     QString openPicName = openPicUrl.right(openPicUrl.size() - openPicUrl.lastIndexOf('/') - 1);
     if (openPicName.size())
     {

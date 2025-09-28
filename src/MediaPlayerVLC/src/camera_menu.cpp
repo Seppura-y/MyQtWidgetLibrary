@@ -25,9 +25,9 @@ CameraMenu::CameraMenu(QWidget* parent)
     ui.setupUi(this);
     initUi();
 
-    ui.tw_item->setTabText(0, QString::fromLocal8Bit("网络"));
-    ui.tw_item->setTabText(1, QString::fromLocal8Bit("文件"));
-    ui.tw_item->setTabText(2, QString::fromLocal8Bit("捕获"));
+    ui.tw_item->setTabText(0, QString::fromLocal8Bit("缃戠粶"));
+    ui.tw_item->setTabText(1, QString::fromLocal8Bit("鏂囦欢"));
+    ui.tw_item->setTabText(2, QString::fromLocal8Bit("鎹曡幏"));
 
     //lw_camera_ = new ItemListWidget(this);
     //lw_camera_ = (ItemListWidget*)ui.tw_item->widget(1);
@@ -527,7 +527,7 @@ void CameraMenu::setLocalListItem(ItemListType item_type, int item_index)
             break;
         }
     }
-    //QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择文件"), QString("./"), QString("Files (*.mp4)"));
+    //QString openPicUrl = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("閫夋嫨鏂囦欢"), QString("./"), QString("Files (*.mp4)"));
     //QString openPicName = openPicUrl.right(openPicUrl.size() - openPicUrl.lastIndexOf('/') - 1);
     //if (openPicName.size())
     //{

@@ -84,24 +84,24 @@ void Title::InitExtendMenu()
 	connect(pb_extend_, SIGNAL(clicked()), this, SLOT(onExtendMenu()));
 
 	pb_doc_ = new QPushButton();
-	pb_doc_->setText(QString::fromLocal8Bit("文件"));
-	//pb_doc_->setText(QString("文件"));
+	pb_doc_->setText(QString::fromLocal8Bit("鏂囦欢"));
+	//pb_doc_->setText(QString("鏂囦欢"));
 	pb_doc_->setMaximumSize(45, 20);
 	pb_doc_->setMinimumSize(45, 20);
 	pb_doc_->setCursor(QCursor(Qt::PointingHandCursor));
 	ext_menu_layout_->addWidget(pb_doc_);
 
 	pb_option_ = new QPushButton();
-	pb_option_->setText(QString::fromLocal8Bit("设置"));
-	//pb_option_->setText(QString("设置"));
+	pb_option_->setText(QString::fromLocal8Bit("璁剧疆"));
+	//pb_option_->setText(QString("璁剧疆"));
 	pb_option_->setMaximumSize(45, 20);
 	pb_option_->setMinimumSize(45, 20);
 	pb_option_->setCursor(QCursor(Qt::PointingHandCursor));
 	ext_menu_layout_->addWidget(pb_option_);
 
 	pb_about_ = new QPushButton();
-	pb_about_->setText(QString::fromLocal8Bit("关于"));
-	//pb_about_->setText(QString("关于"));
+	pb_about_->setText(QString::fromLocal8Bit("鍏充簬"));
+	//pb_about_->setText(QString("鍏充簬"));
 	pb_about_->setMaximumSize(45, 20);
 	pb_about_->setMinimumSize(45, 20);
 	pb_about_->setCursor(QCursor(Qt::PointingHandCursor));

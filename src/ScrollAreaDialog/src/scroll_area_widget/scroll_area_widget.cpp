@@ -16,8 +16,8 @@ ScrollAreaWidget::ScrollAreaWidget(QWidget* parent)
 	//list_wid_->setFrameShape(QFrame::NoFrame);
 	list_wid_->setFocusPolicy(Qt::NoFocus);
 
-	menu_str_list_ << u8"»ù±¾ÉèÖÃ" << u8"ÔÆÅÌÉèÖÃ" << u8"ÏÂÔØÉèÖÃ" << u8"½Ó¹ÜÉèÖÃ"
-		<< u8"ÈÎÎñ¹ÜÀí" << u8"Ðü¸¡´°¿Ú" << u8"¸ß¼¶ÉèÖÃ" << u8"12" << u8"23" << u8"445" << u8"78" << u8"12.";
+	menu_str_list_ << u8"åŸºæœ¬è®¾ç½®" << u8"äº‘ç›˜è®¾ç½®" << u8"ä¸‹è½½è®¾ç½®" << u8"æŽ¥ç®¡è®¾ç½®"
+		<< u8"ä»»åŠ¡ç®¡ç†" << u8"æ‚¬æµ®çª—å£" << u8"é«˜çº§è®¾ç½®" << u8"12" << u8"23" << u8"445" << u8"78" << u8"12.";
 
 	list_wid_->addItems(menu_str_list_);
 

@@ -83,7 +83,7 @@ libvlc_time_t VlcManager::getTotalDuration()
 
 int VlcManager::initVLC()
 {
-    // vlc³õÊ¼»¯
+    // vlcåˆå§‹åŒ–
     vlc_instance_ = libvlc_new(0, nullptr);
 
     if (vlc_instance_)

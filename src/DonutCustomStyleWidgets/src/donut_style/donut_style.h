@@ -11,13 +11,13 @@ class DonutStyle : public QCommonStyle
 public:
 
     enum ControlElement {
-        CE_SwitchButton = QStyle::CE_CustomBase + 1,                   //switchButton ¿Ø¼þ
+        CE_SwitchButton = QStyle::CE_CustomBase + 1,                   //switchButton ï¿½Ø¼ï¿½
         CE_CustomBase = QStyle::CE_CustomBase + 0xf00000
     };
 
     enum SubElement {
-        SE_SwitchButtonGroove = QStyle::SE_CustomBase + 1,             //»¬²Û¾ØÐÎ´óÐ¡
-        SE_SwitchButtonHandle,                                         //»¬¿é¾ØÐÎ´óÐ¡
+        SE_SwitchButtonGroove = QStyle::SE_CustomBase + 1,             //ï¿½ï¿½ï¿½Û¾ï¿½ï¿½Î´ï¿½Ð¡
+        SE_SwitchButtonHandle,                                         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½Ð¡
         SE_CustomBase = QStyle::SE_CustomBase + 0xf00000
     };
 
@@ -28,14 +28,15 @@ public:
     };
 
     enum PrimitiveElement {
-        PE_SwitchButtonGroove = QStyle::PE_CustomBase + 1,             //»¬²Û
-        PE_SwitchButtonHandle,                                         //»¬¿é
+        PE_SwitchButtonGroove = QStyle::PE_CustomBase + 1,             //ï¿½ï¿½ï¿½ï¿½
+        PE_SwitchButtonHandle,                                         //ï¿½ï¿½ï¿½ï¿½
         PE_CustomBase = QStyle::PE_CustomBase + 0xf00000
     };
 
     enum ComplexControl {
         CC_DoubleSlider = QStyle::CC_CustomBase + 1,
         CC_DountTimeline = QStyle::CC_CustomBase + 2,
+        CC_UniversalSlider = QStyle::CC_CustomBase + 3, 
         CC_CustomBase = QStyle::CC_CustomBase + 0xf00000
     };
     enum SubControls { 
@@ -43,7 +44,10 @@ public:
         SC_LowerHandle = SC_TimelineBase + 1,
         SC_UpperHandle = SC_TimelineBase + 2,
         SC_MiddleHandle = SC_TimelineBase + 4,
-        SC_TimelineGroove = SC_TimelineBase + 8
+        SC_TimelineGroove = SC_TimelineBase + 8,
+        SC_ConfirmButton = SC_TimelineBase + 16,  // æ–°å¢ž
+        SC_UpTriangle = SC_TimelineBase + 32,     // æ–°å¢ž
+        SC_DownTriangle = SC_TimelineBase + 64    // æ–°å¢ž
     };
 public:
     DonutStyle();
@@ -53,7 +57,7 @@ public:
     void drawPrimitive(DonutStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w = nullptr) const;
     void drawControl(DonutStyle::ControlElement element, const QStyleOption* opt, QPainter* p, const QWidget* w) const;
     
-    // ×ª·¢£¬Êµ¼Êµ÷ÓÃÖØÔØQStyleµÄ°æ±¾
+    // ×ªï¿½ï¿½ï¿½ï¿½Êµï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½QStyleï¿½Ä°æ±¾
     void drawComplexControl(DonutStyle::ComplexControl cc, const QStyleOptionComplex* opt, QPainter* p, const QWidget* w) const;
 
     int pixelMetric(DonutStyle::PixelMetric metric, const QStyleOption* option, const QWidget* widget) const;

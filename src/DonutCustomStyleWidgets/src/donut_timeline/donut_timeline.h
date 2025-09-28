@@ -46,18 +46,18 @@ public:
     int middlePosition() const;
 
 public Q_SLOTS:
-    // ÄÚ²¿µ÷ÓÃsetSpan, ´«Èëd_ptr_->upper_×÷ÎªÉÏÏÞÖµ
+    // å†…éƒ¨è°ƒç”¨setSpan, ä¼ å…¥d_ptr_->upper_ä½œä¸ºä¸Šé™å€¼
     void setLowerValue(int lower);
-    // ÄÚ²¿µ÷ÓÃsetSpan, ´«Èëd_ptr_->lower_×÷ÎªÏÂÏÞÖµ
+    // å†…éƒ¨è°ƒç”¨setSpan, ä¼ å…¥d_ptr_->lower_ä½œä¸ºä¸‹é™å€¼
     void setUpperValue(int upper);
 
     void setMiddleValue(int middle);
 
     void setSpan(int lower, int upper);
 
-    // ¸üÐÂd_ptr_->lower_pos_
+    // æ›´æ–°d_ptr_->lower_pos_
     void setLowerPosition(int lower);
-    // ¸üÐÂd_ptr_->upper_pos_
+    // æ›´æ–°d_ptr_->upper_pos_
     void setUpperPosition(int upper);
 
     void setMiddlePosition(int middle);

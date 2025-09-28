@@ -12,8 +12,8 @@ void test()
 {
     qDebug() << "test thread id : " << QThread::currentThreadId();
     Thread1 t;
-    t.start();  // 退出此函数线程对象会直接销毁，导致崩溃
-                // 需要在事件循环内等待线程结束？
+    t.start();  // 閫�鍑烘鍑芥暟绾跨▼瀵硅薄浼氱洿鎺ラ攢姣侊紝瀵艰嚧宕╂簝
+                // 闇�瑕佸湪浜嬩欢寰幆鍐呯瓑寰呯嚎绋嬬粨鏉燂紵
 }
 
 int main(int argc, char* argv[])

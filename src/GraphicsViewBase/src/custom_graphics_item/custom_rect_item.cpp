@@ -15,10 +15,10 @@ CustomRectItem::CustomRectItem(QGraphicsItem* parent) :
 {
     setRectSize(m_oldRect);
 
-    //ÉèÖÃ¹â±êĞÎ×´,ÊÖµÄĞÎ×´
+    //è®¾ç½®å…‰æ ‡å½¢çŠ¶,æ‰‹çš„å½¢çŠ¶
     setCursor(Qt::ArrowCursor);
 
-    //ÉèÖÃÍ¼ÔªÊÇ¿ÉÒÆ¶¯µÄ
+    //è®¾ç½®å›¾å…ƒæ˜¯å¯ç§»åŠ¨çš„
     setFlags(QGraphicsItem::ItemIsMovable
         | QGraphicsItem::ItemIsSelectable
         | QGraphicsItem::ItemIsFocusable);
@@ -67,41 +67,41 @@ void CustomRectItem::setRectSize(QRectF mrect, bool bResetRotateCenter)
     m_bottomRectf = QRectF(m_oldRect.x(), m_oldRect.bottom() - 8, m_oldRect.width() - 8, 8);
     m_bottomPolygon = getRotatePolygonFromRect(m_RotateCenter, m_bottomRectf, m_RotateAngle);
 
-    m_SmallRotateRect = getSmallRotateRect(mrect.topLeft(), mrect.topRight());//¾ØĞÎÕıÉÏ·½µÄĞı×ª±ê¼Ç¾ØĞÎ
+    m_SmallRotateRect = getSmallRotateRect(mrect.topLeft(), mrect.topRight());//çŸ©å½¢æ­£ä¸Šæ–¹çš„æ—‹è½¬æ ‡è®°çŸ©å½¢
     m_SmallRotatePolygon = getRotatePolygonFromRect(m_RotateCenter, m_SmallRotateRect, m_RotateAngle);
 }
 
 void CustomRectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    //·´¾â³İ
+    //åé”¯é½¿
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     QPen mPen = QPen(Qt::black);
     mPen.setWidth(5);
     painter->setPen(mPen);
 
-    //»æÖÆĞı×ªºóµÄ¾ØĞÎ
+    //ç»˜åˆ¶æ—‹è½¬åçš„çŸ©å½¢
     painter->drawPolygon(m_oldRectPolygon);
 
-    //»æÖÆĞı×ªÔ²ĞÎ
+    //ç»˜åˆ¶æ—‹è½¬åœ†å½¢
     mPen.setWidth(2);
     mPen.setColor(Qt::green);
     painter->setPen(mPen);
     QPointF pf = getSmallRotateRectCenter(m_oldRectPolygon[0], m_oldRectPolygon[1]);
     QRectF rect = QRectF(pf.x() - 10, pf.y() - 10, 20, 20);
 
-    //»æÖÆÔ²ĞÎ
+    //ç»˜åˆ¶åœ†å½¢
     painter->drawEllipse(rect);
 
-    //»æÖÆµã
+    //ç»˜åˆ¶ç‚¹
     painter->drawPoint(pf);
 
     if (option->state & QStyle::State_Selected)
     {
-        // »æÖÆÑ¡ÔñºóµÄĞéÏß¿ò
+        // ç»˜åˆ¶é€‰æ‹©åçš„è™šçº¿æ¡†
         const qreal penWidth = 1;
 
-        // ±ß¿òÇøÓòÑÕÉ«
+        // è¾¹æ¡†åŒºåŸŸé¢œè‰²
         QColor color = QColor(Qt::white);
 
         painter->setPen(QPen(color, penWidth, Qt::DashLine));
@@ -117,37 +117,37 @@ void CustomRectItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
         m_startPos = event->pos();
         if (m_SmallRotatePolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //Êó±êÔÚĞı×ªÔ²ĞÎÄÚÄÚ
+            //é¼ æ ‡åœ¨æ—‹è½¬åœ†å½¢å†…å†…
             setCursor(Qt::PointingHandCursor);
             m_StateFlag = ROTATE;
         }
         else if (m_insicedPolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //ÔÚ¾ØĞÎÄÚ¿òÇøÓòÊ±
-            setCursor(Qt::ClosedHandCursor);   //¸Ä±ä¹â±êĞÎ×´,ÊÖµÄĞÎ×´
+            //åœ¨çŸ©å½¢å†…æ¡†åŒºåŸŸæ—¶
+            setCursor(Qt::ClosedHandCursor);   //æ”¹å˜å…‰æ ‡å½¢çŠ¶,æ‰‹çš„å½¢çŠ¶
             m_StateFlag = MOV_RECT;
         }
         else if (m_leftPolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //¾ØĞÎµÄ×ó±ß½çÇøÓò
+            //çŸ©å½¢çš„å·¦è¾¹ç•ŒåŒºåŸŸ
             setCursor(Qt::SizeHorCursor);
             m_StateFlag = MOV_LEFT_LINE;
         }
         else if (m_rightPolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //¾ØĞÎµÄÓÒ±ß½çÇøÓò
+            //çŸ©å½¢çš„å³è¾¹ç•ŒåŒºåŸŸ
             setCursor(Qt::SizeHorCursor);
             m_StateFlag = MOV_RIGHT_LINE;
         }
         else if (m_topPolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //¾ØĞÎµÄÉÏ±ß½çÇøÓò
+            //çŸ©å½¢çš„ä¸Šè¾¹ç•ŒåŒºåŸŸ
             setCursor(Qt::SizeVerCursor);
             m_StateFlag = MOV_TOP_LINE;
         }
         else if (m_bottomPolygon.containsPoint(m_startPos, Qt::WindingFill))
         {
-            //¾ØĞÎµÄÏÂ±ß½çÇøÓò
+            //çŸ©å½¢çš„ä¸‹è¾¹ç•ŒåŒºåŸŸ
             setCursor(Qt::SizeVerCursor);
             m_StateFlag = MOV_BOTTOM_LINE;
         }
@@ -166,7 +166,7 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (m_StateFlag == ROTATE)
     {
-        // ×¢Òâatan2¼ÆËã³öÀ´µÄÊÇ»¡¶ÈÖµ£¬ĞèÒª×ª»¯Îª½Ç¶ÈÖµ
+        // æ³¨æ„atan2è®¡ç®—å‡ºæ¥çš„æ˜¯å¼§åº¦å€¼ï¼Œéœ€è¦è½¬åŒ–ä¸ºè§’åº¦å€¼
         int nRotateAngle = atan2((event->pos().x() - m_RotateCenter.x()),
             (event->pos().y() - m_RotateCenter.y())) * 180 / M_PI;
 
@@ -184,7 +184,7 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         QPointF pf = QPointF((m_oldRectPolygon.at(1).x() + m_oldRectPolygon.at(2).x()) / 2, ((m_oldRectPolygon.at(1).y() + m_oldRectPolygon.at(2).y()) / 2));
 
-        //¼ÆËãµ½ÓÒ²à±ßÖĞµãµÄ¾àÀë
+        //è®¡ç®—åˆ°å³ä¾§è¾¹ä¸­ç‚¹çš„è·ç¦»
         qreal dis = sqrt((event->pos().x() - pf.x()) * (event->pos().x() - pf.x()) + (event->pos().y() - pf.y()) * (event->pos().y() - pf.y()));
         qreal dis2LT = sqrt((event->pos().x() - m_oldRectPolygon.at(0).x()) * (event->pos().x() - m_oldRectPolygon.at(0).x()) + (event->pos().y() - m_oldRectPolygon.at(0).y()) * (event->pos().y() - m_oldRectPolygon.at(0).y()));
         qreal dis2RT = sqrt((event->pos().x() - m_oldRectPolygon.at(1).x()) * (event->pos().x() - m_oldRectPolygon.at(1).x()) + (event->pos().y() - m_oldRectPolygon.at(1).y()) * (event->pos().y() - m_oldRectPolygon.at(1).y()));
@@ -202,16 +202,16 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
 
-            //±ØĞëÒªÓÃscene()->update()£¬²»ÄÜÓÃupdate();·ñÔò»á³öÏÖÖØÓ°
+            //å¿…é¡»è¦ç”¨scene()->update()ï¼Œä¸èƒ½ç”¨update();å¦åˆ™ä¼šå‡ºç°é‡å½±
             scene()->update();
         }
     }
     else if (m_StateFlag == MOV_TOP_LINE)
     {
-        //µ×±ßÖĞµã
+        //åº•è¾¹ä¸­ç‚¹
         QPointF pf = QPointF((m_oldRectPolygon.at(2).x() + m_oldRectPolygon.at(3).x()) / 2, ((m_oldRectPolygon.at(2).y() + m_oldRectPolygon.at(3).y()) / 2));
 
-        //¼ÆËãµ½µ×±ßÖĞµãµÄ¾àÀë
+        //è®¡ç®—åˆ°åº•è¾¹ä¸­ç‚¹çš„è·ç¦»
         qreal dis = sqrt((event->pos().x() - pf.x()) * (event->pos().x() - pf.x()) + (event->pos().y() - pf.y()) * (event->pos().y() - pf.y()));
         qreal dis2LT = sqrt((event->pos().x() - m_oldRectPolygon.at(0).x()) * (event->pos().x() - m_oldRectPolygon.at(0).x()) + (event->pos().y() - m_oldRectPolygon.at(0).y()) * (event->pos().y() - m_oldRectPolygon.at(0).y()));
         qreal dis2LB = sqrt((event->pos().x() - m_oldRectPolygon.at(3).x()) * (event->pos().x() - m_oldRectPolygon.at(3).x()) + (event->pos().y() - m_oldRectPolygon.at(3).y()) * (event->pos().y() - m_oldRectPolygon.at(3).y()));
@@ -229,14 +229,14 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             m_RotateCenter = QPointF((m_oldRectPolygon.at(0).x() + m_oldRectPolygon.at(2).x()) / 2, (m_oldRectPolygon.at(0).y() + m_oldRectPolygon.at(2).y()) / 2);
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
-            scene()->update();//±ØĞëÒªÓÃscene()->update()£¬²»ÄÜÓÃupdate();·ñÔò»á³öÏÖÖØÓ°
+            scene()->update();//å¿…é¡»è¦ç”¨scene()->update()ï¼Œä¸èƒ½ç”¨update();å¦åˆ™ä¼šå‡ºç°é‡å½±
         }
     }
     else if (m_StateFlag == MOV_RIGHT_LINE)
     {
         QPointF pf = QPointF((m_oldRectPolygon.at(0).x() + m_oldRectPolygon.at(3).x()) / 2, ((m_oldRectPolygon.at(0).y() + m_oldRectPolygon.at(3).y()) / 2));
 
-        //¼ÆËãµ½×ó²à±ßÖĞµãµÄ¾àÀë
+        //è®¡ç®—åˆ°å·¦ä¾§è¾¹ä¸­ç‚¹çš„è·ç¦»
         qreal dis = sqrt((event->pos().x() - pf.x()) * (event->pos().x() - pf.x()) + (event->pos().y() - pf.y()) * (event->pos().y() - pf.y()));
         qreal dis2LT = sqrt((event->pos().x() - m_oldRectPolygon.at(0).x()) * (event->pos().x() - m_oldRectPolygon.at(0).x()) + (event->pos().y() - m_oldRectPolygon.at(0).y()) * (event->pos().y() - m_oldRectPolygon.at(0).y()));
         qreal dis2RT = sqrt((event->pos().x() - m_oldRectPolygon.at(1).x()) * (event->pos().x() - m_oldRectPolygon.at(1).x()) + (event->pos().y() - m_oldRectPolygon.at(1).y()) * (event->pos().y() - m_oldRectPolygon.at(1).y()));
@@ -254,16 +254,16 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
 
-            //±ØĞëÒªÓÃscene()->update()£¬²»ÄÜÓÃupdate();·ñÔò»á³öÏÖÖØÓ°
+            //å¿…é¡»è¦ç”¨scene()->update()ï¼Œä¸èƒ½ç”¨update();å¦åˆ™ä¼šå‡ºç°é‡å½±
             scene()->update();
         }
     }
     else if (m_StateFlag == MOV_BOTTOM_LINE)
     {
-        //¶¥±ßÖĞµã
+        //é¡¶è¾¹ä¸­ç‚¹
         QPointF pf = QPointF((m_oldRectPolygon.at(0).x() + m_oldRectPolygon.at(1).x()) / 2, ((m_oldRectPolygon.at(0).y() + m_oldRectPolygon.at(1).y()) / 2));
 
-        //¼ÆËãµ½µ×±ßÖĞµãµÄ¾àÀë
+        //è®¡ç®—åˆ°åº•è¾¹ä¸­ç‚¹çš„è·ç¦»
         qreal dis = sqrt((event->pos().x() - pf.x()) * (event->pos().x() - pf.x()) + (event->pos().y() - pf.y()) * (event->pos().y() - pf.y()));
         qreal dis2LT = sqrt((event->pos().x() - m_oldRectPolygon.at(0).x()) * (event->pos().x() - m_oldRectPolygon.at(0).x()) + (event->pos().y() - m_oldRectPolygon.at(0).y()) * (event->pos().y() - m_oldRectPolygon.at(0).y()));
         qreal dis2LB = sqrt((event->pos().x() - m_oldRectPolygon.at(3).x()) * (event->pos().x() - m_oldRectPolygon.at(3).x()) + (event->pos().y() - m_oldRectPolygon.at(3).y()) * (event->pos().y() - m_oldRectPolygon.at(3).y()));
@@ -281,7 +281,7 @@ void CustomRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
 
-            //±ØĞëÒªÓÃscene()->update()£¬²»ÄÜÓÃupdate();·ñÔò»á³öÏÖÖØÓ°
+            //å¿…é¡»è¦ç”¨scene()->update()ï¼Œä¸èƒ½ç”¨update();å¦åˆ™ä¼šå‡ºç°é‡å½±
             scene()->update();
         }
     }
@@ -369,39 +369,39 @@ QRectF CustomRectItem::getSmallRotateRect(QPointF ptA, QPointF ptB)
 
 QPointF CustomRectItem::getSmallRotateRectCenter(QPointF ptA, QPointF ptB)
 {
-    //A,BµãµÄÖĞµãC
+    //A,Bç‚¹çš„ä¸­ç‚¹C
     QPointF ptCenter = QPointF((ptA.x() + ptB.x()) / 2, (ptA.y() + ptB.y()) / 2);
 
-    //ÖĞ´¹Ïß·½³ÌÊ½Îª y=x*k + b
-    qreal x, y;//Ğı×ªÍ¼±ê¾ØĞÎµÄÖĞĞÄ
+    //ä¸­å‚çº¿æ–¹ç¨‹å¼ä¸º y=x*k + b
+    qreal x, y;//æ—‹è½¬å›¾æ ‡çŸ©å½¢çš„ä¸­å¿ƒ
     if (abs(ptB.y() - ptA.y()) < 0.1)
     {
-        if (ptA.x() < ptB.x())//¾ØĞÎ×óÉÏ½ÇÔÚÉÏ·½
+        if (ptA.x() < ptB.x())//çŸ©å½¢å·¦ä¸Šè§’åœ¨ä¸Šæ–¹
         {
             x = ptCenter.x();
             y = ptCenter.y() - 20;
         }
         else
         {
-            //¾ØĞÎ×óÉÏ½ÇÔÚÏÂ·½
+            //çŸ©å½¢å·¦ä¸Šè§’åœ¨ä¸‹æ–¹
             x = ptCenter.x();
             y = ptCenter.y() + 20;
         }
     }
-    else if (ptB.y() > ptA.y()) //Ë³Ê±ÕëĞı×ª0-180
+    else if (ptB.y() > ptA.y()) //é¡ºæ—¶é’ˆæ—‹è½¬0-180
     {
-        qreal k = (ptA.x() - ptB.x()) / (ptB.y() - ptA.y());//ÖĞ´¹ÏßĞ±ÂÊ
+        qreal k = (ptA.x() - ptB.x()) / (ptB.y() - ptA.y());//ä¸­å‚çº¿æ–œç‡
         qreal b = (ptA.y() + ptB.y()) / 2 - k * (ptA.x() + ptB.x()) / 2;
-        //ÇóABÏßÖĞ´¹ÏßÉÏÀëABÖĞµã20¸öÏñËØµÄµãCµÄ×ø±ê
+        //æ±‚ABçº¿ä¸­å‚çº¿ä¸Šç¦»ABä¸­ç‚¹20ä¸ªåƒç´ çš„ç‚¹Cçš„åæ ‡
         x = 20 * cos(atan(k)) + ptCenter.x();
         y = k * x + b;
     }
-    else if (ptB.y() < ptA.y()) //Ë³Ê±ÕëĞı×ª180-360
+    else if (ptB.y() < ptA.y()) //é¡ºæ—¶é’ˆæ—‹è½¬180-360
     {
-        qreal k = (ptA.x() - ptB.x()) / (ptB.y() - ptA.y());//ÖĞ´¹ÏßĞ±ÂÊ
+        qreal k = (ptA.x() - ptB.x()) / (ptB.y() - ptA.y());//ä¸­å‚çº¿æ–œç‡
         qreal b = (ptA.y() + ptB.y()) / 2 - k * (ptA.x() + ptB.x()) / 2;
 
-        //ÇóABÏßÖĞ´¹ÏßÉÏÀëABÖĞµã20¸öÏñËØµÄµãCµÄ×ø±ê
+        //æ±‚ABçº¿ä¸­å‚çº¿ä¸Šç¦»ABä¸­ç‚¹20ä¸ªåƒç´ çš„ç‚¹Cçš„åæ ‡
         x = -20 * cos(atan(k)) + ptCenter.x();
         y = k * x + b;
     }

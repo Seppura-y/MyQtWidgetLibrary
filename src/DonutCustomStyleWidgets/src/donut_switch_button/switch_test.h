@@ -4,11 +4,11 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-// ´ø¶¯»­Ğ§¹ûµÄSwicthButton , ÔÙpaintEventÖĞÊµÏÖÍâ¹Û¶ø²»ÊÇ×Ô¶¨Òåstyle
+// å¸¦åŠ¨ç”»æ•ˆæœçš„SwicthButton , å†paintEventä¸­å®ç°å¤–è§‚è€Œä¸æ˜¯è‡ªå®šä¹‰style
 class SwitchButton : public QWidget
 {
     Q_OBJECT
-        // ÉùÃ÷Ò»¸öÊôĞÔ£¬ÓÃÓÚ¿ØÖÆ»¬¿éµÄÎ»ÖÃ
+        // å£°æ˜ä¸€ä¸ªå±æ€§ï¼Œç”¨äºæ§åˆ¶æ»‘å—çš„ä½ç½®
         Q_PROPERTY(int pos READ pos WRITE setPos)
 public:
     SwitchButton(QWidget* parent = nullptr) : QWidget(parent)
@@ -20,7 +20,7 @@ public:
         m_pos = 0;
         m_animation = new QPropertyAnimation(this, "pos");
         m_animation->setDuration(300);
-        // ÉèÖÃ¶¯»­µÄ»ººÍÇúÏßÎªInOutQuad
+        // è®¾ç½®åŠ¨ç”»çš„ç¼“å’Œæ›²çº¿ä¸ºInOutQuad
         m_animation->setEasingCurve(QEasingCurve::InOutQuad);
         connect(this, &SwitchButton::clicked, this, &SwitchButton::toggle);
     }
@@ -73,9 +73,9 @@ protected:
     {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
-        // ÉèÖÃÎªÆ½»¬Ä£Ê½
+        // è®¾ç½®ä¸ºå¹³æ»‘æ¨¡å¼
         painter.setRenderHint(QPainter::SmoothPixmapTransform);
-        // ÉèÖÃÎªÌî³äÄ£Ê½
+        // è®¾ç½®ä¸ºå¡«å……æ¨¡å¼
         painter.setBrush(Qt::SolidPattern);
         painter.setPen(Qt::NoPen);
         if (!m_checked)

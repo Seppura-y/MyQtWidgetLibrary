@@ -10,7 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(QStylePainter)
 QT_FORWARD_DECLARE_CLASS(QStyleOptionSlider)
 
-// DonutDoubleSliderµÄÊı¾İÀà
+// DonutDoubleSliderçš„æ•°æ®ç±»
 class DonutDoubleSliderPrivate : public QObject
 {
 	Q_OBJECT
@@ -25,7 +25,7 @@ public:
     }
     int pixelPosToRangeValue(int pos) const;
 
-    // Êó±êµã»÷ÊÂ¼şÖĞ£¬·Ö±ğ´úÈë lower_pressed_ ºÍ upper_pressed_ ¼ÇÂ¼´Ë´ÎÊó±êµãÖĞµÄÊÇÄÄ¸öSubControl
+    // é¼ æ ‡ç‚¹å‡»äº‹ä»¶ä¸­ï¼Œåˆ†åˆ«ä»£å…¥ lower_pressed_ å’Œ upper_pressed_ è®°å½•æ­¤æ¬¡é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutDoubleSlider::SpanHandle handle);
 
     QRect getSpan(QPainter* painter, const QRect& rect) const;
@@ -40,13 +40,13 @@ public:
     int offset_;
     int position_;
 
-    // ¼ÇÂ¼×îºóµã»÷µÄÊÇÄÄ¸öhandle
+    // è®°å½•æœ€åç‚¹å‡»çš„æ˜¯å“ªä¸ªhandle
     DonutDoubleSlider::SpanHandle last_pressed_;
     DonutDoubleSlider::SpanHandle main_control_;
 
-    // ¼ÇÂ¼Êó±êµãÖĞµÄÊÇÄÄ¸öSubControl
+    // è®°å½•é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
     QStyle::SubControl lower_pressed_;
-    // ¼ÇÂ¼Êó±êµãÖĞµÄÊÇÄÄ¸öSubControl
+    // è®°å½•é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
     QStyle::SubControl upper_pressed_;
 
     DonutDoubleSlider::HandleMovementMode movement_;

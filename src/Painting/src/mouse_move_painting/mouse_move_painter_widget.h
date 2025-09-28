@@ -21,11 +21,11 @@ protected:
     void mouseReleaseEvent(QMouseEvent* ev) override;
     void mouseDoubleClickEvent(QMouseEvent* ev) override;
 
-    bool is_drawing_ = false;           //ÊÇ·ñÒÑ¾­¿ªÊ¼×ó¼üµã»÷£¬Í¬Ê±±êÊ¶ÊÇ·ñ¿ªÊ¼½øĞĞ»æÖÆ
-    bool is_moving_ = false;            //ÊÇ·ñ´¦ÓÚ»æÖÆÊ±µÄÊó±êÒÆ¶¯×´Ì¬
+    bool is_drawing_ = false;           //æ˜¯å¦å·²ç»å¼€å§‹å·¦é”®ç‚¹å‡»ï¼ŒåŒæ—¶æ ‡è¯†æ˜¯å¦å¼€å§‹è¿›è¡Œç»˜åˆ¶
+    bool is_moving_ = false;            //æ˜¯å¦å¤„äºç»˜åˆ¶æ—¶çš„é¼ æ ‡ç§»åŠ¨çŠ¶æ€
 
     QVector<QPointF> point_list_;
-    QPointF move_point_;    // Ä¿Ç°Êó±êµÄÎ»ÖÃ
+    QPointF move_point_;    // ç›®å‰é¼ æ ‡çš„ä½ç½®
 };
 
 

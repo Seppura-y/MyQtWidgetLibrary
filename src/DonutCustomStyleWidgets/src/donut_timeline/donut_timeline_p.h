@@ -11,7 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QStylePainter)
 QT_FORWARD_DECLARE_CLASS(QStyleOptionSlider)
 QT_FORWARD_DECLARE_CLASS(QWidget)
 
-// DonutTimelineµÄÊı¾İÀà
+// DonutTimelineçš„æ•°æ®ç±»
 class DonutTimelinePrivate : public QObject
 {
 	Q_OBJECT
@@ -26,19 +26,19 @@ public:
         return q_ptr_->orientation() == Qt::Horizontal ? pt.x() : pt.y();
     }
 
-    // ÓÉÏñËØÎ»ÖÃ×ª»»ÎªÊıÖµ
+    // ç”±åƒç´ ä½ç½®è½¬æ¢ä¸ºæ•°å€¼
     int pixelPosToRangeValue(int pos) const;
 
-    // mousePressedEventÖĞ£¬·Ö±ğ´«Èë lower_pressed_ ºÍ upper_pressed_µÄÒıÓÃ£¬ ÒÔ²é¿´´Ë´ÎÊó±êµãÖĞµÄÊÇÄÄ¸öSubControl
-    // SC_SliderGroove »ò SC_SliderHandle »ò SC_SliderTickmarks
+    // mousePressedEventä¸­ï¼Œåˆ†åˆ«ä¼ å…¥ lower_pressed_ å’Œ upper_pressed_çš„å¼•ç”¨ï¼Œ ä»¥æŸ¥çœ‹æ­¤æ¬¡é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
+    // SC_SliderGroove æˆ– SC_SliderHandle æˆ– SC_SliderTickmarks
     void handleMousePress(const QPoint& pos, QStyle::SubControl& control, int value, DonutTimeline::SpanHandle handle);
 
-    // Î´ÓÃ
+    // æœªç”¨
     QRect getSpan(QPainter* painter, const QRect& rect) const;
 
     void triggerAction(QAbstractSlider::SliderAction action, bool main);
 
-    // FreeMovement²ÅÓÃµ½
+    // FreeMovementæ‰ç”¨åˆ°
     void swapControls();
 
     int lower_;
@@ -50,34 +50,34 @@ public:
     int middle_pos_;
     int mouse_hover_pos_;
 
-    // Êµ²â²»ÉèÖÃoffsetÒ²Ã»¿´³öÊ²Ã´Ó°Ïì
+    // å®æµ‹ä¸è®¾ç½®offsetä¹Ÿæ²¡çœ‹å‡ºä»€ä¹ˆå½±å“
     int offset_;
 
-    // Ã¿´Îµã»÷handleÊ±¼ÇÂ¼³õÊ¼Î»ÖÃ£¬ÓÃÓÚÊµÏÖµ±Êó±êÍÏ¶¯Àë¿ªPM_MaximumDragDistance·¶Î§Ê±£¬ÉèÖÃ»Ø×î³õµã»÷µÄÎ»ÖÃ
+    // æ¯æ¬¡ç‚¹å‡»handleæ—¶è®°å½•åˆå§‹ä½ç½®ï¼Œç”¨äºå®ç°å½“é¼ æ ‡æ‹–åŠ¨ç¦»å¼€PM_MaximumDragDistanceèŒƒå›´æ—¶ï¼Œè®¾ç½®å›æœ€åˆç‚¹å‡»çš„ä½ç½®
     int position_;
 
-    // ¼ÇÂ¼×îºóµã»÷µÄÊÇÄÄ¸öhandle
+    // è®°å½•æœ€åç‚¹å‡»çš„æ˜¯å“ªä¸ªhandle
     DonutTimeline::SpanHandle last_pressed_;
 
     DonutTimeline::SpanHandle main_control_;
 
-    // ¼ÇÂ¼Êó±êµãÖĞµÄÊÇÄÄ¸öSubControl
+    // è®°å½•é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
     QStyle::SubControl lower_pressed_;
-    // ¼ÇÂ¼Êó±êµãÖĞµÄÊÇÄÄ¸öSubControl
+    // è®°å½•é¼ æ ‡ç‚¹ä¸­çš„æ˜¯å“ªä¸ªSubControl
     QStyle::SubControl upper_pressed_;
     QStyle::SubControl middle_pressed_;
 
     DonutTimeline::HandleMovementMode movement_;
     bool first_movement_;
 
-    // Í£Ö¹×·×ÙsliderÎ»ÖÃµÄ±êÖ¾Î»£¬·ÀÖ¹setUpperPosition ºÍ setLowerPositionÖĞÑ­»·µ÷ÓÃtriggerAction
+    // åœæ­¢è¿½è¸ªsliderä½ç½®çš„æ ‡å¿—ä½ï¼Œé˜²æ­¢setUpperPosition å’Œ setLowerPositionä¸­å¾ªç¯è°ƒç”¨triggerAction
     bool block_tracking_;
 
     QRect lower_rect_;
     QRect upper_rect_;
     QRect middle_rect_;
 
-    // ¸ù¾İÕâ¼¸¸öÖµ¸ü¸ÄÊó±êĞüÍ£Íâ¹Û
+    // æ ¹æ®è¿™å‡ ä¸ªå€¼æ›´æ”¹é¼ æ ‡æ‚¬åœå¤–è§‚
     bool lower_hovered_;
     bool upper_hovered_;
     bool middle_hovered_;

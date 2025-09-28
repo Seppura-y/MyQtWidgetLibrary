@@ -79,7 +79,7 @@ void RoundWidget::init()
     dn_slider->setOrientation(Qt::Horizontal);
     dn_slider->show();
 
-    //×Ô¶¨ÒåµÄ¿Ø¼ş
+    //è‡ªå®šä¹‰çš„æ§ä»¶
     //DonutSwitchButton* switchBtn = new DonutSwitchButton(this);
     //switchBtn->resize(80, 40);
     //switchBtn->move(200, 300);
@@ -87,7 +87,7 @@ void RoundWidget::init()
     int i = 0;
     QStringList listStyle = QStyleFactory::keys();
 
-    //ÏÔÊ¾ and Ê¹ÓÃµ±Ç°ÏµÍ³Ö§³ÖµÄÏµÍ³·ç¸ñ
+    //æ˜¾ç¤º and ä½¿ç”¨å½“å‰ç³»ç»Ÿæ”¯æŒçš„ç³»ç»Ÿé£æ ¼
     foreach(QString val, listStyle)
     {
         qDebug() << val << "  ";
@@ -101,7 +101,7 @@ void RoundWidget::init()
         );
     }
 
-    //ÈôÊÇ×Ô¶¨Òå·ç¸ñ£¬ new Îª¶ÔÏó¼´¿É
+    //è‹¥æ˜¯è‡ªå®šä¹‰é£æ ¼ï¼Œ new ä¸ºå¯¹è±¡å³å¯
     QPushButton* btn = new QPushButton("My Style", this);
     btn->move(this->rect().right() - 100, this->rect().top() + i++ * 40);
     connect(btn, &QPushButton::clicked, this,

@@ -528,24 +528,24 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
 
-    // ¼ÆËã»¬¿éµÄÏñËØÎ»ÖÃ
+    // è®¡ç®—æ»‘å—çš„åƒç´ ä½ç½®
     QStyleOptionSlider opt;
     d_ptr_->initStyleOption(&opt);
 
-    // »ñÈ¡groove rect
+    // è·å–groove rect
     QRect grooveRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
 
-    // ¼ÆËãlower handleµÄÏñËØÎ»ÖÃ
+    // è®¡ç®—lower handleçš„åƒç´ ä½ç½®
     int lowerPixelPos = QStyle::sliderPositionFromValue(minimum(), maximum(),
         d_ptr_->lower_pos_,
         orientation() == Qt::Horizontal ? grooveRect.width() : grooveRect.height());
 
-    // ¼ÆËãupper handleµÄÏñËØÎ»ÖÃ  
+    // è®¡ç®—upper handleçš„åƒç´ ä½ç½®  
     int upperPixelPos = QStyle::sliderPositionFromValue(minimum(), maximum(),
         d_ptr_->upper_pos_,
         orientation() == Qt::Horizontal ? grooveRect.width() : grooveRect.height());
 
-    // Ê×ÏÈÊ¹ÓÃDonutStylePainter»æÖÆ»¬¿é
+    // é¦–å…ˆä½¿ç”¨DonutStylePainterç»˜åˆ¶æ»‘å—
     {
         DonutStylePainter painter(this);
         DonutDoubleSliderStyleOption opt;
@@ -615,11 +615,11 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
         painter.drawComplexControl(DonutStyle::CC_DoubleSlider, &opt);
     }
 
-    // È»ºóÊ¹ÓÃ±ê×¼QPainter»æÖÆÖµ±êÇ©
+    // ç„¶åä½¿ç”¨æ ‡å‡†QPainterç»˜åˆ¶å€¼æ ‡ç­¾
     QPainter labelPainter(this);
     labelPainter.setRenderHint(QPainter::Antialiasing);
 
-    // ÉèÖÃ×ÖÌåºÍÑÕÉ«
+    // è®¾ç½®å­—ä½“å’Œé¢œè‰²
     QFont font = this->font();
     font.setPixelSize(12);
     font.setBold(true);
@@ -627,14 +627,14 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
 
     QFontMetrics fm(font);
 
-    // ¼ÆËãÊµ¼ÊµÄhandleÎ»ÖÃ
+    // è®¡ç®—å®é™…çš„handleä½ç½®
     QRect actualLowerRect, actualUpperRect;
 
     if (orientation() == Qt::Horizontal)
     {
-        // Ë®Æ½»¬¿é
-        int handleWidth = 16; // ¼ÙÉèhandle¿í¶È
-        int handleHeight = 20; // ¼ÙÉèhandle¸ß¶È
+        // æ°´å¹³æ»‘å—
+        int handleWidth = 16; // å‡è®¾handleå®½åº¦
+        int handleHeight = 20; // å‡è®¾handleé«˜åº¦
         int grooveY = grooveRect.center().y();
 
         actualLowerRect = QRect(grooveRect.x() + lowerPixelPos - handleWidth / 2,
@@ -647,9 +647,9 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
     }
     else
     {
-        // ´¹Ö±»¬¿é
-        int handleWidth = 20; // ¼ÙÉèhandle¿í¶È
-        int handleHeight = 16; // ¼ÙÉèhandle¸ß¶È
+        // å‚ç›´æ»‘å—
+        int handleWidth = 20; // å‡è®¾handleå®½åº¦
+        int handleHeight = 16; // å‡è®¾handleé«˜åº¦
         int grooveX = grooveRect.center().x();
 
         actualLowerRect = QRect(grooveX - handleWidth / 2,
@@ -661,7 +661,7 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
             handleWidth, handleHeight);
     }
 
-    // »æÖÆlowerÖµ±êÇ©
+    // ç»˜åˆ¶lowerå€¼æ ‡ç­¾
     QString lowerText = QString::number(lowerValue());
     QRect lowerTextRect = fm.boundingRect(lowerText);
 
@@ -685,7 +685,7 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
         );
     }
 
-    // »æÖÆlower±êÇ©
+    // ç»˜åˆ¶loweræ ‡ç­¾
     labelPainter.setPen(Qt::NoPen);
     labelPainter.setBrush(QBrush(QColor(50, 50, 50, 200)));
     labelPainter.drawRoundedRect(lowerLabelRect, 4, 4);
@@ -693,7 +693,7 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
     labelPainter.setPen(QPen(QColor(255, 255, 255), 1));
     labelPainter.drawText(lowerLabelRect, Qt::AlignCenter, lowerText);
 
-    // »æÖÆupperÖµ±êÇ©
+    // ç»˜åˆ¶upperå€¼æ ‡ç­¾
     QString upperText = QString::number(upperValue());
     QRect upperTextRect = fm.boundingRect(upperText);
 
@@ -717,7 +717,7 @@ void DonutDoubleSlider::paintEvent(QPaintEvent* event)
         );
     }
 
-    // »æÖÆupper±êÇ©
+    // ç»˜åˆ¶upperæ ‡ç­¾
     labelPainter.setPen(Qt::NoPen);
     labelPainter.setBrush(QBrush(QColor(50, 50, 50, 200)));
     labelPainter.drawRoundedRect(upperLabelRect, 4, 4);

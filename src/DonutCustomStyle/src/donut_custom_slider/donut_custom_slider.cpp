@@ -95,12 +95,12 @@ void DonutCustomSlider::paintEvent(QPaintEvent* ev)
 	QStylePainter painter(this);
 	painter.drawComplexControl(QStyle::CC_Slider, opt);
 
-    // ÔÚÕâÀï¿ÉÒÔÌí¼Ó¶îÍâµÄ»æÖÆ´úÂë£¬¸ù¾İÊó±ê×´Ì¬¸üĞÂhandleµÄÍâ¹Û
+    // åœ¨è¿™é‡Œå¯ä»¥æ·»åŠ é¢å¤–çš„ç»˜åˆ¶ä»£ç ï¼Œæ ¹æ®é¼ æ ‡çŠ¶æ€æ›´æ–°handleçš„å¤–è§‚
     //if (opt.subControls & QStyle::SC_SliderHandle)
     //{
         if (opt.state & QStyle::State_MouseOver)
         {
-            // Êó±êÍ£ÔÚhandleÉÏÊ±£¬¿ÉÒÔÉèÖÃ²»Í¬µÄÑÕÉ«»òÆäËûĞ§¹û
+            // é¼ æ ‡åœåœ¨handleä¸Šæ—¶ï¼Œå¯ä»¥è®¾ç½®ä¸åŒçš„é¢œè‰²æˆ–å…¶ä»–æ•ˆæœ
             painter.setBrush(Qt::red);
             painter.drawComplexControl(QStyle::CC_Slider, opt);
         }
